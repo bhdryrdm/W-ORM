@@ -1,0 +1,449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E43E3B4E-084B-45F8-B150-D672158875F4}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>EF_DBFirst</RootNamespace>
+    <AssemblyName>EF_DBFirst</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdventureWorkCustomerService.cs" />
+    <Compile Include="BaseService.cs" />
+    <Compile Include="NorthWindCustomerService.cs" />
+    <Compile Include="MSSQL\Address.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\AddressType.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\AdventureWorks.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdventureWorks.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\AdventureWorks.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\AdventureWorks.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdventureWorks.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Alphabetical_list_of_products.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\AWBuildVersion.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\BillOfMaterials.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\BusinessEntity.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\BusinessEntityAddress.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\BusinessEntityContact.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Categories.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Category_Sales_for_1997.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ContactType.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CountryRegion.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CountryRegionCurrency.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CreditCard.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Culture.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Currency.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CurrencyRate.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Current_Product_List.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Customer.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CustomerDemographics.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Customers.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Customer_and_Suppliers_by_City.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CustOrderHist_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CustOrdersDetail_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\CustOrdersOrders_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\DatabaseLog.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Department.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\EmailAddress.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Employee.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\EmployeeDepartmentHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\EmployeePayHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Employees.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Employee_Sales_by_Country_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ErrorLog.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Illustration.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Invoices.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\JobCandidate.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Location.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\NorthWind.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NorthWind.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\NorthWind.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\NorthWind.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NorthWind.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Orders.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Orders_Qry.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Order_Details.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Order_Details_Extended.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Order_Subtotals.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Password.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Person.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\PersonCreditCard.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\PersonPhone.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\PhoneNumberType.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Product.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductCategory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductCostHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductDescription.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductInventory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductListPriceHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductModel.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductModelIllustration.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductModelProductDescriptionCulture.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductPhoto.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductProductPhoto.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductReview.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Products.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductSubcategory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Products_Above_Average_Price.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Products_by_Category.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ProductVendor.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Product_Sales_for_1997.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\PurchaseOrderDetail.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\PurchaseOrderHeader.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Region.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesByCategory_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesOrderDetail.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesOrderHeader.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesOrderHeaderSalesReason.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesPerson.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesPersonQuotaHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesReason.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesTaxRate.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesTerritory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SalesTerritoryHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Sales_by_Category.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Sales_by_Year_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Sales_Totals_by_Amount.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ScrapReason.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Shift.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ShipMethod.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Shippers.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\ShoppingCartItem.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SpecialOffer.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\SpecialOfferProduct.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\sp_helpdiagrams_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\StateProvince.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Store.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Summary_of_Sales_by_Quarter.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Summary_of_Sales_by_Year.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Suppliers.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\sysdiagrams.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Ten_Most_Expensive_Products_Result.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Territories.cs">
+      <DependentUpon>NorthWind.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\TransactionHistory.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\TransactionHistoryArchive.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\UnitMeasure.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\Vendor.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\WorkOrder.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\WorkOrderRouting.cs">
+      <DependentUpon>AdventureWorks.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <EntityDeploy Include="MSSQL\NorthWind.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>NorthWind.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="MSSQL\AdventureWorks.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AdventureWorks.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="MSSQL\AdventureWorks.edmx.diagram">
+      <DependentUpon>AdventureWorks.edmx</DependentUpon>
+    </None>
+    <None Include="MSSQL\NorthWind.edmx.diagram">
+      <DependentUpon>NorthWind.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MSSQL\AdventureWorks.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AdventureWorks.edmx</DependentUpon>
+      <LastGenOutput>AdventureWorks.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="MSSQL\AdventureWorks.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AdventureWorks.edmx</DependentUpon>
+      <LastGenOutput>AdventureWorks.cs</LastGenOutput>
+    </Content>
+    <Content Include="MSSQL\NorthWind.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NorthWind.Context.cs</LastGenOutput>
+      <DependentUpon>NorthWind.edmx</DependentUpon>
+    </Content>
+    <Content Include="MSSQL\NorthWind.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>NorthWind.edmx</DependentUpon>
+      <LastGenOutput>NorthWind.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
