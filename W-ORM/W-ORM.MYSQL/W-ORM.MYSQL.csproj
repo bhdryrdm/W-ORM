@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{662E1359-8090-4215-85AF-FE49CCAAF17A}</ProjectGuid>
+    <ProjectGuid>{10A7700E-435B-41C5-AC60-29B78A72F391}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>W_ORM.MSSQL</RootNamespace>
-    <AssemblyName>W-ORM.MSSQL</AssemblyName>
+    <RootNamespace>W_ORM.MYSQL</RootNamespace>
+    <AssemblyName>W-ORM.MYSQL</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,18 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\BIGINT.cs" />
-    <Compile Include="Attributes\BIT.cs" />
-    <Compile Include="Attributes\DATETIME.cs" />
-    <Compile Include="Attributes\INT.cs" />
-    <Compile Include="Attributes\NVARCHAR.cs" />
-    <Compile Include="Attributes\VARCHAR.cs" />
-    <Compile Include="CreateEverything.cs" />
-    <Compile Include="CSHARP_To_MSSQL.cs" />
     <Compile Include="DB_Operation.cs" />
-    <Compile Include="MSSQLProviderContext.cs" />
-    <Compile Include="MSSQL_RunQuery.cs" />
+    <Compile Include="MYSQLProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Attributes\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

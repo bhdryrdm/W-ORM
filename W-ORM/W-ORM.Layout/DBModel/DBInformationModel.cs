@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace W_ORM.Test
+namespace W_ORM.Layout.DBModel
 {
-    public class DBInformationModel 
+    public class DBInformationModel
     {
         public string DatabaseName { get; set; }
         public string ConnectionString { get; set; }
@@ -17,6 +17,5 @@ namespace W_ORM.Test
         public string CreatedAuthor { get; set; }
         public DateTime UpdatedTime { get; set; }
         public string UpdatedAuthor { get; set; }
-
     }
 }

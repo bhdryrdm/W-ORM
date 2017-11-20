@@ -1,22 +1,18 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Configuration;
-using System.Xml;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using W_ORM.Layout.DBType;
-using System.Web.Hosting;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Data.OleDb;
+using System.Xml.Linq;
+using W_ORM.Layout.Attributes;
+using W_ORM.Layout.DBModel;
+using W_ORM.Layout.DBType;
+using W_ORM.MSSQL;
 
 namespace W_ORM.Test
 {
     [TestClass]
-    public class UnitTest1 : MSSQLProviderContext<WORMContext>
+    public class UnitTest1
     {
         [TestMethod]
         public void TestMethod1()
@@ -33,9 +29,10 @@ namespace W_ORM.Test
                                                               new XElement("UpdatedTime", new XAttribute("value", DateTime.Now)),
                                                               new XElement("UpdatedAuthor", new XAttribute("value", "Bahadır Yardım"))),
                                                           new XElement("MYSQL", new XAttribute("id", "MYSQL"),
-                                                              new XElement("ConnectionString", new XAttribute("value", "Server=.;Database=OWASP; Trusted_Connection=True;")),
-                                                              new XElement("Provider", new XAttribute("value", "System.Data.Mysql")),
-                                                              new XElement("Type", new XAttribute("value", DBType_Enum.MSSQL)),
+                                                              new XElement("DatabaseName", new XAttribute("value", "BHDR")),
+                                                              new XElement("ConnectionString", new XAttribute("value", "Server=127.0.0.1;Port=3306;Uid=root;Pwd=123qwe;")),
+                                                              new XElement("Provider", new XAttribute("value", "MySql.Data.MySqlClient")),
+                                                              new XElement("Type", new XAttribute("value", DBType_Enum.MYSQL)),
                                                               new XElement("Version", new XAttribute("value", 132)),
                                                               new XElement("CreatedTime", new XAttribute("value", DateTime.Now)),
                                                               new XElement("CreatedAuthor", new XAttribute("value", "Ali Tevek")),
@@ -54,46 +51,17 @@ namespace W_ORM.Test
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             changesetDB.Save(Path.Combine(path, "WORM.config"));
 
-            Type entityType;
-            dynamic entitySchema;
-            string entityColumnsMSSQL = string.Empty, entityColumnMSSQLType = string.Empty, createTableMSSQLQuery = string.Empty, 
-                   entityColumnsJSON = string.Empty, entityColumnJSON = string.Empty, createJSONObject = string.Empty;
-            List<dynamic> implementedEntities = (from property in EntityType.GetProperties()
-                                                 from genericArguments in property.PropertyType.GetGenericArguments()
-                                                 where genericArguments.BaseType.Equals(typeof(ModelBase))
-                                                 select Activator.CreateInstance(genericArguments)).ToList();
-            createJSONObject = "{ \"Classes\" : {";
-            foreach (var entity in implementedEntities)
-            {
-                entityType = entity.GetType();
-                entitySchema = entityType.GetCustomAttributes(typeof(SchemaAttribute), false).FirstOrDefault();
 
-                foreach (var entityColumn in entityType.GetProperties())
-                {
-                    entityColumnMSSQLType = new From_CSHARP_To_MSSQL_Type().GetMSSQLFormat(entityColumn);
-                    entityColumnsMSSQL += $"{entityColumnMSSQLType}, ";
+            CreateEverything<WORMContext> cr = new CreateEverything<WORMContext>("KEMAL");
+            
+            WORMContext wm = new WORMContext();
+            Category category = new Category { CategoryID = 1, IsActive = true, ProductName = "Test" };
+            wm.Category.Insert(category);
 
-                    entityColumnJSON = new From_CSHARP_To_MSSQL_Type().GetJSONFormat(entityColumn);
-                    entityColumnsJSON += $"{entityColumnJSON}";
-                }
-                entityColumnsMSSQL = entityColumnsMSSQL.Remove(entityColumnsMSSQL.Length - 2);
-                entityColumnsJSON = entityColumnsJSON.Remove(entityColumnsJSON.Length - 1);
-                createTableMSSQLQuery += $"CREATE TABLE [{entitySchema.SchemaName}].[{entityType.Name}] ({entityColumnsMSSQL}) ";
+            wm.PushToDB("WORMContext");
 
-
-                createJSONObject += $"\"{entityType.Name}\" : " +
-                            "[" +
-                                    $"{entityColumnsJSON}" +
-                            "],";
-
-                entityColumnsMSSQL = string.Empty;
-                entityColumnsJSON = string.Empty;
-            }
-            createJSONObject = createJSONObject.Remove(createJSONObject.Length - 1);
-            createJSONObject += "}}";
-            ConnectionStringFactory.CreateDB("BHDR");
-            ConnectionStringFactory.CreateSettingTable("BHDR", createJSONObject);
-            ConnectionStringFactory.CreateTable("BHDR", createTableMSSQLQuery);
+            Product product = new Product();
+            wm.Product.Insert(product);
            
         }
          

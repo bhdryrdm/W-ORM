@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace W_ORM.Test
+namespace W_ORM.MSSQL.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class NVARCHAR : Attribute
+    class DATETIME
     {
     }
 }

@@ -41,8 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\BaseAttribute.cs" />
+    <Compile Include="Attributes\TableAttribute.cs" />
+    <Compile Include="DBConnection\DBConnectionFactory.cs" />
+    <Compile Include="DBConnection\DBConnectionOperation.cs" />
+    <Compile Include="DBModel\BaseContext.cs" />
+    <Compile Include="DBModel\DBInformationModel.cs" />
+    <Compile Include="DBModel\ModelBase.cs" />
+    <Compile Include="DBProvider\IDB_CRUD_Operation.cs" />
     <Compile Include="DBProvider\IDBProvider.cs" />
+    <Compile Include="DBProvider\IDB_Operation.cs" />
     <Compile Include="DBType\DBType_Enum.cs" />
+    <Compile Include="DBType\ICSHARP_To_DB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -4,55 +4,52 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using W_ORM.Layout.DBType;
 
-namespace W_ORM.Test
+namespace W_ORM.MSSQL
 {
-    public class From_CSHARP_To_MSSQL_Type
+    public class CSHARP_To_MSSQL : ICSHARP_To_DB
     {
-        public From_CSHARP_To_MSSQL_Type()
+        public string GetSQLQueryFormat(PropertyInfo propertyInfo)
         {
-
-        }
-        public string GetMSSQLFormat(PropertyInfo propertyType)
-        {
-            string columnAttribute = propertyType.Name;
-            if(propertyType.GetCustomAttributes().Count() > 0)
+            string columnAttribute = propertyInfo.Name;
+            if (propertyInfo.GetCustomAttributes().Count() > 0)
             {
-                foreach (var propertyAttribute in propertyType.GetCustomAttributes())
+                foreach (var propertyAttribute in propertyInfo.GetCustomAttributes())
                 {
-                    columnAttribute += $" {ReturnFromAttributeToMSSQLType(propertyAttribute)} ";
+                    columnAttribute += $" {Attribute_To_SQLType(propertyAttribute)}";
                 }
             }
             else
             {
-                columnAttribute += $" {ReturnFromPropertTypeToMSSQLType(propertyType.PropertyType.Name)} ";
+                columnAttribute += $" {PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
             return columnAttribute;
         }
-        public string GetJSONFormat(PropertyInfo propertyType)
+
+        public string GetXMLDataFormat(PropertyInfo propertyInfo)
         {
-            string columnName = "{\"ColumnName\" : " + $"\"{propertyType.Name}\",";
-            string columnAttributes = "\"ColumnAttributes\" : \"";
-            if (propertyType.GetCustomAttributes().Count() > 0)
+            string column = $"<{propertyInfo.Name} ";
+            if (propertyInfo.GetCustomAttributes().Count() > 0)
             {
-                foreach (var propertyAttribute in propertyType.GetCustomAttributes())
+                foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes())
                 {
-                    columnAttributes += $"{ReturnFromAttributeToMSSQLType(propertyAttribute)}, ";
+                    column += $"{propertyAttribute.AttributeDefination}={Attribute_To_SQLType(propertyAttribute)} ";
                 }
             }
             else
             {
-                columnAttributes += $"{ReturnFromPropertTypeToMSSQLType(propertyType.PropertyType.Name)}, ";
+                column += $"{PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
-            columnAttributes = columnAttributes.Remove(columnAttributes.Length - 2);
-            return columnName + columnAttributes + "\"},";
+            return column + $" ><{propertyInfo.Name}/>";
         }
-        public string ReturnFromAttributeToMSSQLType(Attribute attribute)
+
+        public string Attribute_To_SQLType(Attribute attribute)
         {
             string response = string.Empty;
             switch (attribute.GetType().Name)
             {
-                case "INT" :
+                case "INT":
                     response = "int"; break;
                 case "BIT":
                     response = "bit"; break;
@@ -66,10 +63,10 @@ namespace W_ORM.Test
             }
             return response;
         }
-        public string ReturnFromPropertTypeToMSSQLType(string propertyType)
+        public string PropertyName_To_SQLType(string propertyName)
         {
             string response = string.Empty;
-            switch (propertyType)
+            switch (propertyName)
             {
                 case "int":
                     response = "int"; break;

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{662E1359-8090-4215-85AF-FE49CCAAF17A}</ProjectGuid>
+    <ProjectGuid>{07FE4E24-3C2C-440B-9F36-608E20DC95D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>W_ORM.MSSQL</RootNamespace>
-    <AssemblyName>W-ORM.MSSQL</AssemblyName>
+    <RootNamespace>W_ORM.POSTGRESQL</RootNamespace>
+    <AssemblyName>W-ORM.POSTGRESQL</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,24 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\BIGINT.cs" />
-    <Compile Include="Attributes\BIT.cs" />
-    <Compile Include="Attributes\DATETIME.cs" />
-    <Compile Include="Attributes\INT.cs" />
-    <Compile Include="Attributes\NVARCHAR.cs" />
-    <Compile Include="Attributes\VARCHAR.cs" />
-    <Compile Include="CreateEverything.cs" />
-    <Compile Include="CSHARP_To_MSSQL.cs" />
-    <Compile Include="DB_Operation.cs" />
-    <Compile Include="MSSQLProviderContext.cs" />
-    <Compile Include="MSSQL_RunQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">
-      <Project>{8BA96A02-C636-42C9-91F1-CEBC5330FAB3}</Project>
-      <Name>W-ORM.Layout</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

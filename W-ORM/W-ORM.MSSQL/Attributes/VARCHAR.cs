@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace W_ORM.Test
+namespace W_ORM.MSSQL.Attributes
 {
-    public abstract class ModelBase
+    class VARCHAR
     {
     }
 }

@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using W_ORM.Layout.DBModel;
+using W_ORM.MSSQL;
 
 namespace W_ORM.Test
 {
-    public class WORMContext
+    public class WORMContext : BaseContext
     {
-        public WORMContext()
+        public MSSQLProviderContext<Product> Product
         {
-
+            get { return new MSSQLProviderContext<Product>(); }
         }
-        public MSSQLProviderContext<Product> Product { get; set; }
-        public MSSQLProviderContext<Category> Category { get; set; }
+        public MSSQLProviderContext<Category> Category
+        {
+            get { return new MSSQLProviderContext<Category>(); }
+        }
     }
 }
