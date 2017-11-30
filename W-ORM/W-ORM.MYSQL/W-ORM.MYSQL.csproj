@@ -58,8 +58,6 @@
     <Compile Include="Attributes\TINYTEXT.cs" />
     <Compile Include="Attributes\VARCHAR.cs" />
     <Compile Include="CSHARP_To_MYSQL.cs" />
-    <Compile Include="Attributes\INT.cs" />
-    <Compile Include="Attributes\VARCHAR.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="MYSQLProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -13,7 +13,7 @@ namespace W_ORM.MSSQL.Attributes
         private int _stair;
         private int _comma;
 
-        public DECIMAL(int stair, int comma) : base("Type")
+        public DECIMAL(int stair, int comma) : base("Type", "DECIMAL")
         {
             this._stair = stair;
             this._comma = comma;

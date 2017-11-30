@@ -12,7 +12,7 @@ namespace W_ORM.MSSQL.Attributes
     {
         private int _length;
 
-        public BINARY(int length = 0) : base("Type")
+        public BINARY(int length = 0) : base("Type", "BINARY")
         {
             this._length = length;
         }

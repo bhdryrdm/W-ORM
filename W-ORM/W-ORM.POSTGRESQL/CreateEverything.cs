@@ -17,7 +17,7 @@ namespace W_ORM.POSTGRESQL
 
         public CreateEverything(string databaseName)
         {
-            DB_Operation dB_Operation = new DB_Operation(typeof(TDBEntity).Name, databaseName);
+            DB_Operation dB_Operation = new DB_Operation(typeof(TDBEntity).Name);
             Tuple<string, string> datas = GetPOSTGRESQLQueries();
             dB_Operation.CreateDatabase();
             dB_Operation.CreateSettingTable(datas.Item2);
@@ -32,7 +32,7 @@ namespace W_ORM.POSTGRESQL
                    entityColumnsXML = string.Empty, entityColumnXML = string.Empty, createXMLObjectQuery = string.Empty;
             List<dynamic> implementedEntities = (from property in EntityType.GetProperties()
                                                  from genericArguments in property.PropertyType.GetGenericArguments()
-                                                 where genericArguments.BaseType.Equals(typeof(ModelBase))
+                                                 where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
                                                  select Activator.CreateInstance(genericArguments)).ToList();
             createXMLObjectQuery = "<Classes>";
             foreach (var entity in implementedEntities)

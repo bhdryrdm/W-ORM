@@ -48,6 +48,11 @@
     <Compile Include="ORACLEProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">
+      <Project>{8BA96A02-C636-42C9-91F1-CEBC5330FAB3}</Project>
+      <Name>W-ORM.Layout</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

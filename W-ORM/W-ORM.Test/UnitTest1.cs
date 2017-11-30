@@ -14,14 +14,11 @@ namespace W_ORM.Test
         public void TestMethod1()
         {   
             XDocument changesetDB = new XDocument(new XElement("Databases",
-<<<<<<< HEAD
                                                           new XElement("WORMContext", new XAttribute("id", "WORMContext"),
                                                               new XElement("DatabaseName", new XAttribute("value", "BHDR")),
                                                               new XElement("ConnectionString", new XAttribute("value", "Server=DESKTOP-OC11CCT\\SQL_2014; Trusted_Connection=True;")),
-=======
                                                           new XElement("RECEPContext", new XAttribute("id", "RECEPContext"),
                                                               new XElement("ConnectionString", new XAttribute("value", "Server=.; Trusted_Connection=True;")),
->>>>>>> f39a5d4865cbce928b573d39dbf3bd842d2306be
                                                               new XElement("Provider", new XAttribute("value", "System.Data.SqlClient")),
                                                               new XElement("Type", new XAttribute("value", DBType_Enum.MSSQL)),
                                                               new XElement("UpdatedTime", new XAttribute("value", DateTime.Now)),
@@ -37,7 +34,7 @@ namespace W_ORM.Test
                                                               new XElement("Provider", new XAttribute("value", "System.Data.Postgre")),
                                                               new XElement("Type", new XAttribute("value", DBType_Enum.MSSQL)),
                                                               new XElement("UpdatedTime", new XAttribute("value", DateTime.Now)),
-                                                              new XElement("UpdatedAuthor", new XAttribute("value", "Ali Tevek")))));
+                                                              new XElement("UpdatedAuthor", new XAttribute("value", "Ali Tevek"))))));
 
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
            // changesetDB.Save(Path.Combine(path, "WORM.config"));

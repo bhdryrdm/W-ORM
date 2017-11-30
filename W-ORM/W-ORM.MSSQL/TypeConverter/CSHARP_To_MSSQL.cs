@@ -63,7 +63,6 @@ namespace W_ORM.MSSQL
                     response = "nvarchar"; break;
                 case "NOTNULL":
                     response = "NOT NULL"; break;
-<<<<<<< HEAD:W-ORM/W-ORM.MSSQL/CSHARP_To_MSSQL.cs
                 case "BIGINT":
                     response = "bigint"; break;
                 case "BINARY":
@@ -84,15 +83,13 @@ namespace W_ORM.MSSQL
                     response = "tinyint"; break;
                 case "VARCHAR":
                     response = "varchar"; break;
-=======
                 case "PRIMARY_KEY":
                     response = "PRIMARY KEY"; break;
                 case "FOREIGN_KEY":
                     response = "FOREIGN KEY REFERENCES"; break;
                 case "AUTO_INCREMENT":
                     response = "IDENTITY"; break;
-
->>>>>>> f39a5d4865cbce928b573d39dbf3bd842d2306be:W-ORM/W-ORM.MSSQL/TypeConverter/CSHARP_To_MSSQL.cs
+                    
                 default:
 
                     break;

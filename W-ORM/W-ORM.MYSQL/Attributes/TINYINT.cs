@@ -11,7 +11,7 @@ namespace W_ORM.MYSQL.Attributes
     public class TINYINT : BaseAttribute
     {
         private int _length;
-        public TINYINT(int length = 0 ) : base("Type")
+        public TINYINT(int length = 0 ) : base("Type", "TINYINT")
         {
             this._length = length;
         }

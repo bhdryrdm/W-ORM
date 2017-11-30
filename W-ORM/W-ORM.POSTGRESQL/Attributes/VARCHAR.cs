@@ -12,7 +12,7 @@ namespace W_ORM.POSTGRESQL.Attributes
     {
         private int _length;
 
-        public VARCHAR(int length = 0) : base("Type")
+        public VARCHAR(int length = 0) : base("Type", "VARCHAR")
         {
             this._length = length;
         }

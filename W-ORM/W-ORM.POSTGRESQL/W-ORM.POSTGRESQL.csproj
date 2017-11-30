@@ -56,7 +56,6 @@
     <Compile Include="CSHARP_To_POSTGRESQL.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="POSTGRESQLProviderContext.cs" />
-    <Compile Include="DB_Operation.cs" />
     <Compile Include="POSTGREProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -11,7 +11,7 @@ namespace W_ORM.MYSQL.Attributes
     public class BIGINT : BaseAttribute
     {
         private int _length;
-        public BIGINT(int length = 0) : base("Type")
+        public BIGINT(int length = 0) : base("Type", "BIGINT")
         {
             this._length = length;
         }

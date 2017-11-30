@@ -11,7 +11,7 @@ namespace W_ORM.MYSQL.Attributes
     public class SMALLINT : BaseAttribute
     {
         private int _length;
-        public SMALLINT(int length = 0) : base("Type")
+        public SMALLINT(int length = 0) : base("Type", "SMALLINT")
         {
             this._length = length;
         }

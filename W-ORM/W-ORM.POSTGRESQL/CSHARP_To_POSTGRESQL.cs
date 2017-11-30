@@ -35,7 +35,7 @@ namespace W_ORM.POSTGRESQL
             {
                 foreach(dynamic propertyAttribute in propertyInfo.GetCustomAttributes())
                 {
-                    column += $"{propertyAttribute.AttributeDefination}={Attribute_To_SQLType(propertyAttribute} ";
+                    column += $"{propertyAttribute.AttributeDefination}={Attribute_To_SQLType(propertyAttribute)} ";
                 }
             }
             else

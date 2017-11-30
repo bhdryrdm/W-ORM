@@ -10,7 +10,7 @@ namespace W_ORM.MSSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class TINYINT : BaseAttribute
     {
-        public TINYINT() : base("Type")
+        public TINYINT() : base("Type", "TINYINT")
         {
         }
     }

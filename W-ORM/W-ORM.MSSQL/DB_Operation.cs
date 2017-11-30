@@ -16,12 +16,8 @@ namespace W_ORM.MSSQL
 {
     public class DB_Operation :  IDB_Operation 
     {
-<<<<<<< HEAD
-         DbCommand command = null;
-=======
-        string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
         DbCommand command = null;
->>>>>>> f39a5d4865cbce928b573d39dbf3bd842d2306be
+        string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
         DbConnection connection = null;
 
         #region Property & Constructor

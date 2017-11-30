@@ -10,7 +10,7 @@ namespace W_ORM.MSSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class TEXT : BaseAttribute
     {
-        public TEXT() : base("Type")
+        public TEXT() : base("Type", "TEXT")
         {
         }
     }

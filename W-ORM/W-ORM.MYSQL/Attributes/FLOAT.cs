@@ -13,7 +13,7 @@ namespace W_ORM.MYSQL.Attributes
         private int _stair;
         private int _comma;
 
-        public FLOAT(int stair, int comma) : base("Type")
+        public FLOAT(int stair, int comma) : base("Type", "FLOAT")
         {
             this._stair = stair;
             this._comma = comma;

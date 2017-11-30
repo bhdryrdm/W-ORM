@@ -13,7 +13,7 @@ namespace W_ORM.MYSQL.Attributes
         private int _stair;
         private int _comma;
 
-        public DOUBLE(int stair, int comma) : base("Type")
+        public DOUBLE(int stair, int comma) : base("Type", "DOUBLE")
         {
             this._stair = stair;
             this._comma = comma;

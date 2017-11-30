@@ -13,7 +13,7 @@ namespace W_ORM.MSSQL.Attributes
     {
         private int _length;
 
-        public VARCHAR(int length = 0) : base("Type")
+        public VARCHAR(int length = 0) : base("Type", "VARCHAR")
         {
             this._length = length;
         }

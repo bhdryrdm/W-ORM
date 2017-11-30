@@ -10,7 +10,7 @@ namespace W_ORM.MYSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class TINYTEXT : BaseAttribute
     {
-        public TINYTEXT() : base("Type")
+        public TINYTEXT() : base("Type", "TINYTEXT")
         {
         }
     }

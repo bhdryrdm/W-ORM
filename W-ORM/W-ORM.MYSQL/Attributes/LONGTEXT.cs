@@ -10,7 +10,7 @@ namespace W_ORM.MYSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class LONGTEXT : BaseAttribute
     {
-        public LONGTEXT() : base("Type")
+        public LONGTEXT() : base("Type", "LONGTEXT")
         {
         }
     }

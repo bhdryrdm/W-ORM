@@ -10,7 +10,7 @@ namespace W_ORM.MYSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class DATETIME : BaseAttribute
     {
-        public DATETIME() : base("Type")
+        public DATETIME() : base("Type", "DATETIME")
         {
         }
     }

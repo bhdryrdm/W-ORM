@@ -10,7 +10,7 @@ namespace W_ORM.MSSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class MONEY : BaseAttribute
     {
-        public MONEY() : base("Type")
+        public MONEY() : base("Type", "MONEY")
         {
         }
 
