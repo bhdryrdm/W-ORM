@@ -208,6 +208,11 @@ namespace W_ORM.MSSQL
             return tableList;
         }
 
+        /// <summary>
+        /// Tablodaki tüm sütunları getirir
+        /// </summary>
+        /// <param name="tableName">Veritabanı üzerindeki tablo ismi</param>
+        /// <returns></returns>
         public List<string> ColumnListOnTable(string tableName)
         {
             List<string> columnList = new List<string>();
@@ -225,9 +230,6 @@ namespace W_ORM.MSSQL
                 }
                 reader.Close();
 
-            }
-            catch (Exception ex)
-            {
             }
             DBConnectionOperation.ConnectionClose(connection);
             return columnList;

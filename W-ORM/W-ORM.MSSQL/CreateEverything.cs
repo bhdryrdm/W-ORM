@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using W_ORM.Layout.Attributes;
 using W_ORM.Layout.DBModel;
 
@@ -33,6 +31,7 @@ namespace W_ORM.MSSQL
                                                  from genericArguments in property.PropertyType.GetGenericArguments()
                                                  where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
                                                  select Activator.CreateInstance(genericArguments)).ToList();
+            // Tablolar bazında dönülüyor
             createXMLObjectQuery = "<Classes>";
             foreach (var entity in implementedTableEntities)
             {
@@ -40,37 +39,48 @@ namespace W_ORM.MSSQL
                 entityType = entity.GetType();
                 entityInformation = entityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault();
 
-                string createOrAlterTable = "CREATE";
-                DBTableModel willBeDeletedTableInTableList = tableList.FirstOrDefault(x => x.TableName == entityInformation.TableName && x.SchemaName == entityInformation.SchemaName);
-                if (willBeDeletedTableInTableList != null)
-                {
-                    createOrAlterTable = "ALTER";
-                    tableList.Remove(willBeDeletedTableInTableList);
-                }
-
                 columnList = dB_Operation.ColumnListOnTable(entityType.Name);
 
+                // Sütunlar bazında dönülüyor
                 foreach (var entityColumn in entityType.GetProperties())
                 {
-                    string addOrDropOrAlter = "ADD";
+                    var columnInformation = new CSHARP_To_MSSQL().GetSQLQueryFormat(entityColumn);
+                    if (columnList.Where(x => x == entityColumn.Name).Count() == 0)
+                    {
+                        createTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ADD {columnInformation} ";
+                    }
+                        
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
-                        addOrDropOrAlter = "ALTER COLUMN";
-                    if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
-                        addOrDropOrAlter = "ALTER COLUMN";
+                    {
+                        columnList.Remove(entityColumn.Name);
+                        createTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ALTER COLUMN {columnInformation} ";
+                    }
 
-                    entityColumnsMSSQL += new CSHARP_To_MSSQL().GetSQLQueryFormat(entityColumn) + ", ";
+                    if (tableList.Where(x=> x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName).Count() == 0)
+                    {
+                        entityColumnsMSSQL += columnInformation + ", ";
+                    }
+
                     entityColumnsXML += new CSHARP_To_MSSQL().GetXMLDataFormat(entityColumn);
                 }
-                entityColumnsMSSQL = entityColumnsMSSQL.Remove(entityColumnsMSSQL.Length - 2);
-                createTableMSSQLQuery += $"{createOrAlterTable} TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ({entityColumnsMSSQL}) ";
+                if (!string.IsNullOrEmpty(entityColumnsMSSQL))
+                {
+                    entityColumnsMSSQL = entityColumnsMSSQL.Remove(entityColumnsMSSQL.Length - 2);
+                    createTableMSSQLQuery += $"CREATE TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ({entityColumnsMSSQL}) ";
+                }
+               
                 createXMLObjectQuery += $"<{entityType.Name}>{entityColumnsXML}</{entityType.Name}>";
-                // DROP edilecek tablolar
+                tableList.Remove(new DBTableModel { SchemaName = entityInformation.SchemaName, TableName = entityInformation.TableName });
+                // DROP edilecek sütunlar
                 if (columnList.Count() > 0)
                 {
-                    foreach (DBTableModel table in tableList)
+                    string columnNames = string.Empty;
+                    foreach (string columnName in columnList)
                     {
-                        createTableMSSQLQuery += $"DROP TABLE [{table.SchemaName}].[{table.TableName}] ";
+                        columnNames = $"{columnName}, ";
                     }
+                    columnNames = columnNames.Remove(columnNames.Length - 2);
+                    createTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP COLUMN {columnNames}";
                 }
                 entityColumnsMSSQL = string.Empty;
                 entityColumnsXML = string.Empty;
