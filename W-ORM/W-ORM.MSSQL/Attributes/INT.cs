@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,9 @@ namespace W_ORM.MSSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class INT : BaseAttribute
     {
-        public INT() : base("Type")
+        public INT() : base("Type","INT")
         {
         }
+        public override object TypeId => 1000;
     }
 }

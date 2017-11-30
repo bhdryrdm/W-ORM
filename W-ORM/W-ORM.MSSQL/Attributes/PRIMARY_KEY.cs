@@ -8,11 +8,12 @@ using W_ORM.Layout.Attributes;
 namespace W_ORM.MSSQL.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class BIGINT : BaseAttribute
+    public class PRIMARY_KEY : BaseAttribute
     {
-        public BIGINT() : base("Type","BIGINT")
+        public PRIMARY_KEY() : base("PKey","PRIMARY_KEY")
         {
 
         }
+        public override object TypeId => 4000;
     }
 }

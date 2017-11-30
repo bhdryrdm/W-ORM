@@ -10,6 +10,7 @@ namespace W_ORM.MYSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class VARCHAR : BaseAttribute
     {
+<<<<<<< HEAD
         private int _length;
 
         public VARCHAR(int length = 0) : base("Type")
@@ -22,5 +23,12 @@ namespace W_ORM.MYSQL.Attributes
             get { return _length; }
             set { _length = value; }
         }
+=======
+        public VARCHAR(int maxlength = 4000) : base("Type","VARCHAR")
+        {
+            this.maxlength = maxlength;
+        }
+        private int maxlength;
+>>>>>>> f39a5d4865cbce928b573d39dbf3bd842d2306be
     }
 }

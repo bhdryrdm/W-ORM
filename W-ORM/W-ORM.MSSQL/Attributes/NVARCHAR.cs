@@ -10,9 +10,17 @@ namespace W_ORM.MSSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class NVARCHAR : BaseAttribute
     {
-        public NVARCHAR() : base("Type")
+        public NVARCHAR(int maxLength = 4000) : base("Type","NVARCHAR")
         {
-
+            this.maxLength = maxLength;
         }
+        private int maxLength;
+
+        public int MaxLength
+        {
+            get { return maxLength; }
+            set { maxLength = value; }
+        }
+
     }
 }

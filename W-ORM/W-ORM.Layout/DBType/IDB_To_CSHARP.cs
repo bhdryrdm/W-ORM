@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace W_ORM.Layout.DBModel
+namespace W_ORM.Layout.DBType
 {
-    public abstract class ModelBase
+    public interface IDB_To_CSHARP
     {
+       Type XML_To_CSHARP(string xmlType);
     }
 }

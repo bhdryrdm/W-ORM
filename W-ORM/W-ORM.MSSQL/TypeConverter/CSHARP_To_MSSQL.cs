@@ -15,9 +15,15 @@ namespace W_ORM.MSSQL
             string columnAttribute = propertyInfo.Name;
             if (propertyInfo.GetCustomAttributes().Count() > 0)
             {
-                foreach (var propertyAttribute in propertyInfo.GetCustomAttributes())
+                foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes().OrderBy(x=> x.TypeId))
                 {
                     columnAttribute += $" {Attribute_To_SQLType(propertyAttribute)}";
+                    if (propertyAttribute.AttributeName == "VARCHAR" || propertyAttribute.AttributeName == "NVARCHAR")
+                        columnAttribute += $"({propertyAttribute.MaxLength}) ";
+                    if (propertyAttribute.AttributeDefination == "Increment")
+                        columnAttribute += $"({propertyAttribute.StartNumber},{propertyAttribute.Increase}) ";
+                    if (propertyAttribute.AttributeDefination == "FKey")
+                        columnAttribute += $" {propertyAttribute.ClassName}({propertyAttribute.PropertyName})";
                 }
             }
             else
@@ -34,14 +40,14 @@ namespace W_ORM.MSSQL
             {
                 foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes())
                 {
-                    column += $"{propertyAttribute.AttributeDefination}={Attribute_To_SQLType(propertyAttribute)} ";
+                    column += $"{propertyAttribute.AttributeDefination}=\"{propertyAttribute.AttributeName}\" ";
                 }
             }
             else
             {
                 column += $"{PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
-            return column + $" ><{propertyInfo.Name}/>";
+            return column + $"></{propertyInfo.Name}>";
         }
 
         public string Attribute_To_SQLType(Attribute attribute)
@@ -57,6 +63,7 @@ namespace W_ORM.MSSQL
                     response = "nvarchar"; break;
                 case "NOTNULL":
                     response = "NOT NULL"; break;
+<<<<<<< HEAD:W-ORM/W-ORM.MSSQL/CSHARP_To_MSSQL.cs
                 case "BIGINT":
                     response = "bigint"; break;
                 case "BINARY":
@@ -77,6 +84,15 @@ namespace W_ORM.MSSQL
                     response = "tinyint"; break;
                 case "VARCHAR":
                     response = "varchar"; break;
+=======
+                case "PRIMARY_KEY":
+                    response = "PRIMARY KEY"; break;
+                case "FOREIGN_KEY":
+                    response = "FOREIGN KEY REFERENCES"; break;
+                case "AUTO_INCREMENT":
+                    response = "IDENTITY"; break;
+
+>>>>>>> f39a5d4865cbce928b573d39dbf3bd842d2306be:W-ORM/W-ORM.MSSQL/TypeConverter/CSHARP_To_MSSQL.cs
                 default:
 
                     break;

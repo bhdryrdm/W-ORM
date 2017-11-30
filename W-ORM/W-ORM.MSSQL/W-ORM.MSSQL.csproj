@@ -41,11 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AUTO_INCREMENT.cs" />
     <Compile Include="Attributes\BIGINT.cs" />
     <Compile Include="Attributes\BINARY.cs" />
     <Compile Include="Attributes\BIT.cs" />
     <Compile Include="Attributes\DATETIME.cs" />
     <Compile Include="Attributes\DECIMAL.cs" />
+    <Compile Include="Attributes\FOREIGN_KEY.cs" />
     <Compile Include="Attributes\INT.cs" />
     <Compile Include="Attributes\MONEY.cs" />
     <Compile Include="Attributes\NVARCHAR.cs" />
@@ -53,10 +55,13 @@
     <Compile Include="Attributes\TEXT.cs" />
     <Compile Include="Attributes\TIMESTAMP.cs" />
     <Compile Include="Attributes\TINYINT.cs" />
+    <Compile Include="Attributes\PRIMARY_KEY.cs" />
     <Compile Include="Attributes\VARCHAR.cs" />
+    <Compile Include="ContextGenerate.cs" />
     <Compile Include="CreateEverything.cs" />
-    <Compile Include="CSHARP_To_MSSQL.cs" />
+    <Compile Include="TypeConverter\CSHARP_To_MSSQL.cs" />
     <Compile Include="DB_Operation.cs" />
+    <Compile Include="TypeConverter\MSSQL_To_CSHARP.cs" />
     <Compile Include="MSSQLProviderContext.cs" />
     <Compile Include="MSSQL_RunQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

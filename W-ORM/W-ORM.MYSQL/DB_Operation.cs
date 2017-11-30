@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data.Common;
+using W_ORM.Layout.DBConnection;
 using W_ORM.Layout.DBProvider;
 
 namespace W_ORM.MYSQL
@@ -8,16 +10,9 @@ namespace W_ORM.MYSQL
     {
         DbCommand command = null;
         DbConnection connection = null;
-
+        
         #region Property & Constructor
-        private string databaseName;
-
-        public string DatabaseName
-        {
-            get { return databaseName; }
-            set { databaseName = value; }
-        }
-
+      
         private string contextName;
 
         public string ContextName
@@ -26,24 +21,45 @@ namespace W_ORM.MYSQL
             set { contextName = value; }
         }
 
-        public DB_Operation(string contextName, string databaseName)
+        public DB_Operation(string contextName)
         {
             this.contextName = contextName;
-            this.databaseName = databaseName;
         }
         #endregion
 
         public bool CreateDatabase()
         {
-            throw new NotImplementedException();
+            bool dbCreatedSuccess = true;
+            try
+            {
+                using (connection = DBConnectionFactory.CreateDatabaseInstance(this.contextName))
+                {
+                    
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    MySqlCommand command = new MySqlCommand($"CREATE DATABASE IF NOT EXISTS `{this.contextName.ToLower()}`",(MySqlConnection)connection);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                dbCreatedSuccess = false;
+            }
+            DBConnectionOperation.ConnectionClose(connection);
+            return dbCreatedSuccess;
         }
 
-        public bool CreateSettingTable(string tablesXMLForm)
+            public bool CreateSettingTable(string tablesXMLForm)
         {
             throw new NotImplementedException();
         }
 
         public bool CreateTable(string createTableSQLQuery)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string contextName = "")
         {
             throw new NotImplementedException();
         }

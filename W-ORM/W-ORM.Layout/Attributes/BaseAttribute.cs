@@ -9,10 +9,13 @@ namespace W_ORM.Layout.Attributes
     [AttributeUsage(AttributeTargets.All)]
     public abstract class BaseAttribute : Attribute
     {
-        public BaseAttribute(string defination)
+        public BaseAttribute(string defination, string name)
         {
             this.AttributeDefination = defination;
+            this.AttributeName = name;
         }
         public string AttributeDefination { get; set; }
+        public string AttributeName { get; set; }
+
     }
 }

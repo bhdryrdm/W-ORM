@@ -10,6 +10,7 @@ namespace W_ORM.MYSQL.Attributes
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class INT : BaseAttribute
     {
+<<<<<<< HEAD
         private int _length;
         public INT(int length = 0) : base("Type")
         {
@@ -20,6 +21,11 @@ namespace W_ORM.MYSQL.Attributes
         {
             get { return _length; }
             set { _length = value; }
+=======
+        public INT() : base("Type","INT")
+        {
+
+>>>>>>> f39a5d4865cbce928b573d39dbf3bd842d2306be
         }
     }
 }
