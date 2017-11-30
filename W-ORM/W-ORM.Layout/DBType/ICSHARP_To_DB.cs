@@ -12,6 +12,6 @@ namespace W_ORM.Layout.DBType
         string GetSQLQueryFormat(PropertyInfo propertyInfo);
         string GetXMLDataFormat(PropertyInfo propertyInfo);
         string Attribute_To_SQLType(Attribute attribute);
-        string PropertyName_To_SQLType(string propertyName);
+        string PropertyType_To_SQLType(string propertyName);
     }
 }

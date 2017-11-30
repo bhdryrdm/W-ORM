@@ -31,7 +31,7 @@ namespace W_ORM.MSSQL
                                                  from genericArguments in property.PropertyType.GetGenericArguments()
                                                  where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
                                                  select Activator.CreateInstance(genericArguments)).ToList();
-            // Tablolar bazında dönülüyor
+            // Tablolar bazında dönülüyor // Classlarda dönüyorum
             createXMLObjectQuery = "<Classes>";
             foreach (var entity in implementedTableEntities)
             {
@@ -41,7 +41,7 @@ namespace W_ORM.MSSQL
 
                 columnList = dB_Operation.ColumnListOnTable(entityType.Name);
 
-                // Sütunlar bazında dönülüyor
+                // Sütunlar bazında dönülüyor // Property dönüyorum
                 foreach (var entityColumn in entityType.GetProperties())
                 {
                     var columnInformation = new CSHARP_To_MSSQL().GetSQLQueryFormat(entityColumn);
@@ -70,7 +70,12 @@ namespace W_ORM.MSSQL
                 }
                
                 createXMLObjectQuery += $"<{entityType.Name}>{entityColumnsXML}</{entityType.Name}>";
-                tableList.Remove(new DBTableModel { SchemaName = entityInformation.SchemaName, TableName = entityInformation.TableName });
+                var tableInformation = new DBTableModel { SchemaName = entityInformation.SchemaName, TableName = entityInformation.TableName };
+                if (tableList.Where(x => x.SchemaName == tableInformation.SchemaName && x.TableName == tableInformation.TableName).Count() > 0)
+                {
+                    tableList.Remove(tableInformation);
+                }
+
                 // DROP edilecek sütunlar
                 if (columnList.Count() > 0)
                 {

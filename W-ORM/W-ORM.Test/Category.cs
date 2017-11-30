@@ -1,4 +1,5 @@
-﻿using W_ORM.Layout.Attributes;
+﻿using System;
+using W_ORM.Layout.Attributes;
 using W_ORM.Layout.DBModel;
 using W_ORM.MSSQL.Attributes;
 
@@ -10,6 +11,7 @@ namespace W_ORM.Test
     {
         [AUTO_INCREMENT(1,5)][PRIMARY_KEY][INT] public int CategoryID { get; set; }
         [NVARCHAR(500)] public string ProductName { get; set; }
-        [BIT] public bool IsActive { get; set; }
+        [NVARCHAR(250)]public string CategoryName { get; set; }
+        [DATETIME] public DateTime MyProperty { get; set; }
     }
 }

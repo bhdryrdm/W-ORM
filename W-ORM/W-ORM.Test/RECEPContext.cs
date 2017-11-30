@@ -9,9 +9,6 @@ namespace W_ORM.Test
         {
             get { return new MSSQLProviderContext<Category>(); }
         }
-        public MSSQLProviderContext<Product> Product
-        {
-            get { return new MSSQLProviderContext<Product>(); }
-        }
+
     }
 }

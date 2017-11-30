@@ -216,21 +216,28 @@ namespace W_ORM.MSSQL
         public List<string> ColumnListOnTable(string tableName)
         {
             List<string> columnList = new List<string>();
-            using (connection = DBConnectionFactory.Instance(this.ContextName))
+            try
             {
-                DBConnectionOperation.ConnectionOpen(connection);
-                SqlCommand command = new SqlCommand($"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName", (SqlConnection)connection);
-                command.Parameters.AddWithValue("@TableName", tableName);
-
-                DbDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
                 {
-                    columnList.Add(reader.GetString(3));
-                }
-                reader.Close();
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    SqlCommand command = new SqlCommand($"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName", (SqlConnection)connection);
+                    command.Parameters.AddWithValue("@TableName", tableName);
 
+                    DbDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        columnList.Add(reader.GetString(3));
+                    }
+                    reader.Close();
+
+                }
             }
+            catch (Exception)
+            { 
+            }
+            
             DBConnectionOperation.ConnectionClose(connection);
             return columnList;
         }

@@ -22,7 +22,7 @@ namespace W_ORM.POSTGRESQL
             }
             else
             {
-                columnAttribute += $" {PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
+                columnAttribute += $" {PropertyType_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
             return columnAttribute;
 
@@ -40,7 +40,7 @@ namespace W_ORM.POSTGRESQL
             }
             else
             {
-                column += $"{PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
+                column += $"{PropertyType_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
             return column + $" ><{propertyInfo.Name}/>";
         }
@@ -62,7 +62,7 @@ namespace W_ORM.POSTGRESQL
             }
             return response;
         }
-        public string PropertyName_To_SQLType(string propertyName)
+        public string PropertyType_To_SQLType(string propertyName)
         {
             throw new NotImplementedException();
         }

@@ -10,6 +10,7 @@ namespace W_ORM.MSSQL
 {
     public class CSHARP_To_MSSQL : ICSHARP_To_DB
     {
+        //[FOREIGN_KEY("Category","CategoryID")] [INT] public int CategoryID {get; set; }
         public string GetSQLQueryFormat(PropertyInfo propertyInfo)
         {
             string columnAttribute = propertyInfo.Name;
@@ -28,7 +29,7 @@ namespace W_ORM.MSSQL
             }
             else
             {
-                columnAttribute += $" {PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
+                columnAttribute += $" {PropertyType_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
             return columnAttribute;
         }
@@ -45,7 +46,7 @@ namespace W_ORM.MSSQL
             }
             else
             {
-                column += $"{PropertyName_To_SQLType(propertyInfo.PropertyType.Name)}";
+                column += $"{PropertyType_To_SQLType(propertyInfo.PropertyType.Name)}";
             }
             return column + $"></{propertyInfo.Name}>";
         }
@@ -96,7 +97,7 @@ namespace W_ORM.MSSQL
             }
             return response;
         }
-        public string PropertyName_To_SQLType(string propertyName)
+        public string PropertyType_To_SQLType(string propertyName)
         {
             string response = string.Empty;
             switch (propertyName)
@@ -108,11 +109,11 @@ namespace W_ORM.MSSQL
                 case "bool":
                     response = "bit"; break;
                 case "decimal":
-                    response = "decimal"; break;
+                    response = "decimal(2,18)"; break;
+                case "float":
+                    response = "decimal(2,18)"; break;
                 case "DateTime":
                     response = "datetime"; break;
-                case "float":
-                    response = "float"; break;
                 default:
                     response = "nvarchar(4000)"; break;
             }
