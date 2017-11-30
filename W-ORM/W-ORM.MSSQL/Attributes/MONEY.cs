@@ -8,10 +8,11 @@ using W_ORM.Layout.Attributes;
 namespace W_ORM.MSSQL.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class INT : BaseAttribute
+    public class MONEY : BaseAttribute
     {
-        public INT() : base("Type")
+        public MONEY() : base("Type")
         {
         }
+
     }
 }

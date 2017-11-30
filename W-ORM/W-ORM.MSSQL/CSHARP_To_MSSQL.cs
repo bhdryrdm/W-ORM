@@ -54,9 +54,29 @@ namespace W_ORM.MSSQL
                 case "BIT":
                     response = "bit"; break;
                 case "NVARCHAR":
-                    response = "nvarchar(4000)"; break;
+                    response = "nvarchar"; break;
                 case "NOTNULL":
                     response = "NOT NULL"; break;
+                case "BIGINT":
+                    response = "bigint"; break;
+                case "BINARY":
+                    response = "binary"; break;
+                case "DATETIME":
+                    response = "datetime"; break;
+                case "DECIMAL":
+                    response = "decimal"; break;
+                case "MONEY":
+                    response = "money"; break;
+                case "SMALLINT":
+                    response = "smallint"; break;
+                case "TEXT":
+                    response = "text"; break;
+                case "TIMESTAMP":
+                    response = "timestamp"; break;
+                case "TINYINT":
+                    response = "tinyint"; break;
+                case "VARCHAR":
+                    response = "varchar"; break;
                 default:
 
                     break;

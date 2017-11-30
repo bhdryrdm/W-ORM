@@ -9,7 +9,7 @@ namespace W_ORM.MSSQL
 {
     public class DB_Operation :  IDB_Operation 
     {
-        DbCommand command = null;
+         DbCommand command = null;
         DbConnection connection = null;
 
         #region Property & Constructor

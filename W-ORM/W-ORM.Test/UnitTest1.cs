@@ -20,7 +20,7 @@ namespace W_ORM.Test
             XDocument changesetDB = new XDocument(new XElement("Databases",
                                                           new XElement("WORMContext", new XAttribute("id", "WORMContext"),
                                                               new XElement("DatabaseName", new XAttribute("value", "BHDR")),
-                                                              new XElement("ConnectionString", new XAttribute("value", "Server=.; Trusted_Connection=True;")),
+                                                              new XElement("ConnectionString", new XAttribute("value", "Server=DESKTOP-OC11CCT\\SQL_2014; Trusted_Connection=True;")),
                                                               new XElement("Provider", new XAttribute("value", "System.Data.SqlClient")),
                                                               new XElement("Type", new XAttribute("value", DBType_Enum.MSSQL)),
                                                               new XElement("Version", new XAttribute("value", 001)),

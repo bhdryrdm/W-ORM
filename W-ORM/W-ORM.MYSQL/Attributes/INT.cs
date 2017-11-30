@@ -5,13 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using W_ORM.Layout.Attributes;
 
-namespace W_ORM.MSSQL.Attributes
+namespace W_ORM.MYSQL.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class INT : BaseAttribute
     {
-        public INT() : base("Type")
+        private int _length;
+        public INT(int length = 0) : base("Type")
         {
+            this._length = length;
+        }
+
+        public int Length
+        {
+            get { return _length; }
+            set { _length = value; }
         }
     }
 }

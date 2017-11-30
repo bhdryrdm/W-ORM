@@ -14,7 +14,7 @@ namespace W_ORM.MSSQL
     public class MSSQLProviderContext<TDBEntity> : BaseContext, IDB_CRUD_Operation<TDBEntity>
     {
 
-        protected Type EntitySchema
+        protected string EntitySchema
         {
             get
             {
@@ -41,7 +41,7 @@ namespace W_ORM.MSSQL
             }
             columnName = columnName.Remove(columnName.Length - 1);
             columnNameWithParameter = columnNameWithParameter.Remove(columnNameWithParameter.Length - 1);
-            runQuery = $"INSERT INTO [{EntitySchema}].[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter})";
+            runQuery = $"INSERT INTO dbo.[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter})";
         }
 
         public void Update(TDBEntity entity)
