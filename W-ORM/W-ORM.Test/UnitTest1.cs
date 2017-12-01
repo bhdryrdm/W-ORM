@@ -45,11 +45,11 @@ namespace W_ORM.Test
 
            
 
-            RECEPContext wm = new RECEPContext();
-            Category category = new Category { IsActive = true, ProductName = "Test", CategoryName = "TestCategory", MyProperty = DateTime.Now };
-            wm.Category.Insert(category);
+            //RECEPContext wm = new RECEPContext();
+            //Category category = new Category { ProductName = "Test", CategoryName = "TestCategory", MyProperty = DateTime.Now };
+            //wm.Category.Insert(category);
 
-            wm.PushToDB("RECEPContext");
+            //wm.PushToDB("RECEPContext");
 
            
         }

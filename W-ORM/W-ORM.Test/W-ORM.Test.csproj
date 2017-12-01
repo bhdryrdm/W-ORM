@@ -64,7 +64,6 @@
     <Compile Include="MYSQL\MYSQL-BHDR.cs" />
     <Compile Include="MYSQL\MYSQL.cs" />
     <Compile Include="POSTGRESQL\PostgreSQL.cs" />
-    <Compile Include="Product.cs" />
     <Compile Include="RECEPContext.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

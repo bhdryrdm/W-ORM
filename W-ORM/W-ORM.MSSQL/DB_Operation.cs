@@ -4,17 +4,14 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Xml;
-using W_ORM.Layout.Attributes;
 using W_ORM.Layout.DBConnection;
 using W_ORM.Layout.DBModel;
 using W_ORM.Layout.DBProvider;
 
 namespace W_ORM.MSSQL
 {
-    public class DB_Operation :  IDB_Operation 
+    public class DB_Operation :  IDB_Operation , IDB_Operation_Helper , IDB_Generator
     {
         DbCommand command = null;
         string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
@@ -36,95 +33,172 @@ namespace W_ORM.MSSQL
         }
         #endregion
 
-        public bool CreateDatabase()
+        #region IDB_Operation
+        public bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
         {
             bool dbCreatedSuccess = true;
             try
             {
                 using (connection = DBConnectionFactory.CreateDatabaseInstance(this.contextName))
                 {
-
                     DBConnectionOperation.ConnectionOpen(connection);
-                    command = connection.CreateCommand();
-                    command.CommandText = $"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = N'{this.contextName}')" +
-                                          "BEGIN " +
-                                          $"CREATE DATABASE {this.contextName} " +
-                                          "END";
+
+                    #region Veritabanı var olup olmadığı konrtrol edilerek oluşturulur
+                    SqlCommand command = new SqlCommand(CreateDatabaseQuery(), (SqlConnection)connection);
                     command.ExecuteNonQuery();
+                    #endregion
+
+                    #region Oluşturulan veritabanına geçiş yapılır
+                    connection.ChangeDatabase(this.contextName);
+                    #endregion
+
+                    #region __WORM__Configuration Tablosu var olup olmadığı kontrol edilerek oluşturulur
+                    Tuple<string, SqlCommand> worm_Table = Create__WORM__Configuration_Table(tablesXMLForm);
+                    command = new SqlCommand(worm_Table.Item1, (SqlConnection)connection);
+                    command.ExecuteNonQuery();
+
+                    command = worm_Table.Item2;
+                    command.ExecuteNonQuery();
+                    #endregion
+
+                    #region Tablolar oluşturulur
+                    command = new SqlCommand(createTableSQLQuery, (SqlConnection)connection);
+                    command.ExecuteNonQuery();
+                    #endregion
                 }
             }
             catch (Exception ex)
             {
-
+                DBConnectionOperation.ConnectionClose(connection);
                 dbCreatedSuccess = false;
             }
-            DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
         }
 
-        public bool CreateSettingTable(string tablesXMLForm)
+        public string CreateDatabaseQuery()
         {
-            bool dbTabledSuccess = true;
-            try
-            {
-                using (connection = DBConnectionFactory.Instance(this.ContextName))
-                {
-                    DBConnectionOperation.ConnectionOpen(connection);
-                    SqlCommand command = new SqlCommand($"IF  NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'__WORM__Configuration')" +
-                                                          "BEGIN " +
-                                                          "CREATE TABLE [dbo].[__WORM__Configuration]( " +
-                                                          "Version int IDENTITY(1,1) PRIMARY KEY," +
-                                                          "UpdatedTime datetime," +
-                                                          "UpdatedAuthor nvarchar(200)," +
-                                                          "TablesXMLForm nvarchar(max)" +
-                                                          ") END", (SqlConnection)connection);
-                    command.ExecuteNonQuery();
-
-
-                    DBInformationModel dBInformationModel = DBConnectionFactory.ReturnDBInformatinFromXML(this.ContextName);
-                    command = new SqlCommand($"INSERT INTO [dbo].[__WORM__Configuration](UpdatedTime, UpdatedAuthor, TablesXMLForm) " +
-                                             $"VALUES(@UpdatedTime,@UpdatedAuthor,@TablesXMLForm)",
-                                            (SqlConnection)connection);
-                    command.Parameters.AddWithValue("@UpdatedTime", dBInformationModel.UpdatedTime);
-                    command.Parameters.AddWithValue("@UpdatedAuthor", dBInformationModel.UpdatedAuthor);
-                    command.Parameters.AddWithValue("@TablesXMLForm", tablesXMLForm);
-
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                dbTabledSuccess = false;
-            }
-
-            DBConnectionOperation.ConnectionClose(connection);
-            return dbTabledSuccess;
+            return $"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = N'{this.contextName}') BEGIN CREATE DATABASE {this.contextName} END";
         }
 
-        public bool CreateTable(string createTableSQLQuery)
+        public Tuple<string, SqlCommand> Create__WORM__Configuration_Table(string tablesXMLForm)
         {
-            bool dbTabledSuccess = true;
+            string configurationTableQuery = $"IF  NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'__WORM__Configuration')" +
+                                                        "BEGIN " +
+                                                        "CREATE TABLE [dbo].[__WORM__Configuration]( " +
+                                                        "Version int IDENTITY(1,1) PRIMARY KEY," +
+                                                        "UpdatedTime datetime," +
+                                                        "UpdatedAuthor nvarchar(200)," +
+                                                        "TablesXMLForm nvarchar(max)" +
+                                                        ") END";
+
+            DBInformationModel dBInformationModel = DBConnectionFactory.ReturnDBInformatinFromXML(this.ContextName);
+            SqlCommand command = new SqlCommand($"INSERT INTO [dbo].[__WORM__Configuration](UpdatedTime, UpdatedAuthor, TablesXMLForm) " +
+                                     $"VALUES(@UpdatedTime,@UpdatedAuthor,@TablesXMLForm)",
+                                    (SqlConnection)connection);
+            command.Parameters.AddWithValue("@UpdatedTime", dBInformationModel.UpdatedTime);
+            command.Parameters.AddWithValue("@UpdatedAuthor", dBInformationModel.UpdatedAuthor);
+            command.Parameters.AddWithValue("@TablesXMLForm", tablesXMLForm);
+
+            return Tuple.Create(configurationTableQuery, command);
+        }
+
+
+        #endregion
+
+        #region IDB_Operation_Helper
+        /// <summary>
+        /// Veritabanın var olup olmadığı kontrolünü sağlar
+        /// </summary>
+        /// <returns></returns>
+        public bool DatabaseExistControl()
+        {
+            bool dbExist = false;
             try
             {
                 using (connection = DBConnectionFactory.Instance(this.contextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
-                    command = connection.CreateCommand();
-                    command.CommandText = createTableSQLQuery;
-                    command.ExecuteNonQuery();
+                    SqlCommand command = new SqlCommand($"SELECT CASE WHEN EXISTS((SELECT NAME FROM MASTER.dbo.SYSDATABASES WHERE NAME = @DbName)) THEN 1 ELSE 0 END",
+                                                        (SqlConnection)connection);
+                    command.Parameters.AddWithValue("@DbName", this.contextName);
+                    dbExist = (int)command.ExecuteScalar() == 1 ? true : false;
                 }
             }
             catch (Exception ex)
             {
-                dbTabledSuccess = false;
+                DBConnectionOperation.ConnectionClose(connection);
             }
-            DBConnectionOperation.ConnectionClose(connection);
-            return dbTabledSuccess;
+            return dbExist;
         }
 
+        /// <summary>
+        /// Veritabanı üzerindeki tabloları isim ve şema birlikte listeler
+        /// </summary>
+        /// <returns></returns>
+        public List<DBTableModel> TableListOnDB()
+        {
+            List<DBTableModel> tableList = new List<DBTableModel>();
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.contextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    DataTable tables = connection.GetSchema("Tables");
+                    foreach (DataRow table in tables.Rows)
+                    {
+                        DBTableModel dBTableModel = new DBTableModel
+                        {
+                            SchemaName = table[1].ToString(),
+                            TableName = table[2].ToString()
+
+                        };
+                        tableList.Add(dBTableModel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+            }
+            return tableList;
+        }
+
+        /// <summary>
+        /// Tablo üzerindeki sütunların isimlerini listeler
+        /// </summary>
+        /// <param name="tableName">Sütunları listelenecek tablo adı</param>
+        /// <returns></returns>
+        public List<string> ColumnListOnTable(string tableName)
+        {
+            List<string> columnList = new List<string>();
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    SqlCommand command = new SqlCommand($"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName", (SqlConnection)connection);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        columnList.Add(reader.GetString(3));
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+            }
+            return columnList;
+        }
+        #endregion
+
+        #region IDB_Generator
         public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string contextName = "")
         {
-            
+
             if (string.IsNullOrEmpty(contextPath))
                 contextPath = projectPath + "\\WORM_Context\\";
             if (string.IsNullOrEmpty(contextName))
@@ -137,10 +211,10 @@ namespace W_ORM.MSSQL
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
                     SqlCommand command = new SqlCommand($"SELECT * FROM [dbo].[__WORM__Configuration] WHERE Version=@Version", (SqlConnection)connection);
-                    command.Parameters.AddWithValue("@Version",dbVersion);
-                
+                    command.Parameters.AddWithValue("@Version", dbVersion);
+
                     DbDataReader reader = command.ExecuteReader();
-                    
+
                     while (reader.Read())
                     {
                         XmlDocument xmlDoc = new XmlDocument();
@@ -167,7 +241,7 @@ namespace W_ORM.MSSQL
                         }
                     }
                     reader.Close();
-                    
+
                 }
             }
             catch (Exception ex)
@@ -178,69 +252,7 @@ namespace W_ORM.MSSQL
             DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
         }
-
-
-        public List<DBTableModel> TableListOnDB()
-        {
-            List<DBTableModel> tableList = new List<DBTableModel>();
-            try
-            {
-                using (connection = DBConnectionFactory.Instance(this.ContextName))
-                {
-                    DBConnectionOperation.ConnectionOpen(connection);
-                    DataTable tables = connection.GetSchema("Tables");
-                    foreach (DataRow table in tables.Rows)
-                    {
-                        DBTableModel dBTableModel = new DBTableModel
-                        {
-                           SchemaName = table[1].ToString(),
-                           TableName = table[2].ToString()
-
-                        };
-                        tableList.Add(dBTableModel);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            DBConnectionOperation.ConnectionClose(connection);
-            return tableList;
-        }
-
-        /// <summary>
-        /// Tablodaki tüm sütunları getirir
-        /// </summary>
-        /// <param name="tableName">Veritabanı üzerindeki tablo ismi</param>
-        /// <returns></returns>
-        public List<string> ColumnListOnTable(string tableName)
-        {
-            List<string> columnList = new List<string>();
-            try
-            {
-                using (connection = DBConnectionFactory.Instance(this.ContextName))
-                {
-                    DBConnectionOperation.ConnectionOpen(connection);
-                    SqlCommand command = new SqlCommand($"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName", (SqlConnection)connection);
-                    command.Parameters.AddWithValue("@TableName", tableName);
-
-                    DbDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        columnList.Add(reader.GetString(3));
-                    }
-                    reader.Close();
-
-                }
-            }
-            catch (Exception)
-            { 
-            }
-            
-            DBConnectionOperation.ConnectionClose(connection);
-            return columnList;
-        }
+        #endregion
 
     }
 }
