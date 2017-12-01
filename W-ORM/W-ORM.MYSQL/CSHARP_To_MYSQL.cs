@@ -75,7 +75,25 @@ namespace W_ORM.MYSQL
         }
         public string PropertyType_To_SQLType(string propertyName)
         {
-            throw new NotImplementedException();
+            string response = string.Empty;
+            switch (propertyName)
+            {
+                case "int":
+                    response = "INT"; break;
+                case "string":
+                    response = "LONGTEXT"; break;
+                case "bool":
+                    response = "TINYINT(1)"; break;
+                case "decimal":
+                    response = "DECIMAL(18,4)"; break;
+                case "float":
+                    response = "DECIMAL(18,4)"; break;
+                case "DateTime":
+                    response = "DATETIME"; break;
+                default:
+                    response = "LONGTEXT"; break;
+            }
+            return response;
         }
 
        

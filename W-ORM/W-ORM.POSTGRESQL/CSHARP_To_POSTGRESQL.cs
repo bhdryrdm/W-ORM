@@ -64,7 +64,25 @@ namespace W_ORM.POSTGRESQL
         }
         public string PropertyType_To_SQLType(string propertyName)
         {
-            throw new NotImplementedException();
+            string response = string.Empty;
+            switch (propertyName)
+            {
+                case "int":
+                    response = "int"; break;
+                case "string":
+                    response = "text"; break;
+                case "bool":
+                    response = "boolean"; break;
+                case "decimal":
+                    response = "decimal(18,0)"; break;
+                case "float":
+                    response = "double precision"; break;
+                case "DateTime":
+                    response = "timestamp(3)"; break;
+                default:
+                    response = "text"; break;
+            }
+            return response;
         }
     }
 }

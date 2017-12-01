@@ -109,9 +109,9 @@ namespace W_ORM.MSSQL
                 case "bool":
                     response = "bit"; break;
                 case "decimal":
-                    response = "decimal(2,18)"; break;
+                    response = "decimal(18,0)"; break;
                 case "float":
-                    response = "decimal(2,18)"; break;
+                    response = "decimal(18,0)"; break;
                 case "DateTime":
                     response = "datetime"; break;
                 default:
