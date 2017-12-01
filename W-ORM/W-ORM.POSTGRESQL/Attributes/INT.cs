@@ -13,5 +13,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         public INT() : base("Type", "INT")
         {
         }
+        public override object TypeId => 1000;
+
     }
 }

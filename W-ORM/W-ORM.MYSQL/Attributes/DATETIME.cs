@@ -13,5 +13,6 @@ namespace W_ORM.MYSQL.Attributes
         public DATETIME() : base("Type", "DATETIME")
         {
         }
+        public override object TypeId => 1000;
     }
 }

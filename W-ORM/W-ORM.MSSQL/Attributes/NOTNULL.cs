@@ -13,6 +13,6 @@ namespace W_ORM.MSSQL.Attributes
         public NOTNULL() : base("Null", "NOTNULL")
         {
         }
-
+        public override object TypeId => 2000;
     }
 }

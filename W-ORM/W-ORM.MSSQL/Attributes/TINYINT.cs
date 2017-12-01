@@ -13,6 +13,7 @@ namespace W_ORM.MSSQL.Attributes
         public TINYINT() : base("Type", "TINYINT")
         {
         }
+        public override object TypeId => 1000;
     }
 
 }

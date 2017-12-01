@@ -12,5 +12,7 @@ namespace W_ORM.ORACLE.Attributes
         public DATE() : base("Type", "DATE")
         {
         }
+        public override object TypeId => 1000;
+
     }
 }

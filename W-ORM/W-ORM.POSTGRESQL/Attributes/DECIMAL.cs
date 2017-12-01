@@ -29,5 +29,7 @@ namespace W_ORM.POSTGRESQL.Attributes
             get { return _comma; }
             set { _comma = value; }
         }
+        public override object TypeId => 1000;
+
     }
 }

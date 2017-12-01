@@ -13,6 +13,7 @@ namespace W_ORM.ORACLE.Attributes
         public NULL() : base("Null", "NULL")
         {
         }
+        public override object TypeId => 2000;
 
     }
 }

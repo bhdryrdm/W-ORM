@@ -13,6 +13,6 @@ namespace W_ORM.MSSQL.Attributes
         public TIMESTAMP() : base("Type", "TIMESTAMP")
         {
         }
-
+        public override object TypeId => 1000;
     }
 }

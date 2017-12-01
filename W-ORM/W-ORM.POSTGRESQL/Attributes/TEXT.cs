@@ -13,5 +13,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         public TEXT() : base("Type", "TEXT")
         {
         }
+        public override object TypeId => 1000;
+
     }
 }

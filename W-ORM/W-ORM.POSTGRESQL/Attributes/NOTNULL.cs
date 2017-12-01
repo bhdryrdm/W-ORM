@@ -13,6 +13,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         public NOTNULL() : base("Null", "NOTNULL")
         {
         }
+        public override object TypeId => 2000;
 
     }
 }

@@ -20,6 +20,7 @@ namespace W_ORM.ORACLE.Attributes
             get { return maxlength; }
             set { maxlength = value; }
         }
+        public override object TypeId => 1000;
 
     }
 }

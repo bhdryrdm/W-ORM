@@ -13,5 +13,6 @@ namespace W_ORM.MYSQL.Attributes
         public TIMESTAMP() : base("Type", "TIMESTAMP")
         {
         }
+        public override object TypeId => 1000;
     }
 }

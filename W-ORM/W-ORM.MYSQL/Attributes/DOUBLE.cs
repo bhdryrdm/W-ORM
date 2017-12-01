@@ -29,5 +29,6 @@ namespace W_ORM.MYSQL.Attributes
             get { return _comma; }
             set { _comma = value; }
         }
+        public override object TypeId => 1000;
     }
 }

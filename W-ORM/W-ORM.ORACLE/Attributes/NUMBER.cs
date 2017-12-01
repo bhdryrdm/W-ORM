@@ -13,5 +13,7 @@ namespace W_ORM.ORACLE.Attributes
         public NUMBER() : base("Type", "NUMBER")
         {
         }
+        public override object TypeId => 1000;
+
     }
 }

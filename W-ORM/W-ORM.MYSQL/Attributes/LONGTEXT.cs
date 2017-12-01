@@ -13,5 +13,6 @@ namespace W_ORM.MYSQL.Attributes
         public LONGTEXT() : base("Type", "LONGTEXT")
         {
         }
+        public override object TypeId => 1000;
     }
 }

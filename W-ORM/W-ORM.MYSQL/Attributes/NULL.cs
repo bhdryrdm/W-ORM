@@ -13,6 +13,6 @@ namespace W_ORM.MYSQL.Attributes
         public NULL() : base("Null", "NULL")
         {
         }
-
+        public override object TypeId => 2000;
     }
 }

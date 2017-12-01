@@ -22,5 +22,7 @@ namespace W_ORM.MYSQL.Attributes
 
         }
         private int _length;
+
+        public override object TypeId => 1000;
     }
 }

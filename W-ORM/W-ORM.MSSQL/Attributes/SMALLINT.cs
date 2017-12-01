@@ -13,5 +13,6 @@ namespace W_ORM.MSSQL.Attributes
         public SMALLINT() : base("Type", "SMALLINT")
         {
         }
+        public override object TypeId => 1000;
     }
 }

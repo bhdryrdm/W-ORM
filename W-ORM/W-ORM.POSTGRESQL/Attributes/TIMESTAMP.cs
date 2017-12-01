@@ -13,6 +13,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         public TIMESTAMP() : base("Type", "TIMESTAMP")
         {
         }
+        public override object TypeId => 1000;
 
     }
 }

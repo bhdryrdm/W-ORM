@@ -21,6 +21,6 @@ namespace W_ORM.MSSQL.Attributes
             get { return maxLength; }
             set { maxLength = value; }
         }
-
+        public override object TypeId => 1000;
     }
 }

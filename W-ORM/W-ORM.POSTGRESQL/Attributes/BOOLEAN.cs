@@ -14,5 +14,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         {
 
         }
+        public override object TypeId => 1000;
+
     }
 }

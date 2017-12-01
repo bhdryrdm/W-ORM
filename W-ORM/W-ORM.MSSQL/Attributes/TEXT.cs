@@ -13,5 +13,6 @@ namespace W_ORM.MSSQL.Attributes
         public TEXT() : base("Type", "TEXT")
         {
         }
+        public override object TypeId => 1000;
     }
 }

@@ -21,5 +21,7 @@ namespace W_ORM.POSTGRESQL.Attributes
             get { return _length; }
             set { _length = value; }
         }
+        public override object TypeId => 1000;
+
     }
 }

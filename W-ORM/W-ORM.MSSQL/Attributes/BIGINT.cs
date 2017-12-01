@@ -14,5 +14,6 @@ namespace W_ORM.MSSQL.Attributes
         {
 
         }
+        public override object TypeId => 1000;
     }
 }

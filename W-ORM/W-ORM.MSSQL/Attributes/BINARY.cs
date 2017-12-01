@@ -22,5 +22,6 @@ namespace W_ORM.MSSQL.Attributes
             get { return _length;}
             set{ _length = value;}
         }
+        public override object TypeId => 1000;
     }
 }

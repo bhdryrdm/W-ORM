@@ -13,5 +13,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         public SMALLINT() : base("Type", "SMALLINT")
         {
         }
+        public override object TypeId => 1000;
+
     }
 }

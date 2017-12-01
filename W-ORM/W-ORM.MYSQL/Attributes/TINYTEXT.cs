@@ -13,5 +13,6 @@ namespace W_ORM.MYSQL.Attributes
         public TINYTEXT() : base("Type", "TINYTEXT")
         {
         }
+        public override object TypeId => 1000;
     }
 }

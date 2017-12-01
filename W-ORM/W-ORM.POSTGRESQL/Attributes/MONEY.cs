@@ -13,6 +13,7 @@ namespace W_ORM.POSTGRESQL.Attributes
         public MONEY() : base("Type", "MONEY")
         {
         }
+        public override object TypeId => 1000;
 
     }
 }
