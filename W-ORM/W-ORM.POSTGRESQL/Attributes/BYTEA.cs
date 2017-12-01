@@ -8,18 +8,11 @@ using W_ORM.Layout.Attributes;
 namespace W_ORM.POSTGRESQL.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class BIGINT : BaseAttribute
+    public class BYTEA : BaseAttribute
     {
-        private int _length;
-        public BIGINT(int length = 0) : base("Type", "BIGINT")
+        public BYTEA() : base("Type", "BYTEA")
         {
-            this._length = length;
-        }
-  
-        public int Length
-        {
-            get { return _length; }
-            set { _length = value; }
+            
         }
     }
 }
