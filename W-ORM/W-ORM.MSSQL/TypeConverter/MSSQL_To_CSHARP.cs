@@ -23,6 +23,10 @@ namespace W_ORM.MSSQL
             {
                 case "int":
                     propertyType = typeof(Int32); break;
+                case "string":
+                    propertyType = typeof(String); break;
+                case "decimal":
+                    propertyType = typeof(Decimal); break;
                 default:
                     break;
             }
