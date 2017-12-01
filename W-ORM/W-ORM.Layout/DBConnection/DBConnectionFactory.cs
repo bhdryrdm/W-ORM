@@ -8,9 +8,8 @@ namespace W_ORM.Layout.DBConnection
 {
     public class DBConnectionFactory
     {
-        private static DbConnection dbConnectionString;
+        private static DbConnection dbConnection;
         private static Object objectLockControl = new Object();
-        private static Object createDatabseLockControl = new Object();
 
         private DBConnectionFactory()
         {
@@ -18,34 +17,27 @@ namespace W_ORM.Layout.DBConnection
         }
 
         #region I.Veritabanı yada genel olarak kullanım için gerekli olan kod bloğu
-        public static DbConnection Instance(string contextName = "")
+        public static DbConnection Instance(string contextName)
         {
-            if (dbConnectionString == null)
+            if (dbConnection == null || string.IsNullOrEmpty(dbConnection.ConnectionString))
             {
                 lock (objectLockControl)
                 {
-                    if (dbConnectionString == null)
+                    if (dbConnection == null || string.IsNullOrEmpty(dbConnection.ConnectionString))
                     {
                         var dbInformation = ReturnDBInformatinFromXML(contextName);
                         DbProviderFactory factory = DbProviderFactories.GetFactory(dbInformation.Provider);
-                        DbConnection connection = factory.CreateConnection();
-                        connection.ConnectionString = $"{dbInformation.ConnectionString}";
-                        if (!String.IsNullOrEmpty(contextName))
-                        {
-                            connection.ConnectionString += $" Database={contextName};";
-                        }
-                        return connection;
+                        dbConnection = factory.CreateConnection();
+                        dbConnection.ConnectionString = $"{dbInformation.ConnectionString} Database={contextName};";
                     }
                 }
             }
-            return dbConnectionString;
+            return dbConnection;
         }
         #endregion
 
         public static DbConnection CreateDatabaseInstance(string contextName)
         {
-            lock (createDatabseLockControl)
-            {
                 var dbInformation = ReturnDBInformatinFromXML(contextName);
                 DbProviderFactory factory = null;
                 DbConnection connection = null;
@@ -53,7 +45,6 @@ namespace W_ORM.Layout.DBConnection
                 connection = factory.CreateConnection();
                 connection.ConnectionString = $"{dbInformation.ConnectionString}";
                 return connection;
-            }
         }
 
         public static DBInformationModel ReturnDBInformatinFromXML(string contextID)

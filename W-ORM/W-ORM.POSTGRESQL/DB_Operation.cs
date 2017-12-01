@@ -33,7 +33,7 @@ namespace W_ORM.POSTGRESQL
             throw new NotImplementedException();
         }
 
-        public bool CreateDatabase()
+        public bool CreateDatabase(string tablesXMLForm)
         {
             bool dbCreatedSuccess = true;
             try
