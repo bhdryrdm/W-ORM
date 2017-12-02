@@ -67,6 +67,10 @@
     <Compile Include="MYSQL\Entities\Student.cs" />
     <Compile Include="MYSQL\MYSQL_Unit_Tests.cs" />
     <Compile Include="MYSQL\MYSQL_University.cs" />
+    <Compile Include="POSTGRESQL\Entities\Department.cs" />
+    <Compile Include="POSTGRESQL\Entities\Student.cs" />
+    <Compile Include="POSTGRESQL\POSTGRESQL_Unit_Tests.cs" />
+    <Compile Include="POSTGRESQL\POSTGRESQL_University.cs" />
     <Compile Include="WORMUTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -98,9 +102,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="POSTGRESQL\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

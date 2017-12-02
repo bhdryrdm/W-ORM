@@ -7,7 +7,7 @@ using W_ORM.Layout.DBType;
 
 namespace W_ORM.POSTGRESQL.TypeConverter
 {
-    public class MYSQL_To_CSHARP : IDB_To_CSHARP
+    public class POSTGRESQL_To_CSHARP : IDB_To_CSHARP
     {
         private static Type propertyType;
 

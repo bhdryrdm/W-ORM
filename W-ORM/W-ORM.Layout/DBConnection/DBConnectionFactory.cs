@@ -16,7 +16,7 @@ namespace W_ORM.Layout.DBConnection
 
         }
 
-        #region I.Veritabanı yada genel olarak kullanım için gerekli olan kod bloğu
+        #region Ortak Bağlantı Nesnesi
         public static DbConnection Instance(string contextName)
         {
             if (dbConnection == null || string.IsNullOrEmpty(dbConnection.ConnectionString))
@@ -36,17 +36,20 @@ namespace W_ORM.Layout.DBConnection
         }
         #endregion
 
+        #region Database Oluşturma Nesnesi (ConnectionString Database olmadan)
         public static DbConnection CreateDatabaseInstance(string contextName)
         {
-                var dbInformation = ReturnDBInformatinFromXML(contextName);
-                DbProviderFactory factory = null;
-                DbConnection connection = null;
-                factory = DbProviderFactories.GetFactory(dbInformation.Provider);
-                connection = factory.CreateConnection();
-                connection.ConnectionString = $"{dbInformation.ConnectionString}";
-                return connection;
+            var dbInformation = ReturnDBInformatinFromXML(contextName);
+            DbProviderFactory factory = null;
+            DbConnection connection = null;
+            factory = DbProviderFactories.GetFactory(dbInformation.Provider);
+            connection = factory.CreateConnection();
+            connection.ConnectionString = $"{dbInformation.ConnectionString}";
+            return connection;
         }
+        #endregion
 
+        #region Config Dosya Okuyucusu
         public static DBInformationModel ReturnDBInformatinFromXML(string contextID)
         {
             XmlDocument xmlDoc = new XmlDocument();
@@ -61,5 +64,7 @@ namespace W_ORM.Layout.DBConnection
             };
             return dBInformationModel;
         }
+        #endregion
+
     }
 }
