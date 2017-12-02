@@ -45,22 +45,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\AUTO_INCREMENT.cs" />
     <Compile Include="Attributes\BIGINT.cs" />
     <Compile Include="Attributes\DATETIME.cs" />
     <Compile Include="Attributes\DOUBLE.cs" />
     <Compile Include="Attributes\FLOAT.cs" />
+    <Compile Include="Attributes\FOREIGN_KEY.cs" />
     <Compile Include="Attributes\INT.cs" />
     <Compile Include="Attributes\LONGTEXT.cs" />
+    <Compile Include="Attributes\NOTNULL.cs" />
+    <Compile Include="Attributes\NULL.cs" />
+    <Compile Include="Attributes\PRIMARY_KEY.cs" />
     <Compile Include="Attributes\SMALLINT.cs" />
     <Compile Include="Attributes\TEXT.cs" />
     <Compile Include="Attributes\TIMESTAMP.cs" />
     <Compile Include="Attributes\TINYINT.cs" />
     <Compile Include="Attributes\TINYTEXT.cs" />
     <Compile Include="Attributes\VARCHAR.cs" />
-    <Compile Include="CSHARP_To_MYSQL.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="MYSQLProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeConverter\CSHARP_To_MYSQL.cs" />
+    <Compile Include="TypeConverter\MYSQL_To_CSHARP.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

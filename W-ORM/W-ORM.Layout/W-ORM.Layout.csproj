@@ -44,19 +44,20 @@
   <ItemGroup>
     <Compile Include="Attributes\BaseAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
-    <Compile Include="ContextProvider\IContextProvider.cs" />
     <Compile Include="DBConnection\DBConnectionFactory.cs" />
     <Compile Include="DBConnection\DBConnectionOperation.cs" />
     <Compile Include="DBModel\BaseContext.cs" />
     <Compile Include="DBModel\DBInformationModel.cs" />
     <Compile Include="DBModel\DBTableModel.cs" />
     <Compile Include="DBProvider\IDB_CRUD_Operation.cs" />
-    <Compile Include="DBProvider\IDBProvider.cs" />
+    <Compile Include="DBProvider\IDB_Generator.cs" />
     <Compile Include="DBProvider\IDB_Operation.cs" />
+    <Compile Include="DBProvider\IDB_Operation_Helper.cs" />
     <Compile Include="DBType\DBType_Enum.cs" />
     <Compile Include="DBType\IDB_To_CSHARP.cs" />
     <Compile Include="DBType\ICSHARP_To_DB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\IEntityClassQueryGenerator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

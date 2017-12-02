@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W-ORM.ORACLE", "W-ORM.ORACL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W-ORM.POSTGRESQL", "W-ORM.POSTGRESQL\W-ORM.POSTGRESQL.csproj", "{07FE4E24-3C2C-440B-9F36-608E20DC95D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W-ORM.Console", "W-ORM.Console\W-ORM.Console.csproj", "{F02D554E-ED02-4A42-9F23-E1A00A7FDC71}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{07FE4E24-3C2C-440B-9F36-608E20DC95D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07FE4E24-3C2C-440B-9F36-608E20DC95D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07FE4E24-3C2C-440B-9F36-608E20DC95D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F02D554E-ED02-4A42-9F23-E1A00A7FDC71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F02D554E-ED02-4A42-9F23-E1A00A7FDC71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F02D554E-ED02-4A42-9F23-E1A00A7FDC71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F02D554E-ED02-4A42-9F23-E1A00A7FDC71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

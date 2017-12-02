@@ -70,6 +70,11 @@ namespace W_ORM.POSTGRESQL
         {
             throw new NotImplementedException();
         }
+
+        public bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

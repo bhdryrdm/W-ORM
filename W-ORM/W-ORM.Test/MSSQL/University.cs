@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using W_ORM.Layout.DBModel;
+using W_ORM.MSSQL;
+using W_ORM.Test.MSSQL.Entities;
 
 namespace W_ORM.Test.MSSQL
 {
-    class University
+    public class University 
     {
+        public MSSQLProviderContext<Student> Student { get { return new MSSQLProviderContext<Student>(); } }
     }
 }

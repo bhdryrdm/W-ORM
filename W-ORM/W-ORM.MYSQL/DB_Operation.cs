@@ -63,5 +63,10 @@ namespace W_ORM.MYSQL
         {
             throw new NotImplementedException();
         }
+
+        public bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

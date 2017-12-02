@@ -8,10 +8,10 @@ using W_ORM.MSSQL;
 namespace W_ORM.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class WORMUTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void SaveWormConfig()
         {   
             XDocument changesetDB = new XDocument(new XElement("Databases",
                                                           new XElement("RECEPContext", new XAttribute("id", "RECEPContext"),
@@ -34,24 +34,7 @@ namespace W_ORM.Test
                                                               new XElement("UpdatedAuthor", new XAttribute("value", "Ali Tevek")))));
 
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-           // changesetDB.Save(Path.Combine(path, "WORM.config"));
-            
-            //DB_Operation dB_Operation = new DB_Operation("RECEPContext");
-           
-            //dB_Operation.ContextGenerateFromDB(1);
-
-
-            CreateEverything<RECEPContext> cr = new CreateEverything<RECEPContext>();
-
-           
-
-            RECEPContext rc = new RECEPContext();
-            Category category = new Category { ProductName = "Test", CategoryName = "TestCategory", MyProperty = DateTime.Now };
-            rc.Category.Insert(category);
-
-            rc.PushToDB("RECEPContext");
-
-           
+            changesetDB.Save(Path.Combine(path, "WORM.config"));
         }
      
     }

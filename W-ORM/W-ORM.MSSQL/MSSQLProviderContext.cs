@@ -23,13 +23,7 @@ namespace W_ORM.MSSQL
                 return String.IsNullOrEmpty(entitySchema.SchemaName)  ? entitySchema.SchemaName : "dbo"; 
             }
         } 
-        protected Type EntityType
-        {
-            get
-            {
-                return typeof(TDBEntity);
-            }
-        }
+        protected Type EntityType { get { return typeof(TDBEntity); } }
 
         public void Insert(TDBEntity entity)
         {

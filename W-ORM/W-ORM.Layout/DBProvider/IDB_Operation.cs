@@ -7,7 +7,5 @@ namespace W_ORM.Layout.DBProvider
     {
         string ContextName { get; set; }
         bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery);
-        string CreateDatabaseQuery();
-        Tuple<string, SqlCommand> Create__WORM__Configuration_Table(string tablesXMLForm);
     }
 }

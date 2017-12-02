@@ -7,7 +7,7 @@ using W_ORM.Layout.DBProvider;
 
 namespace W_ORM.Layout.Query
 {
-    public interface IEntityClassQueryGenerator<TDBEntity> where TDBEntity : class
+    public interface IEntityClassQueryGenerator<TDBEntity>
     {
         Tuple<string, string> EntityClassQueries(); 
     }

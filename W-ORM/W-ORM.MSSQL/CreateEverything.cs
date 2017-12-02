@@ -7,9 +7,10 @@ using W_ORM.Layout.Query;
 
 namespace W_ORM.MSSQL
 {
-    public class CreateEverything<TDBEntity> : IEntityClassQueryGenerator<TDBEntity> where TDBEntity : class
+    public class CreateEverything<TDBEntity> : IEntityClassQueryGenerator<TDBEntity>
     {
         public static string contextName = typeof(TDBEntity).Name;
+        protected Type EntityType { get { return typeof(TDBEntity); } }
         List<DBTableModel> tableList = new DB_Operation(contextName).TableListOnDB();
         List<string> columnList;
 
@@ -19,7 +20,7 @@ namespace W_ORM.MSSQL
             dynamic entityInformation;
             string entityColumnsMSSQL = string.Empty, entityColumnMSSQLType = string.Empty, createTableMSSQLQuery = string.Empty,
                    entityColumnsXML = string.Empty, entityColumnXML = string.Empty, createXMLObjectQuery = string.Empty;
-            List<dynamic> implementedTableEntities = (from property in typeof(TDBEntity).GetProperties()
+            List<dynamic> implementedTableEntities = (from property in EntityType.GetProperties()
                                                       from genericArguments in property.PropertyType.GetGenericArguments()
                                                       where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
                                                       select Activator.CreateInstance(genericArguments)).ToList();

@@ -48,16 +48,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\BIGINT.cs" />
+    <Compile Include="Attributes\BOOLEAN.cs" />
+    <Compile Include="Attributes\BYTEA.cs" />
+    <Compile Include="Attributes\DECIMAL.cs" />
+    <Compile Include="Attributes\FOREIGN_KEY.cs" />
     <Compile Include="Attributes\INT.cs" />
+    <Compile Include="Attributes\MONEY.cs" />
+    <Compile Include="Attributes\NOTNULL.cs" />
+    <Compile Include="Attributes\NULL.cs" />
+    <Compile Include="Attributes\PRIMARY_KEY.cs" />
+    <Compile Include="Attributes\SERIAL.cs" />
     <Compile Include="Attributes\SMALLINT.cs" />
     <Compile Include="Attributes\TEXT.cs" />
+    <Compile Include="Attributes\TIMESTAMP.cs" />
     <Compile Include="Attributes\VARCHAR.cs" />
     <Compile Include="CreateEverything.cs" />
-    <Compile Include="CSHARP_To_POSTGRESQL.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="POSTGRESQLProviderContext.cs" />
     <Compile Include="POSTGREProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeConverter\CSHARP_To_POSTGRESQL.cs" />
+    <Compile Include="TypeConverter\POSTGRESQL_To_CSHARP.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

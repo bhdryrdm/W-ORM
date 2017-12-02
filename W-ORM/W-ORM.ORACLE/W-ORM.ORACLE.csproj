@@ -41,12 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\TIMESTAMP.cs" />
+    <Compile Include="Attributes\DATE.cs" />
+    <Compile Include="Attributes\FOREIGN_KEY.cs" />
+    <Compile Include="Attributes\LONG.cs" />
+    <Compile Include="Attributes\NOTNULL.cs" />
+    <Compile Include="Attributes\NULL.cs" />
+    <Compile Include="Attributes\NUMBER.cs" />
+    <Compile Include="Attributes\NVARCHAR2.cs" />
+    <Compile Include="Attributes\PRIMARY_KEY.cs" />
+    <Compile Include="Attributes\RAW.cs" />
+    <Compile Include="Attributes\VARCHAR2.cs" />
     <Compile Include="CreateEverything.cs" />
-    <Compile Include="CSHARP_To_ORACLE.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="ORACLEProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeConverter\CSHARP_To_ORACLE.cs" />
+    <Compile Include="TypeConverter\ORACLE_To_CSHARP.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

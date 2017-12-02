@@ -10,19 +10,7 @@ namespace W_ORM.POSTGRESQL
 {
     public class CreateEverything<TDBEntity> : POSTGRESQLProviderContext<TDBEntity>
     {
-        /// <summary>
-        /// Create Database and setting table 
-        /// </summary>
-        /// <param name="databaseName">Database Name</param>
-
-        public CreateEverything(string databaseName)
-        {
-            DB_Operation dB_Operation = new DB_Operation(typeof(TDBEntity).Name);
-            Tuple<string, string> datas = GetPOSTGRESQLQueries();
-            dB_Operation.CreateDatabase();
-            dB_Operation.CreateSettingTable(datas.Item2);
-            dB_Operation.CreateTable(datas.Item1);
-        }
+       
 
         public Tuple<string, string> GetPOSTGRESQLQueries()
         {

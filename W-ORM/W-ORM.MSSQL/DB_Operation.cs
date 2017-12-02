@@ -75,12 +75,12 @@ namespace W_ORM.MSSQL
             return dbCreatedSuccess;
         }
 
-        public string CreateDatabaseQuery()
+        private string CreateDatabaseQuery()
         {
             return $"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = N'{this.contextName}') BEGIN CREATE DATABASE {this.contextName} END";
         }
 
-        public Tuple<string, SqlCommand> Create__WORM__Configuration_Table(string tablesXMLForm)
+        private Tuple<string, SqlCommand> Create__WORM__Configuration_Table(string tablesXMLForm)
         {
             string configurationTableQuery = $"IF  NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'__WORM__Configuration')" +
                                                         "BEGIN " +
@@ -101,7 +101,6 @@ namespace W_ORM.MSSQL
 
             return Tuple.Create(configurationTableQuery, command);
         }
-
 
         #endregion
 
