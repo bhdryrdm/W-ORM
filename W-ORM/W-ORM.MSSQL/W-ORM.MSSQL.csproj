@@ -50,6 +50,8 @@
     <Compile Include="Attributes\FOREIGN_KEY.cs" />
     <Compile Include="Attributes\INT.cs" />
     <Compile Include="Attributes\MONEY.cs" />
+    <Compile Include="Attributes\NOTNULL.cs" />
+    <Compile Include="Attributes\NULL.cs" />
     <Compile Include="Attributes\NVARCHAR.cs" />
     <Compile Include="Attributes\SMALLINT.cs" />
     <Compile Include="Attributes\TEXT.cs" />

@@ -59,10 +59,14 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MSSQL\Entities\Department.cs" />
     <Compile Include="MSSQL\Entities\Student.cs" />
     <Compile Include="MSSQL\MSSQL_Unit_Tests.cs" />
     <Compile Include="MSSQL\University.cs" />
+    <Compile Include="MYSQL\Entities\Department.cs" />
     <Compile Include="MYSQL\Entities\Student.cs" />
+    <Compile Include="MYSQL\MYSQL_Unit_Tests.cs" />
+    <Compile Include="MYSQL\MYSQL_University.cs" />
     <Compile Include="WORMUTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

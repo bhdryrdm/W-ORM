@@ -35,7 +35,7 @@ namespace W_ORM.MSSQL
 
         #region IDB_Operation
         public bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
-        {
+         {
             bool dbCreatedSuccess = true;
             try
             {
@@ -95,7 +95,7 @@ namespace W_ORM.MSSQL
             SqlCommand command = new SqlCommand($"INSERT INTO [dbo].[__WORM__Configuration](UpdatedTime, UpdatedAuthor, TablesXMLForm) " +
                                      $"VALUES(@UpdatedTime,@UpdatedAuthor,@TablesXMLForm)",
                                     (SqlConnection)connection);
-            command.Parameters.AddWithValue("@UpdatedTime", dBInformationModel.UpdatedTime);
+            command.Parameters.AddWithValue("@UpdatedTime", DateTime.Now);
             command.Parameters.AddWithValue("@UpdatedAuthor", dBInformationModel.UpdatedAuthor);
             command.Parameters.AddWithValue("@TablesXMLForm", tablesXMLForm);
 
@@ -189,8 +189,33 @@ namespace W_ORM.MSSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
             }
             return columnList;
+        }
+
+        public bool IsTableHasPrimaryKey(string schemaName,string tableName)
+        {
+            bool tablehasPrimaryKey = false;
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.contextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    SqlCommand command = new SqlCommand($"SELECT CASE WHEN EXISTS((SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE  TABLE_NAME = @TableName "+
+                                                        "AND TABLE_SCHEMA = @SchemaName" +
+                                                        "AND CONSTRAINT_TYPE = 'PRIMARY KEY')) THEN 1 ELSE 0 END",
+                                                        (SqlConnection)connection);
+                    command.Parameters.AddWithValue("@SchemaName", schemaName);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    tablehasPrimaryKey = (int)command.ExecuteScalar() == 1 ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+            }
+            return tablehasPrimaryKey;
         }
         #endregion
 

@@ -12,12 +12,47 @@ namespace W_ORM.MYSQL
     {
         public string GetSQLQueryFormat(PropertyInfo propertyInfo)
         {
-            throw new NotImplementedException();
+            string returnPropertyAttribute = propertyInfo.Name;
+            if (propertyInfo.GetCustomAttributes().Count() > 0)
+            {
+                foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes().OrderBy(x => x.TypeId))
+                {
+                    returnPropertyAttribute += $" {Attribute_To_SQLType(propertyAttribute)}";
+                    if (propertyAttribute.AttributeName == "VARCHAR")
+                        returnPropertyAttribute += $"({propertyAttribute.MaxLength}) ";
+
+                    if (propertyAttribute.AttributeDefination == "Increment")
+                        returnPropertyAttribute += $"({propertyAttribute.StartNumber},{propertyAttribute.Increase}) ";
+
+                    if (propertyAttribute.AttributeDefination == "FKey")
+                        returnPropertyAttribute += $" {propertyAttribute.ClassName}({propertyAttribute.PropertyName})";
+
+                    if (propertyAttribute.AttributeDefination == "PKey")
+                        returnPropertyAttribute += $",PRIMARY KEY ({propertyInfo.Name})";
+                }
+            }
+            else
+            {
+                returnPropertyAttribute += $" {PropertyType_To_SQLType(propertyInfo.PropertyType.Name)}";
+            }
+            return returnPropertyAttribute;
         }
 
         public string GetXMLDataFormat(PropertyInfo propertyInfo)
         {
-            throw new NotImplementedException();
+            string column = $"<{propertyInfo.Name} ";
+            if (propertyInfo.GetCustomAttributes().Count() > 0)
+            {
+                foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes())
+                {
+                    column += $"{propertyAttribute.AttributeDefination}=\"{propertyAttribute.AttributeName}\" ";
+                }
+            }
+            else
+            {
+                column += $"{PropertyType_To_SQLType(propertyInfo.PropertyType.Name)}";
+            }
+            return column + $"></{propertyInfo.Name}>";
         }
 
         /// <summary>
@@ -60,8 +95,6 @@ namespace W_ORM.MYSQL
                     response = "tinyint"; break;
                 case "VARCHAR":
                     response = "varchar"; break;
-                case "PRIMARY_KEY":
-                    response = "PRIMARY KEY"; break;
                 case "FOREIGN_KEY":
                     response = "FOREIGN KEY REFERENCES"; break;
                 case "AUTO_INCREMENT":

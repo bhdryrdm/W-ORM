@@ -62,6 +62,8 @@
     <Compile Include="Attributes\TINYINT.cs" />
     <Compile Include="Attributes\TINYTEXT.cs" />
     <Compile Include="Attributes\VARCHAR.cs" />
+    <Compile Include="ContextGenerate.cs" />
+    <Compile Include="CreateEverything.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="MYSQLProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

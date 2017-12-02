@@ -27,5 +27,13 @@ namespace W_ORM.Layout.DBProvider
         /// </summary>
         /// <returns></returns>
         bool DatabaseExistControl();
+
+        /// <summary>
+        /// Tablonun Primary Key'e sahip olup olmadığını döner
+        /// </summary>
+        /// <param name="schemaName">Tablo Şema Adı</param>
+        /// <param name="tableName">Tablo Adı</param>
+        /// <returns></returns>
+        bool IsTableHasPrimaryKey(string schemaName,string tableName);
     }
 }
