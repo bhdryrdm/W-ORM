@@ -8,7 +8,7 @@ namespace W_ORM.Test.MYSQL
     public class MYSQL_Unit_Tests
     {
         [TestMethod]
-        public void CreateEverythingForMSSQL()
+        public void CreateEverythingForMYSQL()
         {
             CreateEverything<MYSQL_University> createEverything = new CreateEverything<MYSQL_University>();
             Tuple<string, string> tupleData = createEverything.EntityClassQueries();

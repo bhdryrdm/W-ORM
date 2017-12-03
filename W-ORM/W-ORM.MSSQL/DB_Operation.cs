@@ -71,6 +71,7 @@ namespace W_ORM.MSSQL
             {
                 DBConnectionOperation.ConnectionClose(connection);
                 dbCreatedSuccess = false;
+                throw ex;
             }
             return dbCreatedSuccess;
         }
@@ -126,6 +127,7 @@ namespace W_ORM.MSSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
             }
             return dbExist;
         }
@@ -189,7 +191,6 @@ namespace W_ORM.MSSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
-                throw ex;
             }
             return columnList;
         }
@@ -214,6 +215,7 @@ namespace W_ORM.MSSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
             }
             return tablehasPrimaryKey;
         }
@@ -272,6 +274,7 @@ namespace W_ORM.MSSQL
             {
 
                 dbCreatedSuccess = false;
+                throw ex;
             }
             DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
