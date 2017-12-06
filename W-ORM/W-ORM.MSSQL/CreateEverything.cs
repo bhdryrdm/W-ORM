@@ -32,7 +32,7 @@ namespace W_ORM.MSSQL
                    createXMLObjectQuery = string.Empty;
             #endregion
 
-            #region Entity Classlarının property olarak tanımlanmış olduğu Context sınıfından Class lar generate edilir
+            #region Entity Class(Tablolar)larının property(sütun) olarak tanımlanmış olduğu Context(Database) sınıfından Entity Class(tablo)lar listelenir
             List<dynamic> implementedTableEntities = (from property in typeof(TDBEntity).GetProperties()
                                                       from genericArguments in property.PropertyType.GetGenericArguments()
                                                       where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
@@ -41,7 +41,7 @@ namespace W_ORM.MSSQL
 
             #region Creating SQL Server Queries
 
-                #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları
+                #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları sorguları oluşturulur
                 createXMLObjectQuery = "<Classes>"; // Veritabanında versiyonlama için kullanılacak XML bilgisinin başlangıcı
                 foreach (var entity in implementedTableEntities) // Entity Class yani Veritabaındaki Tabloları oluşturmak için döngü başlatılır
                 {
@@ -50,7 +50,7 @@ namespace W_ORM.MSSQL
 
                     columnList = new DB_Operation(contextName).ColumnListOnTable(entityType.Name); // Veritabanından ilgili tablonun tüm sütunları çekilir
 
-                    // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışmaz CREATE çalışır : ALTER çalışır CREATE çalışmaz
+                    // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışır CREATE çalışmaz : ALTER çalışmaz CREATE çalışır
                     bool tableExistOnDb = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName) != null ? true : false;
 
                     foreach (var entityColumn in entityType.GetProperties()) // Entity Class içerisindeki property ler yani Sütunları oluşturmak için döngü başlatılır
@@ -58,7 +58,7 @@ namespace W_ORM.MSSQL
                         // Property inin Custom Attributelerine bakarak MSSQL Query generate edilir
                         var columnInformation = new CSHARP_To_MSSQL().GetSQLQueryFormat(entityColumn);
 
-                        #region Entity Class içerisinde oluşturulmuş yeni bir property varsa yani sütun ve Entity Class yani Tablo Veritabanında varsa
+                        #region Entity Class içerisinde oluşturulmuş yeni bir property(sütun) varsa  ve Entity Class yani Tablo Veritabanında varsa
                         if (columnList.Where(x => x == entityColumn.Name).Count() == 0 && tableExistOnDb)
                         {
                             alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ADD {columnInformation} ";
@@ -73,9 +73,9 @@ namespace W_ORM.MSSQL
                             columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
                             alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ALTER COLUMN {columnInformation} ";
                         }
-                        #endregion
+                    #endregion
 
-                        #region Entity Class yani Tablo Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
+                        #region Entity Class(tablo) Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
                         if (tableList.Where(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName).Count() == 0)
                         {
                             entityColumnsMSSQL += columnInformation + ", ";
