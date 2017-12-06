@@ -189,7 +189,6 @@ namespace W_ORM.MSSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
-                throw ex;
             }
             return columnList;
         }

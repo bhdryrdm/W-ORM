@@ -59,7 +59,6 @@ namespace W_ORM.Layout.DBConnection
             {
                 ConnectionString = xmlElement.GetElementsByTagName("ConnectionString")[0].Attributes[0].InnerXml,
                 Provider = xmlElement.GetElementsByTagName("Provider")[0].Attributes[0].InnerXml,
-                Type = xmlElement.GetElementsByTagName("Type")[0].Attributes[0].InnerXml,
                 UpdatedAuthor = xmlElement.GetElementsByTagName("UpdatedAuthor")[0].Attributes[0].InnerXml
             };
             return dBInformationModel;

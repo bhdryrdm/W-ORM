@@ -36,9 +36,11 @@ namespace W_ORM.MSSQL
             List<dynamic> implementedTableEntities = (from property in typeof(TDBEntity).GetProperties()
                                                       from genericArguments in property.PropertyType.GetGenericArguments()
                                                       where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
+                                                      orderby genericArguments.CustomAttributes.FirstOrDefault().NamedArguments.FirstOrDefault(x => x.MemberName == "OrdinalPosition").TypedValue.Value
                                                       select Activator.CreateInstance(genericArguments)).ToList();
             #endregion
 
+            
             #region Creating SQL Server Queries
 
                 #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları

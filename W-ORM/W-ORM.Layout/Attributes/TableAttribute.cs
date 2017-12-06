@@ -24,5 +24,17 @@ namespace W_ORM.Layout.Attributes
             get { return schemaName; }
             set { schemaName = value; }
         }
+
+        private int ordinalPosition;
+        /// <summary>
+        /// ForeignKey olarak tanımlanmış tabloları belirlemek için kullanılır
+        /// ForeignKey olarak tanımlanmış alan hangi tabloda Primary Key ise o tablonun OrdinalPosition küçük olmalıdır
+        /// </summary>
+        public int OrdinalPosition
+        {
+            get { return ordinalPosition; }
+            set { ordinalPosition = value; }
+        }
+
     }
 }
