@@ -14,16 +14,18 @@ namespace W_ORM.MSSQL
 {
     public class MSSQLProviderContext<TDBEntity> : BaseContext, IDB_CRUD_Operation<TDBEntity>
     {
-
+        #region Entity Type & Entity Schema
         protected string EntitySchema
         {
             get
             {
                 dynamic entitySchema = EntityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault();
-                return String.IsNullOrEmpty(entitySchema.SchemaName)  ? entitySchema.SchemaName : "dbo"; 
+                return String.IsNullOrEmpty(entitySchema.SchemaName) ? entitySchema.SchemaName : "dbo";
             }
-        } 
+        }
+
         protected Type EntityType { get { return typeof(TDBEntity); } }
+        #endregion
 
         public void Insert(TDBEntity entity)
         {
@@ -52,6 +54,7 @@ namespace W_ORM.MSSQL
             columnNameWithParameter = columnNameWithParameter.Remove(columnNameWithParameter.Length - 1);
             runQuery = $"INSERT INTO [{EntitySchema}].[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter})";
         }
+
         public void Delete(TDBEntity entity)
         {
             string whereClause = string.Empty;
@@ -66,8 +69,5 @@ namespace W_ORM.MSSQL
             runQuery = $"DELETE FROM [{EntitySchema}].[{EntityType.Name}] WHERE {whereClause}";
         }
        
-
-
-
     }
 }

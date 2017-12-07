@@ -41,19 +41,35 @@ namespace W_ORM.MSSQL
                                                       orderby genericArguments.CustomAttributes.FirstOrDefault().NamedArguments.FirstOrDefault(x => x.MemberName == "OrdinalPosition").TypedValue.Value
                                                       select Activator.CreateInstance(genericArguments)).ToList();
             #endregion
+
+
             #region Creating SQL Server Queries
 
+<<<<<<< .merge_file_a18440
                 #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları sorguları oluşturulur
+                createXMLObjectQuery = "<Classes>"; // Veritabanında versiyonlama için kullanılacak XML bilgisinin başlangıcı
+                foreach (var entity in implementedTableEntities) // Entity Class yani Veritabaındaki Tabloları oluşturmak için döngü başlatılır
+                {
+                    entityType = entity.GetType();
+                    entityInformation = entityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault(); // Entity Class üzerindeki Table Attribute üzerinden bilgiler okunur
+=======
+            #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları
             createXMLObjectQuery = "<Classes>"; // Veritabanında versiyonlama için kullanılacak XML bilgisinin başlangıcı
             foreach (var entity in implementedTableEntities) // Entity Class yani Veritabaındaki Tabloları oluşturmak için döngü başlatılır
             {
                 entityType = entity.GetType();
                 entityInformation = entityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault(); // Entity Class üzerindeki Table Attribute üzerinden bilgiler okunur
+>>>>>>> .merge_file_a12880
 
                 columnList = new DB_Operation(contextName).ColumnListOnTable(entityType.Name); // Veritabanından ilgili tablonun tüm sütunları çekilir
 
+<<<<<<< .merge_file_a18440
                     // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışır CREATE çalışmaz : ALTER çalışmaz CREATE çalışır
+                    bool tableExistOnDb = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName) != null ? true : false;
+=======
+                // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışmaz CREATE çalışır : ALTER çalışır CREATE çalışmaz
                 bool tableExistOnDb = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName) != null ? true : false;
+>>>>>>> .merge_file_a12880
 
                 foreach (var entityColumn in entityType.GetProperties()) // Entity Class içerisindeki property ler yani Sütunları oluşturmak için döngü başlatılır
                 {
@@ -79,12 +95,17 @@ namespace W_ORM.MSSQL
                     // Foreign key eklenecek 
                     // ALTER TABLE Student ADD FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID);
 
+<<<<<<< .merge_file_a18440
+                        #region Entity Class içerisinde oluşturulmuş yeni bir property(sütun) varsa  ve Entity Class yani Tablo Veritabanında varsa
+                        if (columnList.Where(x => x == entityColumn.Name).Count() == 0 && tableExistOnDb)
+=======
                    
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
                     {
                         columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
                         string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, entityColumn.Name);
                         if (!string.IsNullOrEmpty(constraintName))
+>>>>>>> .merge_file_a12880
                         {
                             dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
                         }
@@ -95,9 +116,16 @@ namespace W_ORM.MSSQL
                             columnInformation = columnInformation.Replace("PRIMARY KEY", "");
                             alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ADD PRIMARY KEY ({entityColumn.Name}) ";
                         }
+<<<<<<< .merge_file_a18440
+                    #endregion
+
+                        #region Entity Class(tablo) Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
+                        if (tableList.Where(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName).Count() == 0)
+=======
 
                         dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
                         if (isEntityColumnForeignKey != null)
+>>>>>>> .merge_file_a12880
                         {
                             columnInformation = columnInformation.Replace($"FOREIGN KEY REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
                             alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] " +
@@ -108,7 +136,7 @@ namespace W_ORM.MSSQL
                     }
                     #endregion
 
-                        #region Entity Class(tablo) Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
+                    #region Entity Class yani Tablo Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
                     if (tableList.Where(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName).Count() == 0)
                     {
                         entityColumnsMSSQL += columnInformation + ", ";

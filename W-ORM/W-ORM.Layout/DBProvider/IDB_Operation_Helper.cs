@@ -35,5 +35,14 @@ namespace W_ORM.Layout.DBProvider
         /// <param name="tableName">Tablo Adı</param>
         /// <returns></returns>
         bool IsTableHasPrimaryKey(string schemaName,string tableName);
+
+        /// <summary>
+        /// Tablo ve Sütun adı verilerek ilgili Constraint ismini döner
+        /// </summary>
+        /// <param name="schemaName">Tablo Şema Adı</param>
+        /// <param name="tableName">Tablo Adı</param>
+        /// <param name="columnName">Sütun Adı</param>
+        /// <returns></returns>
+        string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName);
     }
 }
