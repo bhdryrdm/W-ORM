@@ -21,5 +21,17 @@ namespace W_ORM.Test.MSSQL
             dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2,tupleData.Item1);
 
         }
+
+        /*[TestMethod]
+        public void CreateEverythingForMSSQL()
+        {
+            CreateEverything<Bank> createEverything = new CreateEverything<Bank>();
+            Tuple<string, string> tupleData = createEverything.EntityClassQueries();
+
+            DB_Operation dB_Operation = new DB_Operation(typeof(Bank).Name);
+            dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
+
+        }*/
+
     }
 }

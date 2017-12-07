@@ -110,7 +110,7 @@ namespace W_ORM.MSSQL
                         string columnNames = string.Empty;
                         foreach (string columnName in columnList)
                         {
-                            columnNames = $"{columnName}, ";
+                            columnNames += $"{columnName}, ";
                         }
                         columnNames = columnNames.Remove(columnNames.Length - 2);
                         alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP COLUMN {columnNames} ";

@@ -14,6 +14,5 @@ namespace W_ORM.Test.MSSQL.Entities
         [INT] [NOTNULL] public int StudentID { get; set; }
         [NVARCHAR(100)] [NOTNULL] public string StudentName { get; set; }
         [NVARCHAR(100)] [NOTNULL] public string StudentSurName { get; set; }
-        [NVARCHAR(100)] [NOTNULL] public string StudentEmail { get; set; }
     }
 }

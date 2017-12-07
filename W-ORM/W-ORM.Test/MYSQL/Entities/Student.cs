@@ -10,5 +10,7 @@ namespace W_ORM.Test.MYSQL.Entities
         [VARCHAR(100)] [NOTNULL] public string StudentName { get; set; }
         [VARCHAR(100)] [NOTNULL] public string StudentSurName { get; set; }
         [VARCHAR(100)] [NOTNULL] public string StudentEmail { get; set; }
+        [INT][NOTNULL]public int StudentCredit { get; set; }
+        [INT][NOTNULL]public int StudentPhone { get; set; }
     }
 }

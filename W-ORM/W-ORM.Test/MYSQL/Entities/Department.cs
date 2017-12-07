@@ -11,7 +11,9 @@ namespace W_ORM.Test.MYSQL.Entities
     [Table(TableName = "Department")]
     public class Department
     {
-        [PRIMARY_KEY] [INT] [NOTNULL] public int DepartmentID { get; set; }
+        [INT] [NOTNULL] public int DepartmentID { get; set; }
         [VARCHAR(500)] [NOTNULL] public string DepartmentName { get; set; }
+        [INT][NOTNULL]public int DepartmentCode { get; set; }
+        [INT][NOTNULL]public int DepartmentBudget { get; set; }
     }
 }

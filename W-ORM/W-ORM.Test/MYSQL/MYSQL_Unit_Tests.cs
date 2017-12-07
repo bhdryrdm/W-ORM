@@ -8,13 +8,15 @@ namespace W_ORM.Test.MYSQL
     public class MYSQL_Unit_Tests
     {
         [TestMethod]
-        public void CreateEverythingForMSSQL()
+        public void CreateEverythingForMYSQL()
         {
             CreateEverything<MYSQL_University> createEverything = new CreateEverything<MYSQL_University>();
             Tuple<string, string> tupleData = createEverything.EntityClassQueries();
 
             DB_Operation dB_Operation = new DB_Operation(typeof(MYSQL_University).Name);
             dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
+
+            
         }
     }
 }

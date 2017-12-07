@@ -59,6 +59,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MSSQL\Bank.cs" />
+    <Compile Include="MSSQL\BankEntities\Account.cs" />
+    <Compile Include="MSSQL\BankEntities\Customer.cs" />
+    <Compile Include="MSSQL\BankEntities\Loan.cs" />
     <Compile Include="MSSQL\Entities\Department.cs" />
     <Compile Include="MSSQL\Entities\Student.cs" />
     <Compile Include="MSSQL\MSSQL_Unit_Tests.cs" />

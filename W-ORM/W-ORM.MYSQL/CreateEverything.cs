@@ -48,7 +48,8 @@ namespace W_ORM.MYSQL
             {
                 entityType = entity.GetType();
                 entityInformation = entityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault(); // Entity Class üzerindeki Table Attribute üzerinden bilgiler okunur
-
+                //string a = entityInformation.TableName;
+                //a.ToLower();
                 columnList = new DB_Operation(contextName).ColumnListOnTable(entityType.Name); // Veritabanından ilgili tablonun tüm sütunları çekilir
 
                 // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışmaz CREATE çalışır : ALTER çalışır CREATE çalışmaz
@@ -72,7 +73,7 @@ namespace W_ORM.MYSQL
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0 /* && isEntityColumnPrimaryKey == null*/)
                     {
                         columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
-                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ALTER COLUMN {columnInformation} ";
+                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} MODIFY COLUMN {columnInformation} ";
                     }
                     #endregion
 
