@@ -71,6 +71,7 @@ namespace W_ORM.MSSQL
             {
                 DBConnectionOperation.ConnectionClose(connection);
                 dbCreatedSuccess = false;
+                throw ex;
             }
             return dbCreatedSuccess;
         }
@@ -216,6 +217,45 @@ namespace W_ORM.MSSQL
             }
             return tablehasPrimaryKey;
         }
+
+        /// <summary>
+        /// Tablo ve Sütun adı verilerek ilgili Constraint ismini döner
+        /// </summary>
+        /// <param name="schemaName">Tablo Şema Adı</param>
+        /// <param name="tableName">Tablo Adı</param>
+        /// <param name="columnName">Sütun Adı</param>
+        /// <returns></returns>
+        public string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName)
+        {
+            string constraintName = string.Empty;
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    SqlCommand command = new SqlCommand($"SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                                                        $"WHERE TABLE_NAME = @TableName AND COLUMN_NAME = @ColumnName AND TABLE_SCHEMA = @SchemaName", 
+                                                        (SqlConnection)connection);
+                    command.Parameters.AddWithValue("@SchemaName", schemaName);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@ColumnName", columnName);
+
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        constraintName = reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+            return constraintName;
+        }
+
         #endregion
 
         #region IDB_Generator

@@ -289,6 +289,11 @@ namespace W_ORM.POSTGRESQL
             DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
         }
+
+        public string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

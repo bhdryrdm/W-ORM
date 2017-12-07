@@ -13,6 +13,7 @@ namespace W_ORM.Test.MSSQL
     [TestClass]
     public class MSSQL_Unit_Tests
     {
+        public static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
         [TestMethod]
         public void CreateEverythingForMSSQL()
         {
@@ -21,9 +22,11 @@ namespace W_ORM.Test.MSSQL
 
             DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
             dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2,tupleData.Item1);
+
+            //dB_Operation.ContextGenerateFromDB(1);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void CreateContextWormConfig()
         {
             SaveWormConfig<University>("Server =.; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
@@ -38,7 +41,7 @@ namespace W_ORM.Test.MSSQL
         public static void SaveWormConfig<TContext>(string connectionString, DBType_Enum dBType_Enum, string author)
         {
             #region WORM.config dosyası var mı kontrolü yapılır
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\WORM.config";
+            path = "\\WORM.config";
             if (!File.Exists(path))
             {
                 File.Create(path);
