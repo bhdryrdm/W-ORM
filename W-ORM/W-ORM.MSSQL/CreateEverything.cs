@@ -31,7 +31,7 @@ namespace W_ORM.MSSQL
                    entityColumnsXML = string.Empty,
                    entityColumnXML = string.Empty,
                    createXMLObjectQuery = string.Empty;
-            List<string> dropConstraintList = new List<string>(); 
+            List<string> dropConstraintList = new List<string>();
             #endregion
 
             #region Entity Class(Tablolar)larının property(sütun) olarak tanımlanmış olduğu Context(Database) sınıfından Entity Class(tablo)lar listelenir
@@ -43,7 +43,7 @@ namespace W_ORM.MSSQL
             #endregion
             #region Creating SQL Server Queries
 
-                #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları sorguları oluşturulur
+            #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları sorguları oluşturulur
             createXMLObjectQuery = "<Classes>"; // Veritabanında versiyonlama için kullanılacak XML bilgisinin başlangıcı
             foreach (var entity in implementedTableEntities) // Entity Class yani Veritabaındaki Tabloları oluşturmak için döngü başlatılır
             {
@@ -52,7 +52,7 @@ namespace W_ORM.MSSQL
 
                 columnList = new DB_Operation(contextName).ColumnListOnTable(entityType.Name); // Veritabanından ilgili tablonun tüm sütunları çekilir
 
-                    // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışır CREATE çalışmaz : ALTER çalışmaz CREATE çalışır
+                // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışır CREATE çalışmaz : ALTER çalışmaz CREATE çalışır
                 bool tableExistOnDb = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName) != null ? true : false;
 
                 foreach (var entityColumn in entityType.GetProperties()) // Entity Class içerisindeki property ler yani Sütunları oluşturmak için döngü başlatılır
@@ -79,7 +79,7 @@ namespace W_ORM.MSSQL
                     // Foreign key eklenecek 
                     // ALTER TABLE Student ADD FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID);
 
-                   
+
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
                     {
                         columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
@@ -108,7 +108,7 @@ namespace W_ORM.MSSQL
                     }
                     #endregion
 
-                        #region Entity Class(tablo) Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
+                    #region Entity Class(tablo) Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
                     if (tableList.Where(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName).Count() == 0)
                     {
                         entityColumnsMSSQL += columnInformation + ", ";
