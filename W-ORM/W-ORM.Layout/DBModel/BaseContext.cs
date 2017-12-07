@@ -43,6 +43,7 @@ namespace W_ORM.Layout.DBModel
             {
                 DBConnectionOperation.ConnectionClose(connection);
                 return 0;
+                throw ex;
             }
         }
     }

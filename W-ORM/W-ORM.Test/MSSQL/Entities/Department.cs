@@ -8,7 +8,7 @@ using W_ORM.MSSQL.Attributes;
 
 namespace W_ORM.Test.MSSQL.Entities
 {
-    [Table(SchemaName ="dbo",TableName ="Department")]
+    [Table(SchemaName ="dbo", TableName ="Department", OrdinalPosition = 1)]
     public class Department
     {
         [INT][NOTNULL] public int DepartmentID { get; set; }

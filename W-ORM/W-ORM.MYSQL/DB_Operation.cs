@@ -72,6 +72,7 @@ namespace W_ORM.MYSQL
             {
                 DBConnectionOperation.ConnectionClose(connection);
                 dbCreatedSuccess = false;
+                throw ex;
             }
             return dbCreatedSuccess;
         }
@@ -126,6 +127,7 @@ namespace W_ORM.MYSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
             }
             return dbExist;
         }
@@ -213,6 +215,7 @@ namespace W_ORM.MYSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
             }
             return tablehasPrimaryKey;
         }
@@ -271,9 +274,15 @@ namespace W_ORM.MYSQL
             {
 
                 dbCreatedSuccess = false;
+                throw ex;
             }
             DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
+        }
+
+        public string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

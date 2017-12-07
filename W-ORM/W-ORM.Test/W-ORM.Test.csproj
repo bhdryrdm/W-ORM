@@ -75,7 +75,6 @@
     <Compile Include="POSTGRESQL\Entities\Student.cs" />
     <Compile Include="POSTGRESQL\POSTGRESQL_Unit_Tests.cs" />
     <Compile Include="POSTGRESQL\POSTGRESQL_University.cs" />
-    <Compile Include="WORMUTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,7 +82,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="WORM.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">
