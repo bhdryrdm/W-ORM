@@ -140,7 +140,7 @@ namespace W_ORM.MSSQL
                         {
                             dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
                         }
-                        columnNames = $"{columnName}, ";
+                        columnNames += $"{columnName}, ";
                     }
                     columnNames = columnNames.Remove(columnNames.Length - 2);
                     alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP COLUMN {columnNames} ";

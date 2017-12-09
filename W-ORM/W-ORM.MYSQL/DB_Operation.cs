@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
 using System.Xml;
 using W_ORM.Layout.DBConnection;
@@ -149,7 +150,6 @@ namespace W_ORM.MYSQL
                     {
                         DBTableModel dBTableModel = new DBTableModel
                         {
-                            SchemaName = table[1].ToString(),
                             TableName = table[2].ToString()
 
                         };
@@ -219,7 +219,48 @@ namespace W_ORM.MYSQL
             }
             return tablehasPrimaryKey;
         }
+
+        // <summary>
+        /// Tablo ve Sütun adı verilerek ilgili Constraint ismini döner
+        /// </summary>
+        /// <param name="schemaName">Tablo Şema Adı</param>
+        /// <param name="tableName">Tablo Adı</param>
+        /// <param name="columnName">Sütun Adı</param>
+        /// <returns></returns>
+        public string ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName = "")
+        {
+            string constraintName = string.Empty;
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    MySqlCommand command = new MySqlCommand($"SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                                                        $"WHERE TABLE_NAME = @TableName AND COLUMN_NAME = @ColumnName",
+                                                        (MySqlConnection)connection);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@ColumnName", columnName);
+
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        constraintName = reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+            return constraintName;
+        }
+
+
         #endregion
+
+
 
         #region IDB_Generator
         public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
@@ -272,17 +313,11 @@ namespace W_ORM.MYSQL
             }
             catch (Exception ex)
             {
-
+                DBConnectionOperation.ConnectionClose(connection);
                 dbCreatedSuccess = false;
                 throw ex;
             }
-            DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
-        }
-
-        public string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName)
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }

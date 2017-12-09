@@ -39,10 +39,10 @@ namespace W_ORM.Layout.DBProvider
         /// <summary>
         /// Tablo ve Sütun adı verilerek ilgili Constraint ismini döner
         /// </summary>
-        /// <param name="schemaName">Tablo Şema Adı</param>
         /// <param name="tableName">Tablo Adı</param>
         /// <param name="columnName">Sütun Adı</param>
+        ///    /// <param name="schemaName">Tablo Şema Adı</param>
         /// <returns></returns>
-        string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName);
+        string ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName);
     }
 }

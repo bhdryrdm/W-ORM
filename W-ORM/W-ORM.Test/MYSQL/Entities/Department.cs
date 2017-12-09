@@ -8,10 +8,9 @@ using W_ORM.MYSQL.Attributes;
 
 namespace W_ORM.Test.MYSQL.Entities
 {
-    [Table(TableName = "Department")]
+    [Table(TableName = "Department", OrdinalPosition = 1)]
     public class Department
     {
-        [PRIMARY_KEY] [INT] [NOTNULL] public int DepartmentID { get; set; }
-        [VARCHAR(500)] [NOTNULL] public string DepartmentName { get; set; }
+        [PRIMARY_KEY][INT] [NOTNULL] public int DepartmentID { get; set; }
     }
 }
