@@ -26,10 +26,11 @@ namespace W_ORM.Test.MSSQL
             //dB_Operation.ContextGenerateFromDB(1);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void CreateContextWormConfig()
         {
-            SaveWormConfig<University>("Server =.; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
+            //SaveWormConfig<University>("Server =.; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
+            SaveWormConfig<University>("Server =DESKTOP-OC11CCT\\SQL_2014; Trusted_Connection = True;", DBType_Enum.MSSQL, "xyz");
         }
         /// <summary>
         /// WORM.config dosyasına yeni context veritabanı eklemek için kullanılır
@@ -41,11 +42,11 @@ namespace W_ORM.Test.MSSQL
         public static void SaveWormConfig<TContext>(string connectionString, DBType_Enum dBType_Enum, string author)
         {
             #region WORM.config dosyası var mı kontrolü yapılır
-            path = "\\WORM.config";
+            path += "\\WORM.config";
             if (!File.Exists(path))
             {
-                File.Create(path);
-                new XDocument(new XElement("Databases")).Save(path);
+                using (File.Create(path)) { };
+                    new XDocument(new XElement("Databases")).Save(path);
             }
             #endregion
 

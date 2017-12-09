@@ -102,7 +102,7 @@ namespace W_ORM.MSSQL
             string response = string.Empty;
             switch (propertyName)
             {
-                case "int":
+                case "Int32":
                     response = "int"; break;
                 case "string":
                     response = "nvarchar(4000)"; break;

@@ -9,5 +9,8 @@ namespace W_ORM.Test.MSSQL.Entities
         [PRIMARY_KEY][INT] [NOTNULL] public int StudentID { get; set; }
         [NVARCHAR(100)] [NOTNULL] public string StudentName { get; set; }
         [NVARCHAR(100)] [NOTNULL] public string StudentSurName { get; set; }
+        [DECIMAL(5, 2)] [NOTNULL] public decimal StudentGpa { get; set; }
+        [INT] [NOTNULL] public int StudentNumber { get; set; }
+        [FOREIGN_KEY("Department", "DepartmentID")][INT]public int DepartmentID { get; set; }
     }
 }
