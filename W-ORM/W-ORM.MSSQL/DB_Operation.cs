@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using W_ORM.Layout.DBConnection;
 using W_ORM.Layout.DBModel;
@@ -13,8 +14,8 @@ namespace W_ORM.MSSQL
 {
     public class DB_Operation :  IDB_Operation , IDB_Operation_Helper , IDB_Generator
     {
-        DbCommand command = null;
         string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+        string projectNamespace = Assembly.GetCallingAssembly().FullName.Split(',')[0].Replace("-","_");
         DbConnection connection = null;
 
         #region Property & Constructor
@@ -261,61 +262,81 @@ namespace W_ORM.MSSQL
         #endregion
 
         #region IDB_Generator
-        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string contextName = "")
+        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
         {
-
             if (string.IsNullOrEmpty(contextPath))
                 contextPath = projectPath + "\\WORM_Context\\";
+            if (string.IsNullOrEmpty(namespaceName))
+                namespaceName = projectNamespace + ".WORM_Context";
             if (string.IsNullOrEmpty(contextName))
-                contextName = "WORM_Context";
+                contextName = this.contextName;
 
             bool dbCreatedSuccess = true;
+            List<string> POCOClasses = new List<string>();
             try
             {
-                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                using (connection = DBConnectionFactory.Instance(this.contextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
-                    SqlCommand command = new SqlCommand($"SELECT * FROM [dbo].[__WORM__Configuration] WHERE Version=@Version", (SqlConnection)connection);
+                    SqlCommand command = new SqlCommand($"SELECT * FROM [dbo].[__WORM__Configuration] WHERE Version=@Version", 
+                                                        (SqlConnection)connection);
                     command.Parameters.AddWithValue("@Version", dbVersion);
 
                     DbDataReader reader = command.ExecuteReader();
 
+                    #region XML verisinden POCO Entity Class ları oluşturulur
                     while (reader.Read())
                     {
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.LoadXml(reader.GetString(3));
                         XmlNodeList xmlTableForm = xmlDoc.GetElementsByTagName("Classes");
 
-                        ContextGenerate contextGenerate = new ContextGenerate();
+                        ContextGenerate POCOClassGenerate = new ContextGenerate();
                         foreach (XmlNode pocoClasses in xmlTableForm)
                         {
-                            foreach (XmlNode pocoProperty in pocoClasses.ChildNodes)
+                            foreach (XmlNode pocoClass in pocoClasses.ChildNodes)
                             {
-                                contextGenerate.CreateContextEntity(pocoProperty.Name, contextName);
-                                foreach (XmlNode pocoColumn in pocoProperty.ChildNodes)
+                                List<string> pocoClasscustomAttributes = new List<string>();
+                                foreach (XmlAttribute pocoClassAttribute in pocoClass.Attributes)
                                 {
-                                    List<string> customAttributes = new List<string>();
+                                    pocoClasscustomAttributes.Add(pocoClassAttribute.Value);
+                                }
+                                POCOClassGenerate.CreateContextEntity(pocoClass.Name, namespaceName + ".Entities", pocoClasscustomAttributes);
+                                POCOClasses.Add(pocoClass.Name);
+                                foreach (XmlNode pocoColumn in pocoClass.ChildNodes)
+                                {
+                                    List<string> pocoColumncustomAttributes = new List<string>();
                                     foreach (XmlAttribute pocoColumnAttribute in pocoColumn.Attributes)
                                     {
-                                        customAttributes.Add(pocoColumnAttribute.Value);
+                                        pocoColumncustomAttributes.Add(pocoColumnAttribute.Value);
                                     }
-                                    contextGenerate.AddProperties(pocoColumn.Name, new MSSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("type").Value), customAttributes);
+                                    POCOClassGenerate.AddProperties(pocoColumn.Name, new MSSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("Type").Value), pocoColumncustomAttributes);
                                 }
-                                contextGenerate.GenerateCSharpCode(contextPath, $"{pocoProperty.Name}.cs");
+                                POCOClassGenerate.GenerateCSharpCode(contextPath + "Entities\\", $"{pocoClass.Name}.cs");
                             }
                         }
                     }
                     reader.Close();
+                    #endregion
+
+                    #region XML verisinden Context Class oluşturulur
+                    ContextGenerate contextGenerate = new ContextGenerate();
+                    contextGenerate.CreateContextEntity(contextName, namespaceName);
+                    foreach (string pocoClass in POCOClasses)
+                    {
+                        contextGenerate.AddProperties(pocoClass, "MSSQLProviderContext",contextName);
+                    }
+                    contextGenerate.GenerateCSharpCode(contextPath, $"{contextName}.cs");
+                    #endregion
 
                 }
             }
             catch (Exception ex)
             {
-
+                DBConnectionOperation.ConnectionClose(connection);
                 dbCreatedSuccess = false;
                 throw ex;
             }
-            DBConnectionOperation.ConnectionClose(connection);
             return dbCreatedSuccess;
         }
         #endregion

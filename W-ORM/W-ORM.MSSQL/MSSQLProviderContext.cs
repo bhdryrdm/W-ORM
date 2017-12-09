@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using W_ORM.Layout.Attributes;
-using W_ORM.Layout.DBConnection;
 using W_ORM.Layout.DBModel;
 using W_ORM.Layout.DBProvider;
 using W_ORM.MSSQL.Attributes;
 
 namespace W_ORM.MSSQL
 {
-    public class MSSQLProviderContext<TDBEntity> : BaseContext, IDB_CRUD_Operation<TDBEntity>
+    public class MSSQLProviderContext<TEntityClass,TContextName> : BaseContext<TContextName>, IDB_CRUD_Operation<TEntityClass>
     {
         #region Entity Type & Entity Schema
         protected string EntitySchema
@@ -24,24 +21,10 @@ namespace W_ORM.MSSQL
             }
         }
 
-        protected Type EntityType { get { return typeof(TDBEntity); } }
+        protected Type EntityType { get { return typeof(TEntityClass); } }
         #endregion
 
-        public void Insert(TDBEntity entity)
-        {
-            string columnName = string.Empty, columnNameWithParameter = string.Empty;
-            foreach (var entityProperty in EntityType.GetProperties())
-            {
-                columnName += $"[{entityProperty.Name}],";
-                columnNameWithParameter += $"@{entityProperty.Name},";
-                parameterList.Add(entityProperty.Name, entityProperty.GetValue(entity));
-            }
-            columnName = columnName.Remove(columnName.Length - 1);
-            columnNameWithParameter = columnNameWithParameter.Remove(columnNameWithParameter.Length - 1);
-            runQuery = $"INSERT INTO dbo.[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter})";
-        }
-
-        public void Update(TDBEntity entity)
+        public void Insert(TEntityClass entity)
         {
             string columnName = string.Empty, columnNameWithParameter = string.Empty;
             foreach (var entityProperty in EntityType.GetProperties())
@@ -55,7 +38,21 @@ namespace W_ORM.MSSQL
             runQuery = $"INSERT INTO [{EntitySchema}].[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter})";
         }
 
-        public void Delete(TDBEntity entity)
+        public void Update(TEntityClass entity)
+        {
+            string columnName = string.Empty, columnNameWithParameter = string.Empty;
+            foreach (var entityProperty in EntityType.GetProperties())
+            {
+                columnName += $"[{entityProperty.Name}],";
+                columnNameWithParameter += $"@{entityProperty.Name},";
+                parameterList.Add(entityProperty.Name, entityProperty.GetValue(entity));
+            }
+            columnName = columnName.Remove(columnName.Length - 1);
+            columnNameWithParameter = columnNameWithParameter.Remove(columnNameWithParameter.Length - 1);
+            runQuery = $"INSERT INTO [{EntitySchema}].[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter})";
+        }
+
+        public void Delete(TEntityClass entity)
         {
             string whereClause = string.Empty;
             foreach (var entityProperty in EntityType.GetProperties())
@@ -66,8 +63,26 @@ namespace W_ORM.MSSQL
                     parameterList.Add(entityProperty.Name, entityProperty.GetValue(entity));
                 }
             }
-            runQuery = $"DELETE FROM [{EntitySchema}].[{EntityType.Name}] WHERE {whereClause}";
+            runQuery += $"DELETE FROM [{EntitySchema}].[{EntityType.Name}] WHERE {whereClause}";
         }
-       
+
+        public List<TEntityClass> ToList()
+        {
+            runQuery = $"SELECT * FROM [{EntitySchema}].[{EntityType.Name}]";
+            return base.GetListFromDB<TEntityClass>();
+        }
+
+        public TEntityClass FirstOrDefault(Expression<Func<TEntityClass, object>> predicate)
+        {
+            runQuery = $"SELECT TOP 1 * FROM [{EntitySchema}].[{EntityType.Name}]";
+            var binaryExpression = (BinaryExpression)((UnaryExpression)predicate.Body).Operand;
+            var left = Expression.Lambda<Func<TEntityClass, object>>(Expression.Convert(binaryExpression.Left, typeof(object)), predicate.Parameters[0]);
+            return base.GetItemFromDB<TEntityClass>();
+        }
+
+        public List<TEntityClass> Where(Expression<Func<TEntityClass, object>> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

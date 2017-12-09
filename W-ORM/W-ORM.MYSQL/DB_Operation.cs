@@ -222,7 +222,7 @@ namespace W_ORM.MYSQL
         #endregion
 
         #region IDB_Generator
-        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string contextName = "")
+        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
         {
 
             if (string.IsNullOrEmpty(contextPath))

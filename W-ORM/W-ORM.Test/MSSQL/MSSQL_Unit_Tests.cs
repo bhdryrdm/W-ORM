@@ -14,6 +14,27 @@ namespace W_ORM.Test.MSSQL
     public class MSSQL_Unit_Tests
     {
         public static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+
+        [TestMethod]
+        public void GetList()
+        {
+            University university = new University();
+            university.Department.Insert(new Entities.Department { DepartmentID = 1, DepartmentName = "Test" });
+            university.PushToDB();
+
+            var departmentList = university.Department.ToList();
+            var student = university.Student.FirstOrDefault(x => x.StudentID == 1 && x.StudentName == "Bahadır" || x.StudentSurName == "Yardım");
+        }
+
+        [TestMethod]
+        public void ContextGenerateFromDB()
+        {
+            DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
+            dB_Operation.ContextGenerateFromDB(1,"","","BHDR_Context");
+        }
+
+
+
         [TestMethod]
         public void CreateEverythingForMSSQL()
         {
@@ -22,11 +43,9 @@ namespace W_ORM.Test.MSSQL
 
             DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
             dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2,tupleData.Item1);
-
-            //dB_Operation.ContextGenerateFromDB(1);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void CreateContextWormConfig()
         {
             SaveWormConfig<University>("Server =.; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
@@ -41,11 +60,12 @@ namespace W_ORM.Test.MSSQL
         public static void SaveWormConfig<TContext>(string connectionString, DBType_Enum dBType_Enum, string author)
         {
             #region WORM.config dosyası var mı kontrolü yapılır
-            path = "\\WORM.config";
+            path += "\\WORM.config";
             if (!File.Exists(path))
             {
-                File.Create(path);
+                using (File.Create(path)) { };
                 new XDocument(new XElement("Databases")).Save(path);
+
             }
             #endregion
 

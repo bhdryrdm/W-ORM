@@ -21,9 +21,11 @@ namespace W_ORM.MSSQL
         {
             switch (xmlType)
             {
-                case "int":
+                case "INT":
                     propertyType = typeof(Int32); break;
-                case "string":
+                case "NVARCHAR":
+                    propertyType = typeof(String); break;
+                case "VARCHAR":
                     propertyType = typeof(String); break;
                 case "decimal":
                     propertyType = typeof(Decimal); break;

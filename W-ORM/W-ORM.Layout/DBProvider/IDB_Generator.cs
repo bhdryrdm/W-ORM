@@ -8,6 +8,6 @@ namespace W_ORM.Layout.DBProvider
 {
     public interface IDB_Generator
     {
-        bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string contextName = "");
+        bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "");
     }
 }

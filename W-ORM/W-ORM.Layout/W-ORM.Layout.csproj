@@ -49,6 +49,7 @@
     <Compile Include="DBModel\BaseContext.cs" />
     <Compile Include="DBModel\DBInformationModel.cs" />
     <Compile Include="DBModel\DBTableModel.cs" />
+    <Compile Include="DBProvider\IDB_CRUD_Helper.cs" />
     <Compile Include="DBProvider\IDB_CRUD_Operation.cs" />
     <Compile Include="DBProvider\IDB_Generator.cs" />
     <Compile Include="DBProvider\IDB_Operation.cs" />

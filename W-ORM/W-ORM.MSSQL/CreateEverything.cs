@@ -37,7 +37,8 @@ namespace W_ORM.MSSQL
             #region Entity Class(Tablolar)larının property(sütun) olarak tanımlanmış olduğu Context(Database) sınıfından Entity Class(tablo)lar listelenir
             List<dynamic> implementedTableEntities = (from property in typeof(TDBEntity).GetProperties()
                                                       from genericArguments in property.PropertyType.GetGenericArguments()
-                                                      where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
+                                                      where genericArguments.CustomAttributes.FirstOrDefault() != null &&
+                                                            genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute)) 
                                                       orderby genericArguments.CustomAttributes.FirstOrDefault().NamedArguments.FirstOrDefault(x => x.MemberName == "OrdinalPosition").TypedValue.Value
                                                       select Activator.CreateInstance(genericArguments)).ToList();
             #endregion
@@ -68,17 +69,6 @@ namespace W_ORM.MSSQL
                     #endregion
 
                     #region Entity Class içerisinde var olup değişikliğe uğramış bir property
-                    // TODO : PrimaryKey ve Foreign Key yapılacak
-
-                    // Tüm Keyler kaldırılacak (Öncelik foreign keylerde daha sonra primary key)
-                    // ALTER TABLE Department DROP CONSTRAINT PK_DepartmentID forachle dönülecek
-
-                    // Primary key eklenecek
-                    // ALTER TABLE Student ADD PRIMARY KEY (StudentID) 
-
-                    // Foreign key eklenecek 
-                    // ALTER TABLE Student ADD FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID);
-
 
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
                     {
@@ -127,7 +117,9 @@ namespace W_ORM.MSSQL
                 }
 
                 // Veritabanında versiyonlama için kullanılacak XML bilgisinin gövdesi
-                createXMLObjectQuery += $"<{entityType.Name}>{entityColumnsXML}</{entityType.Name}>";
+                createXMLObjectQuery += $"<{entityType.Name} SchemaName=\"{entityInformation.SchemaName}\" TableName=\"{entityInformation.TableName}\" OrdinalPosition=\"{entityInformation.TableName}\">" +
+                                        $"{entityColumnsXML}" +
+                                        $"</{entityType.Name}>";
 
                 #region Tablo tableList listesinden çıkartılır
                 DBTableModel tableInformation = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName);

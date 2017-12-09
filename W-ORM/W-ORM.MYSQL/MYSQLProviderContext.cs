@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using W_ORM.Layout.DBProvider;
@@ -27,6 +28,21 @@ namespace W_ORM.MYSQL
         }
 
         public int PushToDB()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<TDBEntity> ToList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TDBEntity FirstOrDefault(Expression<Func<TDBEntity, object>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<TDBEntity> Where(Expression<Func<TDBEntity, object>> predicate)
         {
             throw new NotImplementedException();
         }

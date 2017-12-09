@@ -3,12 +3,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using W_ORM.Layout.Attributes;
-using W_ORM.MSSQL.Attributes;
 
 namespace W_ORM.MSSQL
 {
@@ -29,39 +24,90 @@ namespace W_ORM.MSSQL
         /// <summary>
         /// Define the class.
         /// </summary>
-        public void CreateContextEntity(string entityName, string contextName)
+        public void CreateContextEntity(string entityName, string namespaceName, List<string> customAttributes = null)
         {
             targetUnit = new CodeCompileUnit();
-            CodeNamespace samples = new CodeNamespace(contextName);
+            CodeNamespace samples = new CodeNamespace(namespaceName);
             samples.Imports.Add(new CodeNamespaceImport("W_ORM.Layout.Attributes"));
             samples.Imports.Add(new CodeNamespaceImport("W_ORM.MSSQL.Attributes"));
             targetClass = new CodeTypeDeclaration(entityName);
             targetClass.IsClass = true;
             targetClass.TypeAttributes = TypeAttributes.Public | TypeAttributes.Sealed;
             samples.Types.Add(targetClass);
+            if(customAttributes != null)
+            {
+                targetClass.CustomAttributes.Add(new CodeAttributeDeclaration
+                {
+                    Name = "Table",
+                    Arguments =
+                    {
+                        new CodeAttributeArgument { Name = "SchemaName", Value = new CodePrimitiveExpression(customAttributes[0]) },
+                        new CodeAttributeArgument { Name = "TableName", Value = new CodePrimitiveExpression(customAttributes[1]) }
+                    }
+                });
+            }
             targetUnit.Namespaces.Add(samples);
         }
 
+        public void CreateContextEntity(string contextName, string namespaceName)
+        {
+            targetUnit = new CodeCompileUnit();
+            CodeNamespace samples = new CodeNamespace(namespaceName);
+            samples.Imports.Add(new CodeNamespaceImport("W_ORM.Layout.DBModel"));
+            samples.Imports.Add(new CodeNamespaceImport("W_ORM.MSSQL"));
+            samples.Imports.Add(new CodeNamespaceImport(namespaceName + ".Entities"));
+            targetClass = new CodeTypeDeclaration(contextName);
+            targetClass.IsClass = true;
+            targetClass.BaseTypes.Add(new CodeTypeReference { BaseType = $"BaseContext<{contextName}>"  });
+            targetClass.TypeAttributes = TypeAttributes.Public;
+            samples.Types.Add(targetClass);
+            
+            targetUnit.Namespaces.Add(samples);
+        }
 
         /// <summary>
         /// Add three properties to the class.
         /// </summary>
-        public void AddProperties(string entityColumnName,Type entityColumnType,List<string> customAttributes)
+        public void AddProperties(string entityColumnName,Type entityColumnType,List<string> customAttributes = null)
+        {
+            // Declare the read-only Width property.
+
+            CodeMemberField property = new CodeMemberField
+            {
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                Name = entityColumnName + " { get; set; } // "+ entityColumnName ,
+                Type = new CodeTypeReference(entityColumnType)
+            };
+
+            if(customAttributes != null)
+            {
+                foreach (string customAttribute in customAttributes)
+                {
+                    property.CustomAttributes.Add(new CodeAttributeDeclaration
+                    {
+                        Name = customAttribute
+                    });
+                }
+            }
+            targetClass.Members.Add(property);
+        }
+
+        public void AddProperties(string pocoClassName, string propertyType, string contextName)
         {
             // Declare the read-only Width property.
 
             CodeMemberProperty property = new CodeMemberProperty
             {
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
-                Name = entityColumnName,
-                Type = new CodeTypeReference(entityColumnType),
+                Name = pocoClassName,
+                HasGet = true,
+                Type = new CodeTypeReference($"{propertyType}<{pocoClassName},{contextName}>")
             };
-
-            foreach (string customAttribute in customAttributes)
-            {
-                property.CustomAttributes.Add(new CodeAttributeDeclaration(customAttribute));
-            }
-            
+            property.GetStatements.Add(new CodeMethodReturnStatement(
+                                        new CodeFieldReferenceExpression
+                                        {
+                                            FieldName = $"new MSSQLProviderContext<{pocoClassName},{contextName}>()"
+                                        }));
             targetClass.Members.Add(property);
         }
 

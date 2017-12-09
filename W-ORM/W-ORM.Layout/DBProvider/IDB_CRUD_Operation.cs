@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace W_ORM.Layout.DBProvider
 {
-    public interface IDB_CRUD_Operation<TEntity>
+    public interface IDB_CRUD_Operation<TEntity> : IDB_CRUD_Helper<TEntity>
     {
         void Insert(TEntity entity);
         void Update(TEntity entity);
