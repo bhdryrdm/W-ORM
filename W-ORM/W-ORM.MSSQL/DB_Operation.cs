@@ -305,10 +305,10 @@ namespace W_ORM.MSSQL
                                 POCOClasses.Add(pocoClass.Name);
                                 foreach (XmlNode pocoColumn in pocoClass.ChildNodes)
                                 {
-                                    List<string> pocoColumncustomAttributes = new List<string>();
+                                    Dictionary<string,string> pocoColumncustomAttributes = new Dictionary<string, string>();
                                     foreach (XmlAttribute pocoColumnAttribute in pocoColumn.Attributes)
                                     {
-                                        pocoColumncustomAttributes.Add(pocoColumnAttribute.Value);
+                                        pocoColumncustomAttributes.Add(pocoColumnAttribute.Name, pocoColumnAttribute.Value);
                                     }
                                     POCOClassGenerate.AddProperties(pocoColumn.Name, new MSSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("Type").Value), pocoColumncustomAttributes);
                                 }

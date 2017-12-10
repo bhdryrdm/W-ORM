@@ -42,7 +42,8 @@ namespace W_ORM.MSSQL
                     Arguments =
                     {
                         new CodeAttributeArgument { Name = "SchemaName", Value = new CodePrimitiveExpression(customAttributes[0]) },
-                        new CodeAttributeArgument { Name = "TableName", Value = new CodePrimitiveExpression(customAttributes[1]) }
+                        new CodeAttributeArgument { Name = "TableName", Value = new CodePrimitiveExpression(customAttributes[1]) },
+                        new CodeAttributeArgument { Name = "OrdinalPosition", Value = new CodePrimitiveExpression(Int32.Parse(customAttributes[2])) }
                     }
                 });
             }
@@ -68,7 +69,7 @@ namespace W_ORM.MSSQL
         /// <summary>
         /// Add three properties to the class.
         /// </summary>
-        public void AddProperties(string entityColumnName,Type entityColumnType,List<string> customAttributes = null)
+        public void AddProperties(string entityColumnName,Type entityColumnType,Dictionary<string,string> customAttributes = null)
         {
             // Declare the read-only Width property.
 
@@ -81,12 +82,43 @@ namespace W_ORM.MSSQL
 
             if(customAttributes != null)
             {
-                foreach (string customAttribute in customAttributes)
+                foreach (KeyValuePair<string,string> customAttribute in customAttributes)
                 {
-                    property.CustomAttributes.Add(new CodeAttributeDeclaration
+                    if (customAttribute.Key == "Type" && (customAttribute.Value == "NVARCHAR" || customAttribute.Value == "VARCHAR"))
                     {
-                        Name = customAttribute
-                    });
+                        string maxLength = string.Empty;
+                        customAttributes.TryGetValue("MaxLength", out maxLength);
+                        property.CustomAttributes.Add(new CodeAttributeDeclaration
+                        {
+                            Name = customAttribute.Value,
+                            Arguments =
+                            {
+                                new CodeAttributeArgument { Value = new CodePrimitiveExpression(Int32.Parse(maxLength)) }
+                            }
+                        });
+                    }
+                    else if (customAttribute.Key == "FKey")
+                    {
+                        string tableName = string.Empty, columnName = string.Empty;
+                        customAttributes.TryGetValue("TableName", out tableName);
+                        customAttributes.TryGetValue("ColumnName", out columnName);
+                        property.CustomAttributes.Add(new CodeAttributeDeclaration
+                        {
+                            Name = customAttribute.Value,
+                            Arguments =
+                            {
+                                new CodeAttributeArgument { Value = new CodePrimitiveExpression(tableName) },
+                                new CodeAttributeArgument { Value = new CodePrimitiveExpression(columnName) }
+                            }
+                        });
+                    }
+                    else if(customAttribute.Key == "Type" || customAttribute.Key == "PKey" || customAttribute.Key == "Null")
+                    {
+                        property.CustomAttributes.Add(new CodeAttributeDeclaration
+                        {
+                            Name = customAttribute.Value
+                        });
+                    }
                 }
             }
             targetClass.Members.Add(property);

@@ -10,7 +10,6 @@ namespace W_ORM.MSSQL
 {
     public class CSHARP_To_MSSQL : ICSHARP_To_DB
     {
-        //[FOREIGN_KEY("Category","CategoryID")] [INT] public int CategoryID {get; set; }
         public string GetSQLQueryFormat(PropertyInfo propertyInfo)
         {
             string columnAttribute = propertyInfo.Name;
@@ -42,6 +41,12 @@ namespace W_ORM.MSSQL
                 foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes())
                 {
                     column += $"{propertyAttribute.AttributeDefination}=\"{propertyAttribute.AttributeName}\" ";
+                    if (propertyAttribute.AttributeName == "VARCHAR" || propertyAttribute.AttributeName == "NVARCHAR")
+                        column += $"MaxLength=\"{propertyAttribute.MaxLength}\" ";
+                    if (propertyAttribute.AttributeDefination == "Increment")
+                        column += $"StartNumber=\"{propertyAttribute.StartNumber}\" Increase=\"{propertyAttribute.Increase}\" ";
+                    if (propertyAttribute.AttributeDefination == "FKey")
+                        column += $"TableName=\"{propertyAttribute.ClassName}\" ColumnName=\"{propertyAttribute.PropertyName}\" ";
                 }
             }
             else

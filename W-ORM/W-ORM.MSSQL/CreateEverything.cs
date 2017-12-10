@@ -117,7 +117,7 @@ namespace W_ORM.MSSQL
                 }
 
                 // Veritabanında versiyonlama için kullanılacak XML bilgisinin gövdesi
-                createXMLObjectQuery += $"<{entityType.Name} SchemaName=\"{entityInformation.SchemaName}\" TableName=\"{entityInformation.TableName}\" OrdinalPosition=\"{entityInformation.TableName}\">" +
+                createXMLObjectQuery += $"<{entityType.Name} SchemaName=\"{entityInformation.SchemaName}\" TableName=\"{entityInformation.TableName}\" OrdinalPosition=\"{entityInformation.OrdinalPosition}\">" +
                                         $"{entityColumnsXML}" +
                                         $"</{entityType.Name}>";
 

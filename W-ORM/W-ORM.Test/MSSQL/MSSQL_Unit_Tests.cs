@@ -30,10 +30,8 @@ namespace W_ORM.Test.MSSQL
         public void ContextGenerateFromDB()
         {
             DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
-            dB_Operation.ContextGenerateFromDB(1,"","","BHDR_Context");
+            dB_Operation.ContextGenerateFromDB(2,"","","BHDR_Context");
         }
-
-
 
         [TestMethod]
         public void CreateEverythingForMSSQL()
