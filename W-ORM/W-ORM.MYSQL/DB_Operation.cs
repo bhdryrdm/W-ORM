@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using W_ORM.Layout.DBConnection;
 using W_ORM.Layout.DBModel;
@@ -15,8 +15,8 @@ namespace W_ORM.MYSQL
 {
     public class DB_Operation : IDB_Operation, IDB_Operation_Helper, IDB_Generator
     {
-        DbCommand command = null;
         string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+        string projectNamespace = Assembly.GetCallingAssembly().FullName.Split(',')[0].Replace("-", "_");
         DbConnection connection = null;
 
         #region Property & Constructor
