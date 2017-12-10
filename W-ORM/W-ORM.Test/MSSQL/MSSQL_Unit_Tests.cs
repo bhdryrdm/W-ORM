@@ -19,7 +19,7 @@ namespace W_ORM.Test.MSSQL
         public void GetList()
         {
             University university = new University();
-            university.Department.Insert(new Entities.Department { DepartmentID = 1, DepartmentName = "Test" });
+            university.Department.Insert(new Entities.Department { DepartmentID = 1 });
             university.PushToDB();
 
             var departmentList = university.Department.ToList();
@@ -30,8 +30,10 @@ namespace W_ORM.Test.MSSQL
         public void ContextGenerateFromDB()
         {
             DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
-            dB_Operation.ContextGenerateFromDB(2,"","","BHDR_Context");
+            dB_Operation.ContextGenerateFromDB(12, "","","BHDR_Context");
         }
+
+
 
         [TestMethod]
         public void CreateEverythingForMSSQL()
@@ -46,7 +48,7 @@ namespace W_ORM.Test.MSSQL
         [TestMethod]
         public void CreateContextWormConfig()
         {
-            SaveWormConfig<University>("Server =.; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
+            SaveWormConfig<University>("Server =DESKTOP-OC11CCT\\SQL_2014; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
         }
         /// <summary>
         /// WORM.config dosyasına yeni context veritabanı eklemek için kullanılır

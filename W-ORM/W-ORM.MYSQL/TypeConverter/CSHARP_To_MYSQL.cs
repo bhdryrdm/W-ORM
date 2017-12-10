@@ -25,7 +25,7 @@ namespace W_ORM.MYSQL
                         returnPropertyAttribute += $"({propertyAttribute.StartNumber},{propertyAttribute.Increase}) ";
 
                     if (propertyAttribute.AttributeDefination == "FKey")
-                        returnPropertyAttribute += $" {propertyAttribute.ClassName}({propertyAttribute.PropertyName})";
+                        returnPropertyAttribute += $",FOREIGN KEY ({propertyAttribute.PropertyName}) REFERENCES {propertyAttribute.ClassName}({propertyAttribute.PropertyName})";
 
                     if (propertyAttribute.AttributeDefination == "PKey")
                         returnPropertyAttribute += $",PRIMARY KEY ({propertyInfo.Name})";
@@ -95,8 +95,6 @@ namespace W_ORM.MYSQL
                     response = "tinyint"; break;
                 case "VARCHAR":
                     response = "varchar"; break;
-                case "FOREIGN_KEY":
-                    response = "FOREIGN KEY REFERENCES"; break;
                 case "AUTO_INCREMENT":
                     response = "AUTO_INCREMENT"; break;
 

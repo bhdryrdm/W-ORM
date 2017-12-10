@@ -42,6 +42,7 @@ namespace W_ORM.MSSQL
                                                       orderby genericArguments.CustomAttributes.FirstOrDefault().NamedArguments.FirstOrDefault(x => x.MemberName == "OrdinalPosition").TypedValue.Value
                                                       select Activator.CreateInstance(genericArguments)).ToList();
             #endregion
+           
             #region Creating SQL Server Queries
 
             #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları sorguları oluşturulur
@@ -140,7 +141,7 @@ namespace W_ORM.MSSQL
                         {
                             dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
                         }
-                        columnNames = $"{columnName}, ";
+                        columnNames += $"{columnName}, ";
                     }
                     columnNames = columnNames.Remove(columnNames.Length - 2);
                     alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP COLUMN {columnNames} ";

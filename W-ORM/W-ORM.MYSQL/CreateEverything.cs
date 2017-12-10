@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using W_ORM.Layout.Attributes;
 using W_ORM.Layout.DBModel;
 using W_ORM.Layout.Query;
+using W_ORM.MYSQL.Attributes;
 
 namespace W_ORM.MYSQL
 {
@@ -28,15 +29,19 @@ namespace W_ORM.MYSQL
                    createTableMYSQLQuery = string.Empty,
                    alterTableMYSQLQuery = string.Empty,
                    dropTableMYSQLQuery = string.Empty,
+                   dropConstraintListMYSQLQuery = string.Empty,
                    entityColumnsXML = string.Empty,
                    entityColumnXML = string.Empty,
                    createXMLObjectQuery = string.Empty;
+            List<string> dropConstraintList = new List<string>();
             #endregion
 
             #region Entity Classlarının property olarak tanımlanmış olduğu Context sınıfından Class lar generate edilir
             List<dynamic> implementedTableEntities = (from property in typeof(TDBEntity).GetProperties()
                                                       from genericArguments in property.PropertyType.GetGenericArguments()
-                                                      where genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
+                                                      where genericArguments.CustomAttributes.FirstOrDefault() != null &&
+                                                             genericArguments.CustomAttributes.FirstOrDefault().AttributeType.Equals(typeof(TableAttribute))
+                                                      orderby genericArguments.CustomAttributes.FirstOrDefault().NamedArguments.FirstOrDefault(x => x.MemberName == "OrdinalPosition").TypedValue.Value
                                                       select Activator.CreateInstance(genericArguments)).ToList();
             #endregion
 
@@ -52,7 +57,7 @@ namespace W_ORM.MYSQL
                 columnList = new DB_Operation(contextName).ColumnListOnTable(entityType.Name); // Veritabanından ilgili tablonun tüm sütunları çekilir
 
                 // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışmaz CREATE çalışır : ALTER çalışır CREATE çalışmaz
-                bool tableExistOnDb = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName) != null ? true : false;
+                bool tableExistOnDb = tableList.FirstOrDefault(x => x.TableName == entityInformation.TableName.ToLower()) != null ? true : false;
 
                 foreach (var entityColumn in entityType.GetProperties()) // Entity Class içerisindeki property ler yani Sütunları oluşturmak için döngü başlatılır
                 {
@@ -67,17 +72,40 @@ namespace W_ORM.MYSQL
                     #endregion
 
                     #region Entity Class içerisinde var olup değişikliğe uğramış bir property
-                    // TODO : PrimaryKey ve Foreign Key yapılacak
-                    //var isEntityColumnPrimaryKey = entityColumn.GetCustomAttributes(typeof(PRIMARY_KEY), false).FirstOrDefault();
+
+                    var isEntityColumnPrimaryKey = entityColumn.GetCustomAttributes(typeof(PRIMARY_KEY), false).FirstOrDefault();
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0 /* && isEntityColumnPrimaryKey == null*/)
                     {
                         columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
-                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ALTER COLUMN {columnInformation} ";
+                        string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.TableName, entityColumn.Name);
+                        if (!string.IsNullOrEmpty(constraintName))
+                        {
+                            if(isEntityColumnPrimaryKey != null)
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP PRIMARY KEY;");
+                            else
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintName} ");
+                        }
+
+                        if (isEntityColumnPrimaryKey != null)
+                        {
+                            columnInformation = columnInformation.Replace($",PRIMARY KEY ({entityColumn.Name})", "");
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD PRIMARY KEY ({entityColumn.Name});";
+                        }
+
+                        dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
+                        if (isEntityColumnForeignKey != null)
+                        {
+                            columnInformation = columnInformation.Replace($"FOREIGN KEY REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} " +
+                                                    $"ADD FOREIGN KEY({ entityColumn.Name}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName});";
+                        }
+
+                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} MODIFY COLUMN {columnInformation};";
                     }
                     #endregion
 
                     #region Entity Class yani Tablo Veritabanında yoksa oluşturulacak olan sütunların MSSQL Query generate edilir
-                    if (tableList.Where(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName).Count() == 0)
+                    if (tableList.Where(x => x.TableName == entityInformation.TableName.ToLower()).Count() == 0)
                     {
                         entityColumnsMYSQL += columnInformation + ", ";
                     }
@@ -95,10 +123,12 @@ namespace W_ORM.MYSQL
                 }
 
                 // Veritabanında versiyonlama için kullanılacak XML bilgisinin gövdesi
-                createXMLObjectQuery += $"<{entityType.Name}>{entityColumnsXML}</{entityType.Name}>";
+                createXMLObjectQuery += $"<{entityType.Name} TableName=\"{entityInformation.TableName}\" OrdinalPosition=\"{entityInformation.TableName}\">" +
+                                        $"{entityColumnsXML}" +
+                                        $"</{entityType.Name}>";
 
                 #region Tablo tableList listesinden çıkartılır
-                DBTableModel tableInformation = tableList.FirstOrDefault(x => x.SchemaName == entityInformation.SchemaName && x.TableName == entityInformation.TableName);
+                DBTableModel tableInformation = tableList.FirstOrDefault(x =>x.TableName == entityInformation.TableName.ToLower());
                 if (tableInformation != null) // Veritabanında Tablo zaten var ise güncelleme yapılıyordur (DROP edilmeyecektir)
                 {
                     tableList.Remove(tableInformation);
@@ -111,10 +141,16 @@ namespace W_ORM.MYSQL
                     string columnNames = string.Empty;
                     foreach (string columnName in columnList)
                     {
-                        columnNames = $"{columnName}, ";
+                        string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, columnName);
+                        if (!string.IsNullOrEmpty(constraintName))
+                        {
+                            dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP CONSTRAINT {constraintName};");
+                        }
+                        columnNames += $"{columnName}, ";
                     }
+
                     columnNames = columnNames.Remove(columnNames.Length - 2);
-                    alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} DROP COLUMN {columnNames} ";
+                    alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} DROP COLUMN {columnNames};";
                 }
                 #endregion
 
@@ -137,15 +173,23 @@ namespace W_ORM.MYSQL
                 // Yani Kod tarafında bu tabloya ait Entity Class silinmiştir.
                 foreach (DBTableModel table in tableList)
                 {
-                    dropTableMYSQLQuery += $"DROP TABLE `{table.TableName}` ";
+                    dropTableMYSQLQuery += $"DROP TABLE {table.TableName};";
                 }
+            }
+            #endregion
+
+            #region Constraintler kaldırılır
+            dropConstraintList.Reverse();
+            foreach (string item in dropConstraintList)
+            {
+                dropConstraintListMYSQLQuery += item;
             }
             #endregion
 
             #endregion
 
-            //                      DROP TABLES             CREATE TABLES          ALTER TABLES           XML QUERY
-            return Tuple.Create(dropTableMYSQLQuery + createTableMYSQLQuery + alterTableMYSQLQuery, createXMLObjectQuery);
+            //                      DROP TABLES             CREATE TABLES                         ALTER TABLES                         XML QUERY
+            return Tuple.Create(dropTableMYSQLQuery + createTableMYSQLQuery + (dropConstraintListMYSQLQuery + alterTableMYSQLQuery), createXMLObjectQuery);
         }
     }
 }
