@@ -33,8 +33,6 @@ namespace W_ORM.Test.MYSQL
             dB_Operation.ContextGenerateFromDB(1, "", "", "BHDR_Context");
         }
 
-
-
         [TestMethod]
         public void CreateEverythingForMYSQL()
         {

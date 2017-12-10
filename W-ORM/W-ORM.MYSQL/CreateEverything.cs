@@ -81,7 +81,7 @@ namespace W_ORM.MYSQL
                         if (!string.IsNullOrEmpty(constraintName))
                         {
                             if(isEntityColumnPrimaryKey != null)
-                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP PRIMARY KEY {constraintName} ");
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP PRIMARY KEY;");
                             else
                                 dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintName} ");
                         }
@@ -89,7 +89,7 @@ namespace W_ORM.MYSQL
                         if (isEntityColumnPrimaryKey != null)
                         {
                             columnInformation = columnInformation.Replace($",PRIMARY KEY ({entityColumn.Name})", "");
-                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD PRIMARY KEY ({entityColumn.Name}) ";
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD PRIMARY KEY ({entityColumn.Name});";
                         }
 
                         dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
@@ -97,10 +97,10 @@ namespace W_ORM.MYSQL
                         {
                             columnInformation = columnInformation.Replace($"FOREIGN KEY REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
                             alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} " +
-                                                    $"ADD FOREIGN KEY({ entityColumn.Name}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName}) ";
+                                                    $"ADD FOREIGN KEY({ entityColumn.Name}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName});";
                         }
 
-                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} MODIFY COLUMN {columnInformation} ";
+                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} MODIFY COLUMN {columnInformation};";
                     }
                     #endregion
 
@@ -144,13 +144,13 @@ namespace W_ORM.MYSQL
                         string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, columnName);
                         if (!string.IsNullOrEmpty(constraintName))
                         {
-                            dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
+                            dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP CONSTRAINT {constraintName};");
                         }
-                        columnNames = $"{columnName}, ";
+                        columnNames += $"{columnName}, ";
                     }
 
                     columnNames = columnNames.Remove(columnNames.Length - 2);
-                    alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} DROP COLUMN {columnNames} ";
+                    alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} DROP COLUMN {columnNames};";
                 }
                 #endregion
 
@@ -173,7 +173,7 @@ namespace W_ORM.MYSQL
                 // Yani Kod tarafında bu tabloya ait Entity Class silinmiştir.
                 foreach (DBTableModel table in tableList)
                 {
-                    dropTableMYSQLQuery += $"DROP TABLE `{table.TableName}` ";
+                    dropTableMYSQLQuery += $"DROP TABLE {table.TableName};";
                 }
             }
             #endregion

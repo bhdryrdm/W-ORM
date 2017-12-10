@@ -42,6 +42,7 @@ namespace W_ORM.MSSQL
                                                       orderby genericArguments.CustomAttributes.FirstOrDefault().NamedArguments.FirstOrDefault(x => x.MemberName == "OrdinalPosition").TypedValue.Value
                                                       select Activator.CreateInstance(genericArguments)).ToList();
             #endregion
+           
             #region Creating SQL Server Queries
 
             #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları sorguları oluşturulur
