@@ -8,8 +8,17 @@ using System.Threading.Tasks;
 
 namespace W_ORM.Layout.DBConnection
 {
+    /// <summary>
+    /// TR : Bağlantı kontrolü
+    /// EN : Connection Control
+    /// </summary>
     public static class DBConnectionOperation
     {
+        /// <summary>
+        /// TR : Connection Is Open ? Control 
+        /// </summary>
+        /// <param name="connection"> TR : Bağlantı Nesnesi EN : Connection Object</param>
+        /// <returns></returns>
         public static DbConnection ConnectionOpen(DbConnection connection)
         {
             DbConnection returnConnection = null;
@@ -20,6 +29,12 @@ namespace W_ORM.Layout.DBConnection
             }
             return returnConnection;
         }
+
+        /// <summary>
+        /// TR : Connection Is Close ? Control 
+        /// </summary>
+        /// <param name="connection"> TR : Bağlantı Nesnesi EN : Connection Object</param>
+        /// <returns></returns>
         public static DbConnection ConnectionClose(DbConnection connection)
         {
             DbConnection returnConnection = null;

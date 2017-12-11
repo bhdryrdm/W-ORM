@@ -11,6 +11,10 @@ namespace W_ORM.Layout.Attributes
     {
         private string tableName;
 
+        /// <summary>
+        /// TR : Tablo Adı
+        /// EN : 
+        /// </summary>
         public string TableName
         {
             get { return tableName; }
@@ -19,6 +23,10 @@ namespace W_ORM.Layout.Attributes
 
         private string schemaName;
 
+        /// <summary>
+        /// TR : Tablo Şema Adı
+        /// EN : 
+        /// </summary>
         public string SchemaName
         {
             get { return schemaName; }
@@ -27,8 +35,8 @@ namespace W_ORM.Layout.Attributes
 
         private int ordinalPosition;
         /// <summary>
-        /// ForeignKey olarak tanımlanmış tabloları belirlemek için kullanılır
-        /// ForeignKey olarak tanımlanmış alan hangi tabloda Primary Key ise o tablonun OrdinalPosition küçük olmalıdır
+        /// TR : ForeignKey olarak tanımlanmış tabloları belirlemek için kullanılır ForeignKey olarak tanımlanmış alan hangi tabloda Primary Key ise o tablonun OrdinalPosition küçük olmalıdır
+        /// EN : 
         /// </summary>
         public int OrdinalPosition
         {
