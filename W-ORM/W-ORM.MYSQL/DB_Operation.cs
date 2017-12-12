@@ -277,7 +277,7 @@ namespace W_ORM.MYSQL
                 using (connection = DBConnectionFactory.Instance(this.ContextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
-                    MySqlCommand command = new MySqlCommand($"SELECT * FROM [dbo].[__WORM__Configuration] WHERE Version=@Version", (MySqlConnection)connection);
+                    MySqlCommand command = new MySqlCommand($"SELECT * FROM __WORM__Configuration WHERE Version=@Version", (MySqlConnection)connection);
                     command.Parameters.AddWithValue("@Version", dbVersion);
 
                     DbDataReader reader = command.ExecuteReader();
@@ -301,14 +301,13 @@ namespace W_ORM.MYSQL
                                     {
                                         customAttributes.Add(pocoColumnAttribute.Value);
                                     }
-                                    contextGenerate.AddProperties(pocoColumn.Name, new MYSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("type").Value), customAttributes);
+                                    contextGenerate.AddProperties(pocoColumn.Name, new MYSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("Type").Value), customAttributes);
                                 }
-                                contextGenerate.GenerateCSharpCode(contextPath, $"{pocoProperty.Name}.cs");
+                                contextGenerate.GenerateCSharpCode(contextPath + "Entities\\", $"{pocoProperty.Name}.cs");
                             }
                         }
                     }
                     reader.Close();
-
                 }
             }
             catch (Exception ex)

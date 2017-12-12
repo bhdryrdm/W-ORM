@@ -19,7 +19,34 @@ namespace W_ORM.MYSQL.TypeConverter
 
         public Type XML_To_CSHARP(string xmlType)
         {
-            throw new NotImplementedException();
+            switch (xmlType)
+            {
+                case "INT":
+                    propertyType = typeof(Int32); break;
+                case "BIGINT":
+                    propertyType = typeof(Int64); break;
+                case "FLOAT":
+                    propertyType = typeof(Decimal); break;
+                case "DATETIME":
+                    propertyType = typeof(DateTime); break;
+                case "LONGTEXT":
+                    propertyType = typeof(String); break;
+                case "SMALLINT":
+                    propertyType = typeof(Int32); break;
+                case "TEXT":
+                    propertyType = typeof(String); break;
+                case "TIMESTAMP":
+                    propertyType = typeof(DateTime); break;
+                case "TINYINT":
+                    propertyType = typeof(Byte); break;
+                case "VARCHAR":
+                    propertyType = typeof(String); break;
+                case "TINYTEXT":
+                    propertyType = typeof(String); break;
+                default:
+                    break;
+            }
+            return propertyType;
         }
     }
 }

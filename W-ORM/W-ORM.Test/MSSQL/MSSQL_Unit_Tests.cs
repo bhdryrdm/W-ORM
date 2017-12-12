@@ -19,12 +19,13 @@ namespace W_ORM.Test.MSSQL
         [TestMethod]
         public void CreateContextWormConfig()
         {
-            WORM_Config_Creator.SaveWormConfig<University>(path, "Server = .; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
+            WORM_Config_Creator.SaveWormConfig<University>(path, "Server = DESKTOP-OC11CCT\\SQL_2014; Trusted_Connection = True;", DBType_Enum.MSSQL, "xyz");
         }
 
         [TestMethod]
         public void Insert()
         {
+          
             University university = new University();
             university.Department.Insert(new Department { DepartmentID = 1 });
             university.PushToDB();
@@ -33,14 +34,14 @@ namespace W_ORM.Test.MSSQL
         public void ToList()
         {
             University university = new University();
-            List<Department> departmentList = university.Department.ToList(); 
+            List<Department> departmentList = university.Department.ToList().Where(x => x.DepartmentID == 2 ).ToList(); 
         }
 
         [TestMethod]
         public void ContextGenerateFromDB()
         {
             DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
-            dB_Operation.ContextGenerateFromDB(1, "", "", "BHDR_Context");
+            dB_Operation.ContextGenerateFromDB(1, "", "", "University");
         }
 
         [TestMethod]

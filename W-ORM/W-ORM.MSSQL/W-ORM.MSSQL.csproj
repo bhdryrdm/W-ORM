@@ -65,8 +65,8 @@
     <Compile Include="DB_Operation.cs" />
     <Compile Include="TypeConverter\MSSQL_To_CSHARP.cs" />
     <Compile Include="MSSQLProviderContext.cs" />
-    <Compile Include="MSSQL_RunQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WORM_Config_Creator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

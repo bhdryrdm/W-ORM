@@ -67,7 +67,16 @@ namespace W_ORM.MYSQL
                     #region Entity Class içerisinde oluşturulmuş yeni bir property varsa yani sütun ve Entity Class yani Tablo Veritabanında varsa
                     if (columnList.Where(x => x == entityColumn.Name).Count() == 0 && tableExistOnDb)
                     {
-                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD {columnInformation} ";
+                        dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
+                        columnInformation = columnInformation.Replace($",FOREIGN KEY ({isEntityColumnForeignKey.PropertyName}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
+                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD {columnInformation}; ";
+
+                        if (isEntityColumnForeignKey != null)
+                        {
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} " +
+                                                    $"ADD FOREIGN KEY({ entityColumn.Name}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName});";
+                        }
+                        
                     }
                     #endregion
 
@@ -123,7 +132,7 @@ namespace W_ORM.MYSQL
                 }
 
                 // Veritabanında versiyonlama için kullanılacak XML bilgisinin gövdesi
-                createXMLObjectQuery += $"<{entityType.Name} TableName=\"{entityInformation.TableName}\" OrdinalPosition=\"{entityInformation.TableName}\">" +
+                createXMLObjectQuery += $"<{entityType.Name} TableName=\"{entityInformation.TableName}\" OrdinalPosition=\"{entityInformation.OrdinalPosition}\">" +
                                         $"{entityColumnsXML}" +
                                         $"</{entityType.Name}>";
 
