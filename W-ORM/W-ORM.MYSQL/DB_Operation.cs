@@ -268,10 +268,13 @@ namespace W_ORM.MYSQL
 
             if (string.IsNullOrEmpty(contextPath))
                 contextPath = projectPath + "\\WORM_Context\\";
+            if (string.IsNullOrEmpty(namespaceName))
+                namespaceName = projectNamespace + ".WORM_Context";
             if (string.IsNullOrEmpty(contextName))
-                contextName = "WORM_Context";
+                contextName = this.contextName;
 
             bool dbCreatedSuccess = true;
+            List<string> POCOClasses = new List<string>();
             try
             {
                 using (connection = DBConnectionFactory.Instance(this.ContextName))
@@ -282,32 +285,50 @@ namespace W_ORM.MYSQL
 
                     DbDataReader reader = command.ExecuteReader();
 
+                    #region XML verisinden POCO Entity Class ları oluşturulur
                     while (reader.Read())
                     {
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.LoadXml(reader.GetString(3));
                         XmlNodeList xmlTableForm = xmlDoc.GetElementsByTagName("Classes");
 
-                        ContextGenerate contextGenerate = new ContextGenerate();
+                        ContextGenerate POCOClassGenerate = new ContextGenerate();
                         foreach (XmlNode pocoClasses in xmlTableForm)
                         {
-                            foreach (XmlNode pocoProperty in pocoClasses.ChildNodes)
+                            foreach (XmlNode pocoClass in pocoClasses.ChildNodes)
                             {
-                                contextGenerate.CreateContextEntity(pocoProperty.Name, contextName);
-                                foreach (XmlNode pocoColumn in pocoProperty.ChildNodes)
+                                List<string> pocoClasscustomAttributes = new List<string>();
+                                foreach (XmlAttribute pocoClassAttribute in pocoClass.Attributes)
                                 {
-                                    List<string> customAttributes = new List<string>();
+                                    pocoClasscustomAttributes.Add(pocoClassAttribute.Value);
+                                }
+                                POCOClassGenerate.CreateContextEntity(pocoClass.Name, namespaceName + ".Entities", pocoClasscustomAttributes);
+                                POCOClasses.Add(pocoClass.Name);
+                                foreach (XmlNode pocoColumn in pocoClass.ChildNodes)
+                                {
+                                    Dictionary<string, string> pocoColumncustomAttributes = new Dictionary<string, string>();
                                     foreach (XmlAttribute pocoColumnAttribute in pocoColumn.Attributes)
                                     {
-                                        customAttributes.Add(pocoColumnAttribute.Value);
+                                        pocoColumncustomAttributes.Add(pocoColumnAttribute.Name, pocoColumnAttribute.Value);
                                     }
-                                    contextGenerate.AddProperties(pocoColumn.Name, new MYSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("Type").Value), customAttributes);
+                                    POCOClassGenerate.AddProperties(pocoColumn.Name, new MYSQL_To_CSHARP().XML_To_CSHARP(pocoColumn.Attributes.GetNamedItem("Type").Value), pocoColumncustomAttributes);
                                 }
-                                contextGenerate.GenerateCSharpCode(contextPath + "Entities\\", $"{pocoProperty.Name}.cs");
+                                POCOClassGenerate.GenerateCSharpCode(contextPath + "Entities\\", $"{pocoClass.Name}.cs");
                             }
                         }
                     }
                     reader.Close();
+                    #endregion
+
+                    #region XML verisinden Context Class oluşturulur
+                    ContextGenerate contextGenerate = new ContextGenerate();
+                    contextGenerate.CreateContextEntity(contextName, namespaceName);
+                    foreach (string pocoClass in POCOClasses)
+                    {
+                        contextGenerate.AddProperties(pocoClass, "MYSQLProviderContext", contextName);
+                    }
+                    contextGenerate.GenerateCSharpCode(contextPath, $"{contextName}.cs");
+                    #endregion
                 }
             }
             catch (Exception ex)

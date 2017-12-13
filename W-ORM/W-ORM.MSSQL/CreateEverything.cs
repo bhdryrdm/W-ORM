@@ -80,6 +80,16 @@ namespace W_ORM.MSSQL
                             dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
                         }
 
+                        dynamic isEntityColumnAutoIncrement = entityColumn.GetCustomAttributes(typeof(AUTO_INCREMENT), false).FirstOrDefault();
+                        if (isEntityColumnAutoIncrement != null)
+                        {
+                            alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP COLUMN {entityColumn.Name} ";
+                            columnInformation = columnInformation.Replace("PRIMARY KEY", "");
+                            alterTableMSSQLQuery += $"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] ADD {columnInformation} ";
+                            columnInformation = columnInformation.Replace($"IDENTITY({isEntityColumnAutoIncrement.StartNumber},{isEntityColumnAutoIncrement.Increase})", "");
+
+                        }
+
                         var isEntityColumnPrimaryKey = entityColumn.GetCustomAttributes(typeof(PRIMARY_KEY), false).FirstOrDefault();
                         if (isEntityColumnPrimaryKey != null)
                         {

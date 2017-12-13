@@ -21,9 +21,6 @@ namespace W_ORM.MYSQL
                     if (propertyAttribute.AttributeName == "VARCHAR")
                         returnPropertyAttribute += $"({propertyAttribute.MaxLength}) ";
 
-                    if (propertyAttribute.AttributeDefination == "Increment")
-                        returnPropertyAttribute += $"({propertyAttribute.StartNumber},{propertyAttribute.Increase}) ";
-
                     if (propertyAttribute.AttributeDefination == "FKey")
                         returnPropertyAttribute += $",FOREIGN KEY ({propertyAttribute.PropertyName}) REFERENCES {propertyAttribute.ClassName}({propertyAttribute.PropertyName})";
 
@@ -46,6 +43,10 @@ namespace W_ORM.MYSQL
                 foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes())
                 {
                     column += $"{propertyAttribute.AttributeDefination}=\"{propertyAttribute.AttributeName}\" ";
+                    if (propertyAttribute.AttributeName == "VARCHAR" || propertyAttribute.AttributeName == "NVARCHAR")
+                        column += $"MaxLength=\"{propertyAttribute.MaxLength}\" ";
+                    if (propertyAttribute.AttributeDefination == "FKey")
+                        column += $"TableName=\"{propertyAttribute.ClassName}\" ColumnName=\"{propertyAttribute.PropertyName}\" ";
                 }
             }
             else

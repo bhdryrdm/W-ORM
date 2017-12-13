@@ -92,7 +92,7 @@ namespace W_ORM.MYSQL
                             if(isEntityColumnPrimaryKey != null)
                                 dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP PRIMARY KEY;");
                             else
-                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintName} ");
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintName}; ");
                         }
 
                         if (isEntityColumnPrimaryKey != null)
@@ -104,7 +104,7 @@ namespace W_ORM.MYSQL
                         dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
                         if (isEntityColumnForeignKey != null)
                         {
-                            columnInformation = columnInformation.Replace($"FOREIGN KEY REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
+                            columnInformation = columnInformation.Replace($",FOREIGN KEY ({isEntityColumnForeignKey.PropertyName}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
                             alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} " +
                                                     $"ADD FOREIGN KEY({ entityColumn.Name}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName});";
                         }

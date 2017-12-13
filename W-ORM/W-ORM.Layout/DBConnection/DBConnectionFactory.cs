@@ -6,6 +6,10 @@ using W_ORM.Layout.DBModel;
 
 namespace W_ORM.Layout.DBConnection
 {
+    /// <summary>
+    /// TR : Bağlantı Nesne Fabrikası
+    /// EN : Connection Object Factory
+    /// </summary>
     public class DBConnectionFactory
     {
         private static DbConnection dbConnection;
@@ -16,7 +20,7 @@ namespace W_ORM.Layout.DBConnection
 
         }
 
-        #region Ortak Bağlantı Nesnesi
+        #region TR : Ortak Bağlantı Nesnesi EN : Common Connection Object
         public static DbConnection Instance(string contextName)
         {
             if (dbConnection == null || string.IsNullOrEmpty(dbConnection.ConnectionString))
@@ -36,7 +40,13 @@ namespace W_ORM.Layout.DBConnection
         }
         #endregion
 
-        #region Database Oluşturma Nesnesi (ConnectionString Database olmadan)
+        #region TR : Veritabanı Oluşturan Bağlantı Nesnesi EN : Creating Database by Connection Object
+        /// <summary>
+        /// TR : WORM.config dosyasından bilgiler okunarak Bağlantı nesnesi oluşturulur
+        /// EN : 
+        /// </summary>
+        /// <param name="contextName">WORM.config dosyasından okunacak Context Adı </param>
+        /// <returns></returns>
         public static DbConnection CreateDatabaseInstance(string contextName)
         {
             var dbInformation = ReturnDBInformatinFromXML(contextName);
@@ -49,7 +59,13 @@ namespace W_ORM.Layout.DBConnection
         }
         #endregion
 
-        #region Config Dosya Okuyucusu
+        #region TR : WORM.config Dosya Okuyucusu EN : WORM.config Reader
+        /// <summary>
+        /// TR : 
+        /// EN : 
+        /// </summary>
+        /// <param name="contextID">TR : WORM.config dosyası içerisinden istenen ContextID </param>
+        /// <returns></returns>
         public static DBInformationModel ReturnDBInformatinFromXML(string contextID)
         {
             XmlDocument xmlDoc = new XmlDocument();

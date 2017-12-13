@@ -9,14 +9,23 @@ using W_ORM.Layout.DBConnection;
 
 namespace W_ORM.Layout.DBModel
 {
+    /// <summary>
+    /// TR : Oluşturulan Context Adı
+    /// EN : 
+    /// </summary>
+    /// <typeparam name="TContextName"></typeparam>
     public class BaseContext<TContextName>
     {
+        DbCommand command = null; 
         DbConnection connection = null;
-        DbCommand command = null;
-
         public static string runQuery;
-
         public static Dictionary<string, object> parameterList = new Dictionary<string, object>();
+
+        /// <summary>
+        /// TR :  
+        /// EN :
+        /// </summary>
+        /// <returns></returns>
         public int PushToDB()
         {
             try
@@ -48,6 +57,12 @@ namespace W_ORM.Layout.DBModel
             }
         }
 
+        /// <summary>
+        /// TR : Verilen Entity Class(POCO) yani Tabloya ait tüm kayıtları listelemek için kullanılır
+        /// EN : 
+        /// </summary>
+        /// <typeparam name="TEntity">TR : Entity Class(POCO)/Tablo EN : Entity Class(POCO)/Table </typeparam>
+        /// <returns></returns>
         protected List<TEntity> GetListFromDB<TEntity>()
         {
             List<TEntity> entities = new List<TEntity>();
@@ -84,6 +99,12 @@ namespace W_ORM.Layout.DBModel
             return entities;
         }
 
+        /// <summary>
+        /// TR : Verilen Entity Class(POCO) yani Tabloya ait tek bir kaydı getirmek için kullanılır
+        /// EN : 
+        /// </summary>
+        /// <typeparam name="TEntity">TR : Entity Class(POCO)/Tablo EN : Entity Class(POCO)/Table</typeparam>
+        /// <returns></returns>
         protected TEntity GetItemFromDB<TEntity>()
         {
             TEntity entity = Activator.CreateInstance<TEntity>();
