@@ -11,29 +11,16 @@ namespace W_ORM.Test.MSSQL
     [TestClass]
     public class MSSQL_Unit_Tests
     {
-        public static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-
         [TestMethod]
         public void CreateContextWormConfig()
         {
-            WORM_Config_Creator.SaveWormConfig<University>(path, "Server = .; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
-        }
-
-        [TestMethod]
-        public void CreateEverythingForMSSQL()
-        {
-            CreateEverything<University> createEverything = new CreateEverything<University>();
-            Tuple<string, string> tupleData = createEverything.EntityClassQueries();
-
-            DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
-            dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
+            WORM_Config_Operation.SaveWormConfig<University>("Server = .; Trusted_Connection = True;", DBType_Enum.MSSQL, "bhdryrdm");
         }
 
         [TestMethod]
         public void ContextGenerateFromDB()
         {
-            DB_Operation dB_Operation = new DB_Operation(typeof(University).Name);
-            dB_Operation.ContextGenerateFromDB(1, "", "", "BHDR_Context");
+            WORM_Config_Operation.CreateContext<University>(12,"","","University");
         }
     }
 
@@ -83,6 +70,14 @@ namespace W_ORM.Test.MSSQL
         {
             University university = new University();
             List<Department> departmentList = university.Department.ToList();
+            
+        }
+
+        [TestMethod]
+        public void ToPaginateList()
+        {
+            University university = new University();
+            List<Department> departmentList = university.Department.ToPaginateList(null,"DepartmentID", 2, 3);
         }
 
         [TestMethod]

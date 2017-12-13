@@ -49,12 +49,16 @@
     <Compile Include="DBModel\BaseContext.cs" />
     <Compile Include="DBModel\DBInformationModel.cs" />
     <Compile Include="DBModel\DBTableModel.cs" />
+    <Compile Include="DBModel\Environment\DEV.cs" />
+    <Compile Include="DBModel\Environment\PREPROD.cs" />
+    <Compile Include="DBModel\Environment\PROD.cs" />
     <Compile Include="DBProvider\IDB_CRUD_Helper.cs" />
     <Compile Include="DBProvider\IDB_CRUD_Operation.cs" />
     <Compile Include="DBProvider\IDB_Generator.cs" />
     <Compile Include="DBProvider\IDB_Operation.cs" />
     <Compile Include="DBProvider\IDB_Operation_Helper.cs" />
     <Compile Include="DBType\DBType_Enum.cs" />
+    <Compile Include="DBType\DBType_To_DBProvider.cs" />
     <Compile Include="DBType\IDB_To_CSHARP.cs" />
     <Compile Include="DBType\ICSHARP_To_DB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

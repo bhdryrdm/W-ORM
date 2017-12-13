@@ -13,6 +13,7 @@ namespace W_ORM.MSSQL
     public class MSSQLProviderContext<TEntityClass,TContextName> : BaseContext<TContextName>, IDB_CRUD_Operation<TEntityClass>
     {
         public static string whereCondition;
+        private string versionQuery = "SELECT TOP 1 Version FROM [dbo].[__WORM__Configuration] ORDER BY Version DESC";
 
         #region Entity Type & Entity Schema
         protected string EntitySchema
@@ -27,6 +28,7 @@ namespace W_ORM.MSSQL
         protected Type EntityType { get { return typeof(TEntityClass); } }
         #endregion
 
+        #region IDB_CRUD_Operation
         public void Insert(TEntityClass entity)
         {
             string columnName = string.Empty, columnNameWithParameter = string.Empty;
@@ -43,6 +45,7 @@ namespace W_ORM.MSSQL
             columnName = columnName.Remove(columnName.Length - 1);
             columnNameWithParameter = columnNameWithParameter.Remove(columnNameWithParameter.Length - 1);
             runQuery = $"INSERT INTO [{EntitySchema}].[{EntityType.Name}] ({columnName}) VALUES ({columnNameWithParameter});";
+            runVersionQuery = versionQuery;
         }
 
         public void Update(TEntityClass entity)
@@ -60,16 +63,29 @@ namespace W_ORM.MSSQL
             columnNameAndValue = columnNameAndValue.Remove(columnNameAndValue.Length - 1);
             runQuery = $"UPDATE [{EntitySchema}].[{EntityType.Name}] SET {columnNameAndValue} ";
             runQuery += !string.IsNullOrEmpty(whereCondition) ? $"WHERE {whereCondition}" : "";
+            runVersionQuery = versionQuery;
         }
 
         public void Delete(TEntityClass entity)
         {
             runQuery = $"DELETE FROM [{EntitySchema}].[{EntityType.Name}] WHERE {whereCondition}";
+            runVersionQuery = versionQuery;
         }
+        #endregion
 
+        #region IDB_CRUD_Helper_Operation
         public List<TEntityClass> ToList()
         {
             runQuery = $"SELECT * FROM [{EntitySchema}].[{EntityType.Name}]";
+            return base.GetListFromDB<TEntityClass>();
+        }
+
+        public List<TEntityClass> ToPaginateList(Expression<Func<TEntityClass, object>> predicate = null, string orderByColumn = "", int pageSize = 10, int requestedPageNumber = 1)
+        {
+            string whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
+            runQuery = $"SELECT * FROM (SELECT * , ROW_NUMBER() OVER (ORDER BY {(!string.IsNullOrEmpty(orderByColumn) ? orderByColumn : typeof(TEntityClass).GetProperties().FirstOrDefault().Name)}) " +
+                       $"AS ROW  FROM [{EntitySchema}].[{EntityType.Name}] {(!string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "")} ) " +
+                       $"AS PAGED WHERE ROW > {(requestedPageNumber - 1) * pageSize} AND ROW <= {requestedPageNumber * pageSize}";
             return base.GetListFromDB<TEntityClass>();
         }
 
@@ -88,5 +104,8 @@ namespace W_ORM.MSSQL
             runQuery += !string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "";
             return base.GetListFromDB<TEntityClass>();
         }
+        #endregion
+
+
     }
 }

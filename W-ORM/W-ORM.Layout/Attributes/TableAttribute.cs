@@ -35,7 +35,7 @@ namespace W_ORM.Layout.Attributes
 
         private int ordinalPosition;
         /// <summary>
-        /// TR : ForeignKey olarak tanımlanmış tabloları belirlemek için kullanılır ForeignKey olarak tanımlanmış alan hangi tabloda Primary Key ise o tablonun OrdinalPosition küçük olmalıdır
+        /// TR : ForeignKey olarak tanımlanmış tabloları belirlemek için kullanılır. ForeignKey olarak tanımlanmış alan hangi tabloda Primary Key ise o tablonun OrdinalPosition küçük olmalıdır
         /// EN : 
         /// </summary>
         public int OrdinalPosition

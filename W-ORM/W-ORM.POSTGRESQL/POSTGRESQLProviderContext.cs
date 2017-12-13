@@ -52,6 +52,11 @@ namespace W_ORM.POSTGRESQL
             throw new NotImplementedException();
         }
 
+        public List<TDBEntity> ToPaginateList(Expression<Func<TDBEntity, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(TDBEntity entity)
         {
             throw new NotImplementedException();

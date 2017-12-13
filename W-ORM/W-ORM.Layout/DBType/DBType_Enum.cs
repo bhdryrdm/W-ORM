@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace W_ORM.Layout.DBType
+﻿namespace W_ORM.Layout.DBType
 {
+    /// <summary>
+    /// TR : Veritabanı tipleri
+    /// EN : Database Type
+    /// </summary>
     public enum DBType_Enum
     {
         MSSQL,

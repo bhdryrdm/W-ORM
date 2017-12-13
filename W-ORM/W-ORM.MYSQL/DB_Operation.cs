@@ -319,6 +319,11 @@ namespace W_ORM.MYSQL
             }
             return dbCreatedSuccess;
         }
+
+        public int LatestVersionDatabase()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

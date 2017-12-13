@@ -12,6 +12,10 @@ using W_ORM.Layout.DBProvider;
 
 namespace W_ORM.MSSQL
 {
+    /// <summary>
+    /// TR : Veritabanı ile ilgili işlemler için kullanılır
+    /// EN : 
+    /// </summary>
     public class DB_Operation :  IDB_Operation , IDB_Operation_Helper , IDB_Generator
     {
         string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
@@ -257,6 +261,37 @@ namespace W_ORM.MSSQL
                 throw ex;
             }
             return constraintName;
+        }
+
+        /// <summary>
+        /// TR : Veritabanında oluşturulmuş olan versiyonların sonuncusunu döner
+        /// EN : 
+        /// </summary>
+        /// <returns></returns>
+        public int LatestVersionDatabase()
+        {
+            int version = 0;
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    SqlCommand command = new SqlCommand($"SELECT TOP 1 Version FROM [dbo].[__WORM__Configuration] ORDER BY Version DESC ",(SqlConnection)connection);
+
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        version = reader.GetInt32(0);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+            return version;
         }
 
         #endregion

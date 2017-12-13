@@ -297,6 +297,11 @@ namespace W_ORM.POSTGRESQL
         {
             throw new NotImplementedException();
         }
+
+        public int LatestVersionDatabase()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

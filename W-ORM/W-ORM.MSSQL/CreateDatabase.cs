@@ -8,16 +8,25 @@ using W_ORM.MSSQL.Attributes;
 
 namespace W_ORM.MSSQL
 {
-    public class CreateEverything<TDBEntity> : IEntityClassQueryGenerator<TDBEntity>
+    /// <summary>
+    /// TR : Veritabanı oluşturmak için kullanılır
+    /// EN : 
+    /// </summary>
+    /// <typeparam name="TDBEntity">TR : Context Adı (Veritabanı Adı) EN : Context Name (Database Name) </typeparam>
+    public class CreateDatabase<TDBEntity> : IEntityClassQueryGenerator<TDBEntity>
     {
         public static string contextName = typeof(TDBEntity).Name;
         List<DBTableModel> tableList = new DB_Operation(contextName).TableListOnDB();
         List<string> columnList;
 
         /// <summary>
-        /// SQL Server için oluşturulacak Query ler generate edilir
+        /// TR : SQL Server için oluşturulacak tabloların, sütunların sorguları generate edilir
+        /// EN : 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// TupleData Item1 : TR : SQL Server üzerinde çalıştırılacak sorgular EN : 
+        /// TupleData Item2 : TR : __WORM_Configuration tablosunda tutulacak Veritabanı XML formu EN : 
+        /// </returns>
         public Tuple<string, string> EntityClassQueries()
         {
             #region Field Defination

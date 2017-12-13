@@ -7,6 +7,10 @@ using W_ORM.Layout.DBModel;
 
 namespace W_ORM.Layout.DBProvider
 {
+    /// <summary>
+    /// TR : Veritabanı oluşturmak için gerekli olan yardımcı methhodlar
+    /// EN : 
+    /// </summary>
     public interface IDB_Operation_Helper
     {
         /// <summary>
@@ -44,5 +48,12 @@ namespace W_ORM.Layout.DBProvider
         ///    /// <param name="schemaName">Tablo Şema Adı</param>
         /// <returns></returns>
         string ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName);
+
+        /// <summary>
+        /// TR : Veritabanında oluşturulmuş olan versiyonların sonuncusunu döner
+        /// EN : 
+        /// </summary>
+        /// <returns></returns>
+        int LatestVersionDatabase();
     }
 }

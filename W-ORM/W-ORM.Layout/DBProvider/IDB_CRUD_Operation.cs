@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace W_ORM.Layout.DBProvider
 {
+    /// <summary>
+    /// TR : CRUD işlemleri
+    /// EN : CRUD Operations
+    /// </summary>
+    /// <typeparam name="TEntity">Entity Class(POCO)</typeparam>
     public interface IDB_CRUD_Operation<TEntity> : IDB_CRUD_Helper<TEntity>
     {
         void Insert(TEntity entity);

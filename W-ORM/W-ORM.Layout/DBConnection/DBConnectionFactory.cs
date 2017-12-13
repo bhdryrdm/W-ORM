@@ -15,6 +15,9 @@ namespace W_ORM.Layout.DBConnection
         private static DbConnection dbConnection;
         private static Object objectLockControl = new Object();
 
+        /// <summary>
+        /// Private Constructor
+        /// </summary>
         private DBConnectionFactory()
         {
 
@@ -78,6 +81,14 @@ namespace W_ORM.Layout.DBConnection
                 UpdatedAuthor = xmlElement.GetElementsByTagName("UpdatedAuthor")[0].Attributes[0].InnerXml
             };
             return dBInformationModel;
+        }
+
+        public static int LatestDatabaseVersionFromXML(string contextID)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\WORM.config");
+            XmlElement xmlElement = (XmlElement)xmlDoc.DocumentElement.SelectSingleNode($"{contextID}[@id='{contextID}']");
+            return Int32.Parse(xmlElement.GetElementsByTagName("Version")[0].Attributes[0].InnerXml);
         }
         #endregion
 

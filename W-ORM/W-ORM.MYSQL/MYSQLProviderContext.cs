@@ -46,5 +46,10 @@ namespace W_ORM.MYSQL
         {
             throw new NotImplementedException();
         }
+
+        public List<TDBEntity> ToPaginateList(Expression<Func<TDBEntity, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
