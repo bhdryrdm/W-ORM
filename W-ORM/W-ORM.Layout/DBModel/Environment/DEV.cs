@@ -32,19 +32,10 @@ namespace W_ORM.Layout.DBModel.Environment
                     command = connection.CreateCommand();
                     command.CommandText = runVersionQuery;
 
-                    if (DBConnectionFactory.LatestDatabaseVersionFromXML(contextName) == Convert.ToInt32(command.ExecuteScalar()))
-                    {
-
-                    }
-                    else
-                    {
-                        throw new Exception("Veritabanı üzerinde bir güncelleme olduğu için bu işlem gerçekleştirilemez." +
-                                            "Lütfen öncelikle Veritabanı versiyonunuzu eşitleyiniz.");
-                    }
-
+                    if (DBConnectionFactory.LatestDatabaseVersionFromXML(contextName) != Convert.ToInt32(command.ExecuteScalar()))
+                        throw new Exception("Veritabanı üzerinde bir güncelleme olduğu için bu işlem gerçekleştirilemez.Lütfen öncelikle Veritabanı versiyonunuzu eşitleyiniz.");
 
                     command.CommandText = runQuery;
-
                     if (parameterList != null && parameterList.Count > 0)
                     {
                         foreach (var loopParameter in parameterList)

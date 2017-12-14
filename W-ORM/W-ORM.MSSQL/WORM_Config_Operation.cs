@@ -101,6 +101,8 @@ namespace W_ORM.MSSQL
 
                 string contextName = typeof(TContext).Name;
                 XDocument xDocument = XDocument.Load(path + "\\WORM.config");
+                if (xDocument.Element("Databases").Element(contextName).Elements("Version") != null)
+                    xDocument.Element("Databases").Element(contextName).Elements("Version").Remove();
                 xDocument.Element("Databases").Element(contextName).Add(new XElement("Version", new XAttribute("value", latestVersion)));
                 xDocument.Save(path + "\\WORM.config");
             }
@@ -109,7 +111,5 @@ namespace W_ORM.MSSQL
                 throw ex;
             }
         }
-
-
     }
 }
