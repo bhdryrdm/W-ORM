@@ -59,12 +59,18 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MSSQL\Entities\Course.cs" />
     <Compile Include="MSSQL\Entities\Department.cs" />
+    <Compile Include="MSSQL\Entities\Instructor.cs" />
     <Compile Include="MSSQL\Entities\Student.cs" />
+    <Compile Include="MSSQL\Entities\TakeCourse.cs" />
+    <Compile Include="MSSQL\Entities\Teach.cs" />
     <Compile Include="MSSQL\MSSQL_Unit_Tests.cs" />
     <Compile Include="MSSQL\University.cs" />
+    <Compile Include="MYSQL\Entities\Course.cs" />
     <Compile Include="MYSQL\Entities\Department.cs" />
     <Compile Include="MYSQL\Entities\Student.cs" />
+    <Compile Include="MYSQL\Entities\TakeCourse.cs" />
     <Compile Include="MYSQL\MYSQL_Unit_Tests.cs" />
     <Compile Include="MYSQL\MYSQL_University.cs" />
     <Compile Include="POSTGRESQL\Entities\Department.cs" />

@@ -10,6 +10,6 @@ namespace W_ORM.Test.MSSQL.Entities
         [NVARCHAR(100)] [NOTNULL] public string StudentName { get; set; }
         [NVARCHAR(100)] [NOTNULL] public string StudentSurName { get; set; }
         [NVARCHAR(100)] [NOTNULL] public string StudentEmail { get; set; }
-        [FOREIGN_KEY("Department", "DepartmentID")][INT]public int DepartmentID { get; set; }
+        [FOREIGN_KEY("Department", "DepartmentID")] [INT] [NOTNULL] public int DepartmentID { get; set; }
     }
 }

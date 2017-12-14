@@ -7,6 +7,6 @@ namespace W_ORM.Test.MSSQL.Entities
     public class Department
     {
         [PRIMARY_KEY][AUTO_INCREMENT(1,1)][INT][NOTNULL] public int DepartmentID { get; set; }
-        [NVARCHAR(500)] [NOTNULL] public string DepartmentName { get; set; }
+        [NVARCHAR(100)] [NOTNULL] public string DepartmentName { get; set; }
     }
 }

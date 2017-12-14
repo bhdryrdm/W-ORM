@@ -18,7 +18,7 @@ namespace W_ORM.MSSQL.Attributes
             this._length = length;
         }
 
-        public int Length
+        public int MaxLength
         {
             get { return _length; }
             set { _length = value; }

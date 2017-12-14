@@ -138,7 +138,7 @@ namespace W_ORM.MSSQL
             property.GetStatements.Add(new CodeMethodReturnStatement(
                                         new CodeFieldReferenceExpression
                                         {
-                                            FieldName = $"new MSSQLProviderContext<{pocoClassName},{contextName}>()"
+                                            FieldName = $"new {propertyType}<{pocoClassName},{contextName}>()"
                                         }));
             targetClass.Members.Add(property);
         }

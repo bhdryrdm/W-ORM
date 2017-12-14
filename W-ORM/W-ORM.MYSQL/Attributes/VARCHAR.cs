@@ -15,6 +15,7 @@ namespace W_ORM.MYSQL.Attributes
             this.maxlength = maxlength;
         }
         private int maxlength;
+
         public int MaxLength
         {
             get { return maxlength; }
