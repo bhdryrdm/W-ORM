@@ -71,7 +71,7 @@ namespace W_ORM.MYSQL
         {
             string contextName = typeof(TContext).Name;
             DB_Operation dB_Operation = new DB_Operation(contextName);
-            dB_Operation.ContextGenerateFromDB(dbVersion, contextPath, namespaceName, contextName);
+            dB_Operation.ContextGenerateFromDB(dbVersion, contextPath, namespaceName);
             CreateEverythingForMSSQL<TContext>();
             SaveVersionToWormConfig<TContext>();
         }

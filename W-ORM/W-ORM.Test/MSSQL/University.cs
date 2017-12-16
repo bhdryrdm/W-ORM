@@ -1,4 +1,7 @@
-﻿using W_ORM.Layout.DBModel;
+﻿using System;
+using System.Data.Common;
+using W_ORM.Layout.DBConnection;
+using W_ORM.Layout.DBModel;
 using W_ORM.MSSQL;
 using W_ORM.Test.MSSQL.Entities;
 

@@ -21,6 +21,6 @@ namespace W_ORM.Layout.DBProvider
         /// <param name="namespaceName">TR : Generate edilecek Namespace EN : </param>
         /// <param name="contextName">TR : Generate edilecek Context Adı EN : </param>
         /// <returns></returns>
-        bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "");
+        bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "");
     }
 }

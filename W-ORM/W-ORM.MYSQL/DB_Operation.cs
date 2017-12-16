@@ -157,7 +157,7 @@ namespace W_ORM.MYSQL
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 DBConnectionOperation.ConnectionClose(connection);
             }
@@ -188,7 +188,7 @@ namespace W_ORM.MYSQL
                     reader.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 DBConnectionOperation.ConnectionClose(connection);
             }
@@ -291,15 +291,13 @@ namespace W_ORM.MYSQL
         #endregion
 
         #region IDB_Generator
-        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
+        public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "")
         {
 
             if (string.IsNullOrEmpty(contextPath))
                 contextPath = projectPath + "\\WORM_Context\\";
             if (string.IsNullOrEmpty(namespaceName))
                 namespaceName = projectNamespace + ".WORM_Context";
-            if (string.IsNullOrEmpty(contextName))
-                contextName = this.contextName;
 
             bool dbCreatedSuccess = true;
             List<string> POCOClasses = new List<string>();

@@ -19,7 +19,7 @@ namespace W_ORM.Test
         [TestMethod]
         public void ContextGenerateFromDB()
         {
-            WORM_Config_Operation.CreateContext<University>(12,"","","University");
+            WORM_Config_Operation.CreateContext<University>(12,"","");
         }
     }
 

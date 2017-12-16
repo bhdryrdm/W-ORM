@@ -65,10 +65,11 @@ namespace W_ORM.MSSQL
             dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
         }
 
-        public static void CreateContext<TContext>(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
+        public static void CreateContext<TContext>(int dbVersion, string contextPath = "", string namespaceName = "")
         {
-            DB_Operation dB_Operation = new DB_Operation(typeof(TContext).Name);
-            dB_Operation.ContextGenerateFromDB(dbVersion, contextPath, namespaceName, contextName);
+            string contextName = typeof(TContext).Name;
+            DB_Operation dB_Operation = new DB_Operation(contextName);
+            dB_Operation.ContextGenerateFromDB(dbVersion, contextPath, namespaceName);
             SaveVersionToWormConfig<TContext>();
         }
 

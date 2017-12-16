@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Reflection;
 using W_ORM.Layout.DBConnection;
-using W_ORM.Layout.DBModel.Environment;
 
 namespace W_ORM.Layout.DBModel
 {
@@ -12,19 +11,53 @@ namespace W_ORM.Layout.DBModel
     /// EN : 
     /// </summary>
     /// <typeparam name="TContextName"></typeparam>
-    public class BaseContext<TContextName> : DEV<TContextName>
+    public class BaseContext<TContextName>
     {
-        DbCommand command = null; 
-        DbConnection connection = null;
-
+        protected DbCommand command = null;
+        protected DbConnection connection = null;
+        protected static string runQuery;
+        protected static string runVersionQuery;
+        protected static Dictionary<string, object> parameterList = new Dictionary<string, object>();
+        private static string contextName = typeof(TContextName).Name;
         /// <summary>
         /// TR : CRUD işlemlerinden sonra çalıştırılacak method
         /// EN :
         /// </summary>
         /// <returns></returns>
-        public int PushToDB()
+        /// <summary>
+        public virtual int PushToDB()
         {
-            return base.SendToDB();
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(contextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    command = connection.CreateCommand();
+                    command.CommandText = runVersionQuery;
+
+                    //Development ortamı isteyen geliştiriciler override edip bu satırları aktif hale getirecekler 
+                    //if (DBConnectionFactory.LatestDatabaseVersionFromXML(contextName) != Convert.ToInt32(command.ExecuteScalar()))
+                    //  throw new Exception("Veritabanı üzerinde bir güncelleme olduğu için bu işlem gerçekleştirilemez.Lütfen öncelikle Veritabanı versiyonunuzu eşitleyiniz.");
+
+                    command.CommandText = runQuery;
+                    if (parameterList != null && parameterList.Count > 0)
+                    {
+                        foreach (var loopParameter in parameterList)
+                        {
+                            DbParameter parameter = command.CreateParameter();
+                            parameter.ParameterName = loopParameter.Key.ToString();
+                            parameter.Value = loopParameter.Value;
+                            command.Parameters.Add(parameter);
+                        }
+                    }
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -38,7 +71,7 @@ namespace W_ORM.Layout.DBModel
             List<TEntity> entities = new List<TEntity>();
             try
             {
-                using (connection = DBConnectionFactory.Instance(typeof(TContextName).Name))
+                using (connection = DBConnectionFactory.Instance(contextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
                     command = connection.CreateCommand();
@@ -80,7 +113,7 @@ namespace W_ORM.Layout.DBModel
             TEntity entity = Activator.CreateInstance<TEntity>();
             try
             {
-                using (connection = DBConnectionFactory.Instance(typeof(TContextName).Name))
+                using (connection = DBConnectionFactory.Instance(contextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
                     command = connection.CreateCommand();
