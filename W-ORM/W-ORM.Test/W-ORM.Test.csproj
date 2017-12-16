@@ -65,18 +65,14 @@
     <Compile Include="MSSQL\Entities\Student.cs" />
     <Compile Include="MSSQL\Entities\TakeCourse.cs" />
     <Compile Include="MSSQL\Entities\Teach.cs" />
-    <Compile Include="MSSQL\MSSQL_Unit_Tests.cs" />
+    <Compile Include="MSSQL_Unit_Tests.cs" />
     <Compile Include="MSSQL\University.cs" />
     <Compile Include="MYSQL\Entities\Course.cs" />
     <Compile Include="MYSQL\Entities\Department.cs" />
     <Compile Include="MYSQL\Entities\Student.cs" />
     <Compile Include="MYSQL\Entities\TakeCourse.cs" />
-    <Compile Include="MYSQL\MYSQL_Unit_Tests.cs" />
+    <Compile Include="MYSQL_Unit_Tests.cs" />
     <Compile Include="MYSQL\MYSQL_University.cs" />
-    <Compile Include="POSTGRESQL\Entities\Department.cs" />
-    <Compile Include="POSTGRESQL\Entities\Student.cs" />
-    <Compile Include="POSTGRESQL\POSTGRESQL_Unit_Tests.cs" />
-    <Compile Include="POSTGRESQL\POSTGRESQL_University.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

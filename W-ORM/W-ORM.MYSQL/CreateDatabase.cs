@@ -10,14 +10,14 @@ using W_ORM.MYSQL.Attributes;
 
 namespace W_ORM.MYSQL
 {
-    public class CreateEverything<TDBEntity> : IEntityClassQueryGenerator<TDBEntity>
+    public class CreateDatabase<TDBEntity> : IEntityClassQueryGenerator<TDBEntity>
     {
         public static string contextName = typeof(TDBEntity).Name;
         List<DBTableModel> tableList = new DB_Operation(contextName).TableListOnDB();
         List<string> columnList;
 
         /// <summary>
-        /// SQL Server için oluşturulacak Query ler generate edilir
+        /// MYSQL Server için oluşturulacak Query ler generate edilir
         /// </summary>
         /// <returns></returns>
         public Tuple<string, string> EntityClassQueries()
@@ -49,50 +49,68 @@ namespace W_ORM.MYSQL
 
             #region Veritabanı versiyonu için XML verisi ve Create&Alter Tabloları ve Sütunları
             createXMLObjectQuery = "<Classes>"; // Veritabanında versiyonlama için kullanılacak XML bilgisinin başlangıcı
-            foreach (var entity in implementedTableEntities) // Entity Class yani Veritabaındaki Tabloları oluşturmak için döngü başlatılır
+            foreach (var entity in implementedTableEntities) // Entity Classlar(Tablo) oluşturmak için döngü başlatılır
             {
                 entityType = entity.GetType();
-                entityInformation = entityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault(); // Entity Class üzerindeki Table Attribute üzerinden bilgiler okunur
+                entityInformation = entityType.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault(); // Entity Class üzerindeki Table Attribute üzerinden Schema ve Tablo İsmi okunur
 
                 columnList = new DB_Operation(contextName).ColumnListOnTable(entityType.Name); // Veritabanından ilgili tablonun tüm sütunları çekilir
 
-                // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışmaz CREATE çalışır : ALTER çalışır CREATE çalışmaz
+                // Veritabanında Tablonun var olup olmadığı kontrol edilir Tablo Varsa ? ALTER çalışır CREATE çalışmaz : ALTER çalışmaz CREATE çalışır
                 bool tableExistOnDb = tableList.FirstOrDefault(x => x.TableName == entityInformation.TableName.ToLower()) != null ? true : false;
 
                 foreach (var entityColumn in entityType.GetProperties()) // Entity Class içerisindeki property ler yani Sütunları oluşturmak için döngü başlatılır
                 {
-                    // Property inin Custom Attributelerine bakarak MSSQL Query generate edilir
+                    // Property inin Custom Attributelerine bakarak MYSQL Query generate edilir
                     var columnInformation = new CSHARP_To_MYSQL().GetSQLQueryFormat(entityColumn);
-
-                    #region Entity Class içerisinde oluşturulmuş yeni bir property varsa yani sütun ve Entity Class yani Tablo Veritabanında varsa
+                    var isEntityColumnPrimaryKey = entityColumn.GetCustomAttributes(typeof(PRIMARY_KEY), false).FirstOrDefault();
+                    dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
+                    
+                    #region Entity Class(Tablo) içerisinde oluşturulmuş yeni bir property(sütun/column) varsa ve Entity Class(Tablo) Veritabanında varsa
                     if (columnList.Where(x => x == entityColumn.Name).Count() == 0 && tableExistOnDb)
                     {
-                        dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
-                        columnInformation = columnInformation.Replace($",FOREIGN KEY ({isEntityColumnForeignKey.PropertyName}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
-                        alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD {columnInformation}; ";
-
-                        if (isEntityColumnForeignKey != null)
+                        if (isEntityColumnPrimaryKey != null && isEntityColumnForeignKey != null)
                         {
+                            if(entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault() != null)
+                                alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} AUTO_INCREMENT=1;";
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD {columnInformation};";
+                        }
+                        if (isEntityColumnPrimaryKey != null)
+                        {
+                            columnInformation = columnInformation.Replace($",PRIMARY KEY ({entityColumn.Name})", "");
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD {columnInformation};";
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD PRIMARY KEY ({entityColumn.Name});";
+                        }
+                        if(isEntityColumnForeignKey != null)
+                        {
+                            columnInformation = columnInformation.Replace($",FOREIGN KEY ({isEntityColumnForeignKey.PropertyName}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
+                            alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD {columnInformation}; ";
                             alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} " +
                                                     $"ADD FOREIGN KEY({ entityColumn.Name}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName});";
                         }
-                        
                     }
                     #endregion
 
                     #region Entity Class içerisinde var olup değişikliğe uğramış bir property
-
-                    var isEntityColumnPrimaryKey = entityColumn.GetCustomAttributes(typeof(PRIMARY_KEY), false).FirstOrDefault();
-                    if (columnList.Where(x => x == entityColumn.Name).Count() > 0 /* && isEntityColumnPrimaryKey == null*/)
+                    if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
                     {
                         columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
-                        string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.TableName, entityColumn.Name);
-                        if (!string.IsNullOrEmpty(constraintName))
+                        Tuple<string,string> constraintTupleData = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.TableName, entityColumn.Name);
+                        if (!string.IsNullOrEmpty(constraintTupleData.Item1))
                         {
                             if(isEntityColumnPrimaryKey != null)
+                            {
                                 dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP PRIMARY KEY;");
+
+                                // MYSQL Auto Increment olan bir sütunu DROP edemiyor
+                                // Önce Sütundan Auto Increment kaldırılır daha sonra PRIMARY KEY DROP edilir
+                                columnInformation = columnInformation.Replace($",PRIMARY KEY ({entityColumn.Name})", "");
+                                columnInformation = columnInformation.Replace($"AUTO_INCREMENT", "");
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} MODIFY COLUMN {columnInformation};");
+
+                            }
                             else
-                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintName}; ");
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintTupleData.Item1}; ");
                         }
 
                         if (isEntityColumnPrimaryKey != null)
@@ -100,8 +118,7 @@ namespace W_ORM.MYSQL
                             columnInformation = columnInformation.Replace($",PRIMARY KEY ({entityColumn.Name})", "");
                             alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} ADD PRIMARY KEY ({entityColumn.Name});";
                         }
-
-                        dynamic isEntityColumnForeignKey = entityColumn.GetCustomAttributes(typeof(FOREIGN_KEY), false).FirstOrDefault();
+                        
                         if (isEntityColumnForeignKey != null)
                         {
                             columnInformation = columnInformation.Replace($",FOREIGN KEY ({isEntityColumnForeignKey.PropertyName}) REFERENCES {isEntityColumnForeignKey.ClassName}({isEntityColumnForeignKey.PropertyName})", "");
@@ -150,16 +167,25 @@ namespace W_ORM.MYSQL
                     string columnNames = string.Empty;
                     foreach (string columnName in columnList)
                     {
-                        string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, columnName);
-                        if (!string.IsNullOrEmpty(constraintName))
+                        Tuple<string,string> constraintTupleData = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.TableName, columnName);
+                        if (!string.IsNullOrEmpty(constraintTupleData.Item1))
                         {
-                            dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP CONSTRAINT {constraintName};");
-                        }
-                        columnNames += $"{columnName}, ";
-                    }
+                            if (constraintTupleData.Item2 == "PRIMARY KEY")
+                            {
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP PRIMARY KEY;");
 
+                                // MYSQL Auto Increment olan bir sütunu DROP edemiyor
+                                // Önce Sütundan Auto Increment kaldırılır daha sonra PRIMARY KEY DROP edilir
+                                string columnInformation = new DB_Operation(contextName).ColumnInformationFromDB(entityInformation.TableName, columnName);
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} MODIFY COLUMN {columnName} {columnInformation};");
+                            }
+                            if (constraintTupleData.Item2 == "FOREIGN KEY")
+                                dropConstraintList.Add($"ALTER TABLE {entityInformation.TableName} DROP FOREIGN KEY {constraintTupleData.Item1};");
+                        }
+                        columnNames += $"DROP {columnName}, ";
+                    }
                     columnNames = columnNames.Remove(columnNames.Length - 2);
-                    alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} DROP COLUMN {columnNames};";
+                    alterTableMYSQLQuery += $"ALTER TABLE {entityInformation.TableName} {columnNames};";
                 }
                 #endregion
 
@@ -197,8 +223,8 @@ namespace W_ORM.MYSQL
 
             #endregion
 
-            //                      DROP TABLES             CREATE TABLES                         ALTER TABLES                         XML QUERY
-            return Tuple.Create(dropTableMYSQLQuery + createTableMYSQLQuery + (dropConstraintListMYSQLQuery + alterTableMYSQLQuery), createXMLObjectQuery);
+            //                                                    DROP TABLES          CREATE TABLES             ALTER TABLES           XML QUERY
+            return Tuple.Create(dropConstraintListMYSQLQuery +dropTableMYSQLQuery + createTableMYSQLQuery +  alterTableMYSQLQuery, createXMLObjectQuery);
         }
     }
 }

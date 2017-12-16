@@ -83,10 +83,10 @@ namespace W_ORM.MSSQL
                     if (columnList.Where(x => x == entityColumn.Name).Count() > 0)
                     {
                         columnList.Remove(entityColumn.Name); // Tablo içerisindeki sütun listesinden işlem yapılan sütun çıkartılır (DROP edilmeyecektir)
-                        string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, entityColumn.Name);
-                        if (!string.IsNullOrEmpty(constraintName))
+                        Tuple<string,string> constraintTupleData = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, entityColumn.Name);
+                        if (!string.IsNullOrEmpty(constraintTupleData.Item1))
                         {
-                            dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
+                            dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintTupleData.Item1} ");
                         }
 
                         dynamic isEntityColumnAutoIncrement = entityColumn.GetCustomAttributes(typeof(AUTO_INCREMENT), false).FirstOrDefault();
@@ -155,10 +155,10 @@ namespace W_ORM.MSSQL
                     string columnNames = string.Empty;
                     foreach (string columnName in columnList)
                     {
-                        string constraintName = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, columnName);
-                        if (!string.IsNullOrEmpty(constraintName))
+                        Tuple<string,string> constraintTupleData = new DB_Operation(contextName).ConstraintNameByTableAndColumnName(entityInformation.SchemaName, entityInformation.TableName, columnName);
+                        if (!string.IsNullOrEmpty(constraintTupleData.Item1))
                         {
-                            dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintName} ");
+                            dropConstraintList.Add($"ALTER TABLE [{entityInformation.SchemaName}].[{entityInformation.TableName}] DROP CONSTRAINT {constraintTupleData.Item1} ");
                         }
                         columnNames += $"{columnName}, ";
                     }
@@ -201,8 +201,8 @@ namespace W_ORM.MSSQL
 
             #endregion
 
-            //                      DROP TABLES             CREATE TABLES                         ALTER TABLES                         XML QUERY
-            return Tuple.Create(dropTableMSSQLQuery + createTableMSSQLQuery + (dropConstraintListMSSQLQuery + alterTableMSSQLQuery), createXMLObjectQuery);
+            //                                                    DROP TABLES          CREATE TABLES             ALTER TABLES           XML QUERY
+            return Tuple.Create(dropConstraintListMSSQLQuery + dropTableMSSQLQuery + createTableMSSQLQuery + alterTableMSSQLQuery, createXMLObjectQuery);
         }
     }
 }

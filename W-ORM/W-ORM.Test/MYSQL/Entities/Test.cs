@@ -14,29 +14,17 @@ namespace W_ORM.MYSQL.WORM_Context.Entities
     using W_ORM.MYSQL.Attributes;
     
     
-    [Table(TableName="Student", OrdinalPosition=2)]
-    public sealed class Student
+    [Table(TableName="Test", OrdinalPosition=1)]
+    public sealed class Test
     {
         
         [PRIMARY_KEY()]
         [INT()]
         [NOTNULL()]
-        public int StudentID { get; set; } // StudentID;
+        public int TestID { get; set; } // TestID;
         
         [VARCHAR(100)]
         [NOTNULL()]
-        public string StudentName { get; set; } // StudentName;
-        
-        [VARCHAR(100)]
-        [NOTNULL()]
-        public string StudentSurName { get; set; } // StudentSurName;
-        
-        [VARCHAR(100)]
-        [NOTNULL()]
-        public string StudentEmail { get; set; } // StudentEmail;
-        
-        [FOREIGN_KEY("Department", "DepartmentID")]
-        [INT()]
-        public int DepartmentID { get; set; } // DepartmentID;
+        public string TestName { get; set; } // TestName;
     }
 }

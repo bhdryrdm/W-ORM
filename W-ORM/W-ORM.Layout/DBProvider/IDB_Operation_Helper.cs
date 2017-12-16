@@ -41,13 +41,13 @@ namespace W_ORM.Layout.DBProvider
         bool IsTableHasPrimaryKey(string schemaName,string tableName);
 
         /// <summary>
-        /// Tablo ve Sütun adı verilerek ilgili Constraint ismini döner
+        /// Tablo ve Sütun adı verilerek ilgili Constraint ismini ve tipini döner
         /// </summary>
         /// <param name="tableName">Tablo Adı</param>
         /// <param name="columnName">Sütun Adı</param>
         ///    /// <param name="schemaName">Tablo Şema Adı</param>
         /// <returns></returns>
-        string ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName);
+        Tuple<string,string> ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName);
 
         /// <summary>
         /// TR : Veritabanında oluşturulmuş olan versiyonların sonuncusunu döner

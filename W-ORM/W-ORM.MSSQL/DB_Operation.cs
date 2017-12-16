@@ -232,7 +232,7 @@ namespace W_ORM.MSSQL
         /// <param name="tableName">Tablo Adı</param>
         /// <param name="columnName">Sütun Adı</param>
         /// <returns></returns>
-        public string ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName)
+        public Tuple<string,string> ConstraintNameByTableAndColumnName(string schemaName, string tableName, string columnName)
         {
             string constraintName = string.Empty;
             try
@@ -260,7 +260,7 @@ namespace W_ORM.MSSQL
                 DBConnectionOperation.ConnectionClose(connection);
                 throw ex;
             }
-            return constraintName;
+            return Tuple.Create(constraintName,"");
         }
 
         /// <summary>
@@ -355,15 +355,15 @@ namespace W_ORM.MSSQL
                     #endregion
 
                     #region XML verisinden Context Class oluşturulur
+                    // TODO : Otomatik oluşturulan Entity Class lar exclude halinde geliyor
                     ContextGenerate contextGenerate = new ContextGenerate();
                     contextGenerate.CreateContextEntity(contextName, namespaceName);
-                    foreach (string pocoClass in POCOClasses)
-                    {
-                        contextGenerate.AddProperties(pocoClass, "MSSQLProviderContext",contextName);
-                    }
+                    //foreach (string pocoClass in POCOClasses)
+                    //{
+                    //    contextGenerate.AddProperties(pocoClass, "MSSQLProviderContext", contextName);
+                    //}
                     contextGenerate.GenerateCSharpCode(contextPath, $"{contextName}.cs");
                     #endregion
-
                 }
             }
             catch (Exception ex)

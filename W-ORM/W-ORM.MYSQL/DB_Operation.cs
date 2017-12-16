@@ -227,24 +227,29 @@ namespace W_ORM.MYSQL
         /// <param name="tableName">Tablo Adı</param>
         /// <param name="columnName">Sütun Adı</param>
         /// <returns></returns>
-        public string ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName = "")
+        public Tuple<string,string> ConstraintNameByTableAndColumnName(string tableName, string columnName, string schemaName = "")
         {
             string constraintName = string.Empty;
+            string constraintType = string.Empty;
             try
             {
                 using (connection = DBConnectionFactory.Instance(this.ContextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
-                    MySqlCommand command = new MySqlCommand($"SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
-                                                        $"WHERE TABLE_NAME = @TableName AND COLUMN_NAME = @ColumnName",
-                                                        (MySqlConnection)connection);
+                    MySqlCommand command = new MySqlCommand($"SELECT Col.COLUMN_NAME,Col.CONSTRAINT_NAME,Tbl.CONSTRAINT_TYPE " +
+                                                            $"FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS Tbl,INFORMATION_SCHEMA.KEY_COLUMN_USAGE Col " +
+                                                            $"WHERE Col.CONSTRAINT_NAME = Tbl.CONSTRAINT_NAME " +
+                                                            $"AND Col.TABLE_NAME = Tbl.TABLE_NAME " +
+                                                            $"AND Col.TABLE_NAME = @TableName " +
+                                                            $"AND Col.COLUMN_NAME = @ColumnName",(MySqlConnection)connection);
                     command.Parameters.AddWithValue("@TableName", tableName);
                     command.Parameters.AddWithValue("@ColumnName", columnName);
 
                     DbDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        constraintName = reader.GetString(0);
+                        constraintName = reader.GetString(1);
+                        constraintType = reader.GetString(2);
                     }
                     reader.Close();
                 }
@@ -254,13 +259,36 @@ namespace W_ORM.MYSQL
                 DBConnectionOperation.ConnectionClose(connection);
                 throw ex;
             }
-            return constraintName;
+            return Tuple.Create(constraintName, constraintType);
         }
 
+        public int LatestVersionDatabase()
+        {
+            int version = 0;
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    MySqlCommand command = new MySqlCommand($"SELECT Version FROM __WORM__Configuration ORDER BY Version DESC LIMIT 1", (MySqlConnection)connection);
+
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        version = reader.GetInt32(0);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+            return version;
+        }
 
         #endregion
-
-
 
         #region IDB_Generator
         public bool ContextGenerateFromDB(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
@@ -321,12 +349,13 @@ namespace W_ORM.MYSQL
                     #endregion
 
                     #region XML verisinden Context Class oluşturulur
+                    // TODO : Otomatik oluşturulan Entity Class lar exclude halinde geliyor
                     ContextGenerate contextGenerate = new ContextGenerate();
                     contextGenerate.CreateContextEntity(contextName, namespaceName);
-                    foreach (string pocoClass in POCOClasses)
-                    {
-                        contextGenerate.AddProperties(pocoClass, "MYSQLProviderContext", contextName);
-                    }
+                    //foreach (string pocoClass in POCOClasses)
+                    //{
+                    //    contextGenerate.AddProperties(pocoClass, "MYSQLProviderContext", contextName);
+                    //}
                     contextGenerate.GenerateCSharpCode(contextPath, $"{contextName}.cs");
                     #endregion
                 }
@@ -339,10 +368,36 @@ namespace W_ORM.MYSQL
             }
             return dbCreatedSuccess;
         }
+        #endregion
 
-        public int LatestVersionDatabase()
+        #region Custom_MYSQL_Helper
+        public string ColumnInformationFromDB(string tableName, string columnName)
         {
-            throw new NotImplementedException();
+            string columnInformation = string.Empty;
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    MySqlCommand command = new MySqlCommand($"SELECT DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS  " +
+                                                            $"WHERE TABLE_NAME = @TableName AND COLUMN_NAME = @ColumnName", (MySqlConnection)connection);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@ColumnName", columnName);
+
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        columnInformation = $"{reader.GetString(0)}{(reader.IsDBNull(1) ? "" : $"({reader.GetString(1)})")} {(reader.GetString(2) == "YES" ? "NULL" : "NOT NULL")} "; 
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+            return columnInformation;
         }
         #endregion
     }

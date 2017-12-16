@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using W_ORM.Layout.DBType;
 using W_ORM.MSSQL;
+using W_ORM.Test.MSSQL;
 using W_ORM.Test.MSSQL.Entities;
 
-namespace W_ORM.Test.MSSQL
+namespace W_ORM.Test
 {
     [TestClass]
     public class MSSQL_Unit_Tests

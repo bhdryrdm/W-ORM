@@ -63,12 +63,13 @@
     <Compile Include="Attributes\TINYTEXT.cs" />
     <Compile Include="Attributes\VARCHAR.cs" />
     <Compile Include="ContextGenerate.cs" />
-    <Compile Include="CreateEverything.cs" />
+    <Compile Include="CreateDatabase.cs" />
     <Compile Include="DB_Operation.cs" />
     <Compile Include="MYSQLProviderContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeConverter\CSHARP_To_MYSQL.cs" />
     <Compile Include="TypeConverter\MYSQL_To_CSHARP.cs" />
+    <Compile Include="WORM_Config_Operation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

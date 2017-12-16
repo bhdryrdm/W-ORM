@@ -18,7 +18,7 @@ namespace W_ORM.MYSQL
                 foreach (dynamic propertyAttribute in propertyInfo.GetCustomAttributes().OrderBy(x => x.TypeId))
                 {
                     returnPropertyAttribute += $" {Attribute_To_SQLType(propertyAttribute)}";
-                    if (propertyAttribute.AttributeName == "VARCHAR")
+                    if (propertyAttribute.AttributeName == "VARCHAR" || propertyAttribute.AttributeName == "NVARCHAR")
                         returnPropertyAttribute += $"({propertyAttribute.MaxLength}) ";
 
                     if (propertyAttribute.AttributeDefination == "FKey")

@@ -105,7 +105,5 @@ namespace W_ORM.MSSQL
             return base.GetListFromDB<TEntityClass>();
         }
         #endregion
-
-
     }
 }

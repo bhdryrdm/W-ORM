@@ -155,7 +155,6 @@ namespace W_ORM.MYSQL
             if (!Directory.Exists(path))
             {
                 DirectoryInfo directory = Directory.CreateDirectory(path);
-                directory.Attributes = FileAttributes.Directory | FileAttributes.Normal;
             }
 
             using (StreamWriter sourceWriter = new StreamWriter(path + entityName))

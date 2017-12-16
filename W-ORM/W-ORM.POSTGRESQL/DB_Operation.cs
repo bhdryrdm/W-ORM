@@ -12,7 +12,7 @@ using W_ORM.POSTGRESQL.TypeConverter;
 
 namespace W_ORM.POSTGRESQL
 {
-    public class DB_Operation : IDB_Operation, IDB_Operation_Helper, IDB_Generator
+    public class DB_Operation //: IDB_Operation, IDB_Operation_Helper, IDB_Generator
     {
         string projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
         DbConnection connection = null;

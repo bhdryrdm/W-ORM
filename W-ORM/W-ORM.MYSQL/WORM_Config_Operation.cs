@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using W_ORM.Layout.DBType;
 
-namespace W_ORM.MSSQL
+namespace W_ORM.MYSQL
 {
-    public static class WORM_Config_Operation
+    public class WORM_Config_Operation
     {
-        public static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+        public static string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\WORM.config";
 
         /// <summary>
         /// WORM.config dosyasına yeni context veritabanı eklemek için yada güncellemek kullanılır
@@ -22,7 +24,6 @@ namespace W_ORM.MSSQL
         public static void SaveWormConfig<TContext>(string connectionString, DBType_Enum dBType_Enum, string author)
         {
             #region WORM.config dosyası var mı kontrolü yapılır
-            path += "\\WORM.config";
             if (!File.Exists(path))
             {
                 using (File.Create(path)) { };
@@ -33,7 +34,7 @@ namespace W_ORM.MSSQL
             #region WORM.config dosyasına yeni context oluşturulur yada üzerine yazılır
             string contextName = typeof(TContext).Name;
             XDocument xDocument = XDocument.Load(path);
-            if (xDocument.Element("Databases").Elements(contextName) != null)
+            if(xDocument.Element("Databases").Elements(contextName) != null)
                 xDocument.Element("Databases").Elements(contextName).Remove();
 
             XElement contextRoot = new XElement(contextName);
@@ -41,6 +42,7 @@ namespace W_ORM.MSSQL
             contextRoot.Add(new XElement("ConnectionString", new XAttribute("value", connectionString)),
                             new XElement("Provider", new XAttribute("value", DBType_To_DBProvider.GetProviderFactoryByEnum(dBType_Enum))),
                             new XElement("UpdatedAuthor", new XAttribute("value", author)));
+
 
             xDocument.Element("Databases").Add(contextRoot);
             xDocument.Save(path);
@@ -65,10 +67,12 @@ namespace W_ORM.MSSQL
             dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
         }
 
-        public static void CreateContext<TContext>(int dbVersion, string contextPath = "", string namespaceName = "", string contextName = "")
+        public static void CreateContext<TContext>(int dbVersion, string contextPath = "", string namespaceName = "")
         {
-            DB_Operation dB_Operation = new DB_Operation(typeof(TContext).Name);
+            string contextName = typeof(TContext).Name;
+            DB_Operation dB_Operation = new DB_Operation(contextName);
             dB_Operation.ContextGenerateFromDB(dbVersion, contextPath, namespaceName, contextName);
+            CreateEverythingForMSSQL<TContext>();
             SaveVersionToWormConfig<TContext>();
         }
 

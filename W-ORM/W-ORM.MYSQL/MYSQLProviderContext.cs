@@ -1,55 +1,100 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using W_ORM.Layout.Attributes;
+using W_ORM.Layout.DBModel;
 using W_ORM.Layout.DBProvider;
+using W_ORM.Layout.Query.Evaluator;
+using W_ORM.MYSQL.Attributes;
 
 namespace W_ORM.MYSQL
 {
-    public class MYSQLProviderContext<TDBEntity> : IDB_CRUD_Operation<TDBEntity>
+    public class MYSQLProviderContext<TEntityClass, TContextName> : BaseContext<TContextName>, IDB_CRUD_Operation<TEntityClass>
     {
-        protected Type EntityType { get { return typeof(TDBEntity); } }
+        public static string whereCondition;
+        private string versionQuery = "SELECT Version FROM [dbo].[__WORM__Configuration] ORDER BY Version DESC LIMIT 1";
 
-        public void Insert(TDBEntity entity)
-        {
-            throw new NotImplementedException();
-        }
+        #region Entity Type
+        protected Type EntityType { get { return typeof(TEntityClass); } }
+        #endregion
 
-        public void Update(TDBEntity entity)
+        #region IDB_CRUD_Operation
+        public void Insert(TEntityClass entity)
         {
-            throw new NotImplementedException();
-        }
-        public void Delete(TDBEntity entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int PushToDB()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<TDBEntity> ToList()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TDBEntity FirstOrDefault(Expression<Func<TDBEntity, object>> predicate)
-        {
-            throw new NotImplementedException();
+            string columnName = string.Empty, columnNameWithParameter = string.Empty;
+            foreach (var entityProperty in EntityType.GetProperties())
+            {
+                if (entityProperty.GetCustomAttributes(typeof(AUTO_INCREMENT), false).FirstOrDefault() != null)
+                {
+                    continue;
+                }
+                columnName += $"[{entityProperty.Name}],";
+                columnNameWithParameter += $"@{entityProperty.Name},";
+                parameterList.Add(entityProperty.Name, entityProperty.GetValue(entity));
+            }
+            columnName = columnName.Remove(columnName.Length - 1);
+            columnNameWithParameter = columnNameWithParameter.Remove(columnNameWithParameter.Length - 1);
+            runQuery = $"INSERT INTO {EntityType.Name} ({columnName}) VALUES ({columnNameWithParameter});";
+            runVersionQuery = versionQuery;
         }
 
-        public List<TDBEntity> Where(Expression<Func<TDBEntity, object>> predicate)
+        public void Update(TEntityClass entity)
         {
-            throw new NotImplementedException();
+            string columnNameAndValue = string.Empty;
+            foreach (var entityProperty in EntityType.GetProperties())
+            {
+                if (entityProperty.GetCustomAttributes(typeof(AUTO_INCREMENT), false).FirstOrDefault() != null)
+                {
+                    continue;
+                }
+                columnNameAndValue += $"{entityProperty.Name} = @{entityProperty.Name},";
+                parameterList.Add(entityProperty.Name, entityProperty.GetValue(entity));
+            }
+            columnNameAndValue = columnNameAndValue.Remove(columnNameAndValue.Length - 1);
+            runQuery = $"UPDATE {EntityType.Name} SET {columnNameAndValue} ";
+            runQuery += !string.IsNullOrEmpty(whereCondition) ? $"WHERE {whereCondition}" : "";
+            runVersionQuery = versionQuery;
         }
 
-        public List<TDBEntity> ToPaginateList(Expression<Func<TDBEntity, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber)
+        public void Delete(TEntityClass entity)
         {
-            throw new NotImplementedException();
+            runQuery = $"DELETE FROM {EntityType.Name} WHERE {whereCondition}";
+            runVersionQuery = versionQuery;
         }
+        #endregion
+
+        #region IDB_CRUD_Helper_Operation
+        public List<TEntityClass> ToList()
+        {
+            runQuery = $"SELECT * FROM {EntityType.Name}";
+            return base.GetListFromDB<TEntityClass>();
+        }
+
+        public TEntityClass FirstOrDefault(Expression<Func<TEntityClass, object>> predicate)
+        {
+            runQuery = $"SELECT TOP 1 * FROM {EntityType.Name}";
+            whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
+            runQuery += !string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "";
+            return base.GetItemFromDB<TEntityClass>();
+        }
+
+        public List<TEntityClass> Where(Expression<Func<TEntityClass, object>> predicate)
+        {
+            runQuery = $"SELECT * FROM {EntityType.Name}";
+            string whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
+            runQuery += !string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "";
+            return base.GetListFromDB<TEntityClass>();
+        }
+
+        public List<TEntityClass> ToPaginateList(Expression<Func<TEntityClass, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber)
+        {
+            string whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
+            runQuery = $"SELECT * FROM (SELECT * , ROW_NUMBER() OVER (ORDER BY {(!string.IsNullOrEmpty(orderByColumn) ? orderByColumn : typeof(TEntityClass).GetProperties().FirstOrDefault().Name)}) " +
+                       $"AS ROW  FROM {EntityType.Name} {(!string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "")} ) " +
+                       $"AS PAGED WHERE ROW > {(requestedPageNumber - 1) * pageSize} AND ROW <= {requestedPageNumber * pageSize}";
+            return base.GetListFromDB<TEntityClass>();
+        }
+        #endregion
     }
 }
