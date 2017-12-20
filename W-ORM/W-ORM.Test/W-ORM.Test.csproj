@@ -80,7 +80,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="WORM.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\W-ORM.Layout\W-ORM.Layout.csproj">

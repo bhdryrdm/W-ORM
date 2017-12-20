@@ -30,7 +30,7 @@ namespace W_ORM.Test
         public void Insert()
         {
             MYSQL_University university = new MYSQL_University();
-            university.Department.Insert(new Department { DepartmentName = "Test" });
+            university.Department.Insert(new Department { DepartmentID=1, DepartmentName = "Computer Engineering" });
             university.PushToDB();
         }
 
@@ -39,7 +39,7 @@ namespace W_ORM.Test
         {
             MYSQL_University university = new MYSQL_University();
             Department willBeUpdatingDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
-            willBeUpdatingDepartment.DepartmentName = "2";
+            willBeUpdatingDepartment.DepartmentName = "Computer Engineering Updated";
             university.Department.Update(willBeUpdatingDepartment);
             university.PushToDB();
         }
@@ -69,7 +69,6 @@ namespace W_ORM.Test
         {
             MYSQL_University university = new MYSQL_University();
             List<Department> departmentList = university.Department.ToList();
-
         }
 
         [TestMethod]

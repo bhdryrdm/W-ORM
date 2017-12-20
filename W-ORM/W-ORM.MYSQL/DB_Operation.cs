@@ -36,9 +36,10 @@ namespace W_ORM.MYSQL
         #endregion
 
         #region IDB_Operation
-        public bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
+        public Tuple<bool,int> CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
         {
             bool dbCreatedSuccess = true;
+            int version = 0;
             try
             {
                 using (connection = DBConnectionFactory.CreateDatabaseInstance(this.contextName))
@@ -63,6 +64,16 @@ namespace W_ORM.MYSQL
                     command.ExecuteNonQuery();
                     #endregion
 
+                    #region __WORM__Configuration tablosundan veritabanı son versiyonu çekilir
+                    command = new MySqlCommand($"SELECT Version FROM __WORM__Configuration ORDER BY Version DESC LIMIT 1", (MySqlConnection)connection);
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        version = reader.GetInt32(0);
+                    }
+                    reader.Close();
+                    #endregion
+
                     #region Tablolar oluşturulur
                     command = new MySqlCommand(createTableSQLQuery, (MySqlConnection)connection);
                     command.ExecuteNonQuery();
@@ -72,10 +83,9 @@ namespace W_ORM.MYSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
-                dbCreatedSuccess = false;
                 throw ex;
             }
-            return dbCreatedSuccess;
+            return Tuple.Create(dbCreatedSuccess,version);
         }
 
         private string CreateDatabaseQuery()

@@ -29,7 +29,7 @@ namespace W_ORM.MYSQL
                 {
                     continue;
                 }
-                columnName += $"[{entityProperty.Name}],";
+                columnName += $"{entityProperty.Name},";
                 columnNameWithParameter += $"@{entityProperty.Name},";
                 parameterList.Add(entityProperty.Name, entityProperty.GetValue(entity));
             }
@@ -73,9 +73,10 @@ namespace W_ORM.MYSQL
 
         public TEntityClass FirstOrDefault(Expression<Func<TEntityClass, object>> predicate)
         {
-            runQuery = $"SELECT TOP 1 * FROM {EntityType.Name}";
+            runQuery = $"SELECT * FROM {EntityType.Name}";
             whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
             runQuery += !string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "";
+            runQuery += " LIMIT 1";
             return base.GetItemFromDB<TEntityClass>();
         }
 
@@ -90,9 +91,9 @@ namespace W_ORM.MYSQL
         public List<TEntityClass> ToPaginateList(Expression<Func<TEntityClass, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber)
         {
             string whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
-            runQuery = $"SELECT * FROM (SELECT * , ROW_NUMBER() OVER (ORDER BY {(!string.IsNullOrEmpty(orderByColumn) ? orderByColumn : typeof(TEntityClass).GetProperties().FirstOrDefault().Name)}) " +
-                       $"AS ROW  FROM {EntityType.Name} {(!string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "")} ) " +
-                       $"AS PAGED WHERE ROW > {(requestedPageNumber - 1) * pageSize} AND ROW <= {requestedPageNumber * pageSize}";
+            runQuery = $"SELECT * FROM {EntityType.Name} " +
+                        $"{(!string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "")}" +
+                        $"LIMIT {(requestedPageNumber - 1) * pageSize},{requestedPageNumber * pageSize} ";
             return base.GetListFromDB<TEntityClass>();
         }
         #endregion

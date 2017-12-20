@@ -80,6 +80,14 @@ namespace W_ORM.MSSQL
             return base.GetListFromDB<TEntityClass>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="predicate">Predicate</param>
+        /// <param name="orderByColumn">Sıralanması istenen Sütun</param>
+        /// <param name="pageSize">Bir sayfada kaç item olacak</param>
+        /// <param name="requestedPageNumber">İstenen sayfa numarası</param>
+        /// <returns></returns>
         public List<TEntityClass> ToPaginateList(Expression<Func<TEntityClass, object>> predicate = null, string orderByColumn = "", int pageSize = 10, int requestedPageNumber = 1)
         {
             string whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));

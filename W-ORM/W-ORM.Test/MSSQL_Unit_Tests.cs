@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Diagnostics;
 using W_ORM.Layout.DBType;
 using W_ORM.MSSQL;
 using W_ORM.Test.MSSQL;
@@ -19,7 +20,7 @@ namespace W_ORM.Test
         [TestMethod]
         public void ContextGenerateFromDB()
         {
-            WORM_Config_Operation.CreateContext<University>(12,"","");
+            WORM_Config_Operation.CreateContext<University>(1,"","");
         }
     }
 

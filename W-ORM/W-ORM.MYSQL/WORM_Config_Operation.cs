@@ -26,7 +26,6 @@ namespace W_ORM.MYSQL
             #region WORM.config dosyası var mı kontrolü yapılır
             if (!File.Exists(path))
             {
-                using (File.Create(path)) { };
                 new XDocument(new XElement("Databases")).Save(path);
             }
             #endregion
@@ -48,23 +47,25 @@ namespace W_ORM.MYSQL
             xDocument.Save(path);
             #endregion
 
-            #region MSSQL için Veritabanı, Tablo ve Sütunlar oluşturulur
-            CreateEverythingForMSSQL<TContext>();
+            #region MYSQL için Veritabanı, Tablo ve Sütunlar oluşturulur
+            CreateEverythingForMYSQL<TContext>();
             #endregion
-
-            #region WORM.Config dosyasına en son oluşturulan versiyon bilgisi yazılır
-            SaveVersionToWormConfig<TContext>();
-            #endregion
-
         }
 
-        private static void CreateEverythingForMSSQL<TContext>()
+        private static void CreateEverythingForMYSQL<TContext>()
         {
             CreateDatabase<TContext> createDatabase = new CreateDatabase<TContext>();
             Tuple<string, string> tupleData = createDatabase.EntityClassQueries();
 
             DB_Operation dB_Operation = new DB_Operation(typeof(TContext).Name);
-            dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
+            Tuple<bool,int> tupleData2 = dB_Operation.CreateORAlterDatabaseAndTables(tupleData.Item2, tupleData.Item1);
+
+            string contextName = typeof(TContext).Name;
+            XDocument xDocument = XDocument.Load(path);
+            if (xDocument.Element("Databases").Element(contextName).Elements("Version") != null)
+                xDocument.Element("Databases").Element(contextName).Elements("Version").Remove();
+            xDocument.Element("Databases").Element(contextName).Add(new XElement("Version", new XAttribute("value", tupleData2.Item2)));
+            xDocument.Save(path);
         }
 
         public static void CreateContext<TContext>(int dbVersion, string contextPath = "", string namespaceName = "")
@@ -72,28 +73,7 @@ namespace W_ORM.MYSQL
             string contextName = typeof(TContext).Name;
             DB_Operation dB_Operation = new DB_Operation(contextName);
             dB_Operation.ContextGenerateFromDB(dbVersion, contextPath, namespaceName);
-            CreateEverythingForMSSQL<TContext>();
-            SaveVersionToWormConfig<TContext>();
-        }
-
-        private static void SaveVersionToWormConfig<TContext>()
-        {
-            try
-            {
-                DB_Operation dB_Operation = new DB_Operation(typeof(TContext).Name);
-                int latestVersion = dB_Operation.LatestVersionDatabase();
-
-                string contextName = typeof(TContext).Name;
-                XDocument xDocument = XDocument.Load(path);
-                if (xDocument.Element("Databases").Element(contextName).Elements("Version") != null)
-                    xDocument.Element("Databases").Element(contextName).Elements("Version").Remove();
-                xDocument.Element("Databases").Element(contextName).Add(new XElement("Version", new XAttribute("value", latestVersion)));
-                xDocument.Save(path);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            CreateEverythingForMYSQL<TContext>();
         }
     }
 }

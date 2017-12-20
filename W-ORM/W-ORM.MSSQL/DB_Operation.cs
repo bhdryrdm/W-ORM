@@ -39,9 +39,17 @@ namespace W_ORM.MSSQL
         #endregion
 
         #region IDB_Operation
-        public bool CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
+        /// <summary>
+        /// TR : Veritabanı oluşturulurken ve güncellenirken çalıştırılacak fonksiyon
+        /// EN : 
+        /// </summary>
+        /// <param name="tablesXMLForm">TR : Veritabanının XML formu  EN : </param>
+        /// <param name="createTableSQLQuery">TR : Veritabanı oluşumu için gerekli olan SQL sorguları EN : </param>
+        /// <returns></returns>
+        public Tuple<bool,int> CreateORAlterDatabaseAndTables(string tablesXMLForm, string createTableSQLQuery)
          {
             bool dbCreatedSuccess = true;
+            int version = 0;
             try
             {
                 using (connection = DBConnectionFactory.CreateDatabaseInstance(this.contextName))
@@ -66,6 +74,16 @@ namespace W_ORM.MSSQL
                     command.ExecuteNonQuery();
                     #endregion
 
+                    #region __WORM__Configuration tablosundan veritabanı son versiyonu çekilir
+                    command = new SqlCommand($"SELECT TOP 1 Version FROM [dbo].[__WORM__Configuration] ORDER BY Version DESC ", (SqlConnection)connection);
+                    DbDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        version = reader.GetInt32(0);
+                    }
+                    reader.Close();
+                    #endregion
+
                     #region Tablolar oluşturulur
                     command = new SqlCommand(createTableSQLQuery, (SqlConnection)connection);
                     command.ExecuteNonQuery();
@@ -75,12 +93,15 @@ namespace W_ORM.MSSQL
             catch (Exception ex)
             {
                 DBConnectionOperation.ConnectionClose(connection);
-                dbCreatedSuccess = false;
                 throw ex;
             }
-            return dbCreatedSuccess;
+            return Tuple.Create(dbCreatedSuccess,version);
         }
 
+        /// <summary>
+        /// Veritabanı oluşturmak için SQL Query
+        /// </summary>
+        /// <returns></returns>
         private string CreateDatabaseQuery()
         {
             return $"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = N'{this.contextName}') BEGIN CREATE DATABASE {this.contextName} END";
@@ -200,6 +221,12 @@ namespace W_ORM.MSSQL
             return columnList;
         }
 
+        /// <summary>
+        /// Tablonun Primary Key'e sahip olup olmadığını döner
+        /// </summary>
+        /// <param name="schemaName">Tablo Şema Adı</param>
+        /// <param name="tableName">Tablo Adı</param>
+        /// <returns></returns>
         public bool IsTableHasPrimaryKey(string schemaName,string tableName)
         {
             bool tablehasPrimaryKey = false;
@@ -273,7 +300,7 @@ namespace W_ORM.MSSQL
             int version = 0;
             try
             {
-                using (connection = DBConnectionFactory.Instance(this.ContextName))
+                using (connection = DBConnectionFactory.Instance(this.contextName))
                 {
                     DBConnectionOperation.ConnectionOpen(connection);
                     SqlCommand command = new SqlCommand($"SELECT TOP 1 Version FROM [dbo].[__WORM__Configuration] ORDER BY Version DESC ",(SqlConnection)connection);
@@ -293,7 +320,6 @@ namespace W_ORM.MSSQL
             }
             return version;
         }
-
         #endregion
 
         #region IDB_Generator
