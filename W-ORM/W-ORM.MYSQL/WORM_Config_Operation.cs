@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 using W_ORM.Layout.DBType;
 
@@ -26,6 +21,10 @@ namespace W_ORM.MYSQL
             #region WORM.config dosyası var mı kontrolü yapılır
             if (!File.Exists(path))
             {
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    // Process kullanıldığı için using scopeları arasında yazıldı.Silinmeyecek
+                }
                 new XDocument(new XElement("Databases")).Save(path);
             }
             #endregion

@@ -19,6 +19,7 @@ namespace W_ORM.Layout.DBModel
         protected static string runVersionQuery;
         protected static Dictionary<string, object> parameterList = new Dictionary<string, object>();
         private static string contextName = typeof(TContextName).Name;
+
         /// <summary>
         /// TR : CRUD işlemlerinden sonra çalıştırılacak method
         /// EN :
@@ -140,6 +141,65 @@ namespace W_ORM.Layout.DBModel
                 throw ex;
             }
             return entity;
+        }
+
+        public DbTransaction BeginTransaction()
+        {
+            try
+            {
+                connection = DBConnectionFactory.Instance(contextName);
+                DBConnectionOperation.ConnectionOpen(connection);
+                return connection.BeginTransaction();
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+        }
+
+        protected int BaseTransaction(DbTransaction transaction)
+        {
+            try
+            {
+                connection = DBConnectionFactory.Instance(contextName);
+                DBConnectionOperation.ConnectionOpen(connection);
+                command = connection.CreateCommand();
+                command.Transaction = transaction;
+
+                command.CommandText = runQuery;
+                if (parameterList != null && parameterList.Count > 0)
+                {
+                    foreach (var loopParameter in parameterList)
+                    {
+                        DbParameter parameter = command.CreateParameter();
+                        parameter.ParameterName = loopParameter.Key.ToString();
+                        parameter.Value = loopParameter.Value;
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                return command.ExecuteNonQuery();
+                
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+        }
+
+        public void TransactionCommit(DbTransaction transaction)
+        {
+            try
+            {
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                DBConnectionOperation.ConnectionClose(connection);
+                throw new Exception("Transaction çalıştırılırken hata oluştu!.RollBack çalıştırıldı.",ex);
+            }
         }
     }
 }

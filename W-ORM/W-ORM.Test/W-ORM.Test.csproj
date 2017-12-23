@@ -65,13 +65,19 @@
     <Compile Include="MSSQL\Entities\Student.cs" />
     <Compile Include="MSSQL\Entities\TakeCourse.cs" />
     <Compile Include="MSSQL\Entities\Teach.cs" />
-    <Compile Include="MSSQL_Unit_Tests.cs" />
+    <Compile Include="MSSQL\UnitTests\_01_MSSQL_Database_Operation_UTests.cs" />
+    <Compile Include="MSSQL\UnitTests\_02_MSSQL_CRUD_UTests.cs" />
+    <Compile Include="MSSQL\UnitTests\_03_MSSQL_CRUD_Transaction_UTests.cs" />
+    <Compile Include="MSSQL\UnitTests\_04_MSSQL_CRUD_Helper_UTests.cs" />
     <Compile Include="MSSQL\University.cs" />
     <Compile Include="MYSQL\Entities\Course.cs" />
     <Compile Include="MYSQL\Entities\Department.cs" />
     <Compile Include="MYSQL\Entities\Student.cs" />
     <Compile Include="MYSQL\Entities\TakeCourse.cs" />
-    <Compile Include="MYSQL_Unit_Tests.cs" />
+    <Compile Include="MYSQL\UnitTests\_04_MYSQL_CRUD_Helper_UTests.cs" />
+    <Compile Include="MYSQL\UnitTests\_03_MYSQL_CRUD_Transaction_UTests.cs" />
+    <Compile Include="MYSQL\UnitTests\_02_MYSQL_CRUD_UTests.cs" />
+    <Compile Include="MYSQL\UnitTests\_01_MYSQL_Database_Operation_UTests.cs" />
     <Compile Include="MYSQL\MYSQL_University.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

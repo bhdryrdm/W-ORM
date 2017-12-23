@@ -25,7 +25,10 @@ namespace W_ORM.MSSQL
             #region WORM.config dosyası var mı kontrolü yapılır
             if (!File.Exists(path))
             {
-                File.Create(path);
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    // Process kullanıldığı için using scopeları arasında yazıldı.Silinmeyecek
+                }
                 new XDocument(new XElement("Databases")).Save(path);
             }
             #endregion

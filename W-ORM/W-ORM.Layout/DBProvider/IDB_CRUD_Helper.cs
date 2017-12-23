@@ -15,8 +15,8 @@ namespace W_ORM.Layout.DBProvider
     public interface IDB_CRUD_Helper<TEntity>
     {
         List<TEntity> ToList();
-        List<TEntity> ToPaginateList(Expression<Func<TEntity, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber);
         TEntity FirstOrDefault(Expression<Func<TEntity, object>> predicate);
         List<TEntity> Where(Expression<Func<TEntity, object>> predicate);
+        List<TEntity> ToPaginateList(Expression<Func<TEntity, object>> predicate, string orderByColumn, int pageSize, int requestedPageNumber);
     }
 }

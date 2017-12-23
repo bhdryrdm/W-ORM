@@ -170,7 +170,7 @@ namespace W_ORM.POSTGRESQL
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 DBConnectionOperation.ConnectionClose(connection);
             }
@@ -201,7 +201,7 @@ namespace W_ORM.POSTGRESQL
                     reader.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 DBConnectionOperation.ConnectionClose(connection);
             }

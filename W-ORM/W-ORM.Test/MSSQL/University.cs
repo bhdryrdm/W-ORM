@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.Common;
-using W_ORM.Layout.DBConnection;
-using W_ORM.Layout.DBModel;
+﻿using W_ORM.Layout.DBModel;
 using W_ORM.MSSQL;
 using W_ORM.Test.MSSQL.Entities;
 
@@ -15,5 +12,6 @@ namespace W_ORM.Test.MSSQL
         public MSSQLProviderContext<TakeCourse, University> TakeCourse { get { return new MSSQLProviderContext<TakeCourse, University>(); } }
         public MSSQLProviderContext<Instructor, University> Instructor { get { return new MSSQLProviderContext<Instructor, University>(); } }
         public MSSQLProviderContext<Teach, University> Teach { get { return new MSSQLProviderContext<Teach, University>(); } }
+
     }
 }
