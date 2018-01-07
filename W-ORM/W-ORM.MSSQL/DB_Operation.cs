@@ -98,6 +98,25 @@ namespace W_ORM.MSSQL
             return Tuple.Create(dbCreatedSuccess,version);
         }
 
+        public void CreateOrAlterTable(string createTableSQLQuery)
+        {
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(this.contextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection); 
+                    SqlCommand command = new SqlCommand(createTableSQLQuery, (SqlConnection)connection);
+                    command.ExecuteNonQuery();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// Veritabanı oluşturmak için SQL Query
         /// </summary>

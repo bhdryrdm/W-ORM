@@ -10,30 +10,42 @@ namespace W_ORM.Test.MSSQL.UnitTests
         [TestMethod]
         public void FirstOrDefault()
         {
+            //University university = new University();
+            //university.Student.FirstOrDefault(x => x.DepartmentID == 1);
+
             University university = new University();
-            university.Student.FirstOrDefault(x => x.DepartmentID == 1);
+            Department deparment = university.Department.FirstOrDefault(x =>x.DepartmentID == 1);
         }
 
         [TestMethod]
         public void ToList()
         {
+            //University university = new University();
+            //List<Department> departmentList = university.Department.ToList();
+
             University university = new University();
             List<Department> departmentList = university.Department.ToList();
-
         }
 
         [TestMethod]
         public void ToPaginateList()
         {
+            //University university = new University();
+            //List<Department> departmentList = university.Department.ToPaginateList(null, "DepartmentID", 2, 3);
+
             University university = new University();
             List<Department> departmentList = university.Department.ToPaginateList(null, "DepartmentID", 2, 3);
+
         }
 
         [TestMethod]
         public void Where()
         {
+            //University university = new University();
+            //List<Student> studentList = university.Student.Where(x => x.DepartmentID == 1 && x.StudentEmail.Contains("Test") || x.StudentName != "Bahadır");
+
             University university = new University();
-            List<Student> studentList = university.Student.Where(x => x.DepartmentID == 1 && x.StudentEmail.Contains("Test") || x.StudentName != "Bahadır");
+            List<Department> departmentList = university.Department.Where(x => x.DepartmentID > 6 && x.DepartmentID < 10);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace W_ORM.Test.MYSQL.UnitTests
     public class _01_MYSQL_Database_Operation_UTests
     {
         [TestMethod]
-        public void CreateContextWormConfig() => WORM_Config_Operation.SaveWormConfig<MYSQL_University>("Server = localhost; Port = 3306; Uid=root; Pwd = 123qwe;", DBType_Enum.MYSQL, "bhdryrdm");
+        public void CreateContextWormConfig() => WORM_Config_Operation.SaveWormConfig<MYSQL_University>("Server = 130.211.138.151; Port = 3306; Uid=root; Pwd = bhdryrdm54;", DBType_Enum.MYSQL, "rcpypc");
 
         [TestMethod]
         public void ContextGenerateFromDB() => WORM_Config_Operation.CreateContext<MYSQL_University>(21, "F:\\01-GITLAB\\10-W-ORM\\W-ORM\\W-ORM.Test\\MYSQL\\", "");

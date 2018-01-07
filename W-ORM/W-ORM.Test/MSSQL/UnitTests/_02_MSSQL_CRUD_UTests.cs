@@ -28,7 +28,7 @@ namespace W_ORM.Test.MSSQL.UnitTests
         public void Delete()
         {
             University university = new University();
-            Department willBeDeletedDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
+            Department willBeDeletedDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 2);
             university.Department.Delete(willBeDeletedDepartment);
             university.PushToDB();
         }

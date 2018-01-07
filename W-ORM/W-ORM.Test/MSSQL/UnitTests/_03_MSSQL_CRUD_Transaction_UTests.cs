@@ -28,25 +28,49 @@ namespace W_ORM.Test.MSSQL.UnitTests
                 university.Department.Insert(department, transaction);
             }
             university.Department.TransactionCommit(transaction);
+
+            
+
         }
 
         [TestMethod]
         public void UpdateWithTransaction()
         {
+            //University university = new University();
+
+            //Department willBeUpdatingDepartment = new Department { DepartmentName = "Bahadır" };
+            //Department willBeUpdatingDepartment1 = new Department { DepartmentName = "Yardım" };
+
+            //var transaction = university.BeginTransaction();
+            //university.Department.Update(x => x.DepartmentID == 5, willBeUpdatingDepartment, transaction);
+            //university.Department.Update(x => x.DepartmentID == 6, willBeUpdatingDepartment1, transaction);
+            //university.TransactionCommit(transaction);
+
             University university = new University();
 
-            Department willBeUpdatingDepartment = new Department { DepartmentName = "Bahadır" };
-            Department willBeUpdatingDepartment1 = new Department { DepartmentName = "Yardım" };
+            Department willBeUpdatingDepartment = new Department { DepartmentName = "UpdatingDepartmentName1" };
+            Department willBeUpdatingDepartment1 = new Department { DepartmentName = "UpdatingDepartmentName2" };
 
             var transaction = university.BeginTransaction();
-            university.Department.Update(x => x.DepartmentID == 5, willBeUpdatingDepartment, transaction);
-            university.Department.Update(x => x.DepartmentID == 6, willBeUpdatingDepartment1, transaction);
-            university.TransactionCommit(transaction);
+            university.Department.Update(x => x.DepartmentID == 18, willBeUpdatingDepartment, transaction);
+            university.Department.Update(x => x.DepartmentID == 20, willBeUpdatingDepartment1, transaction);
+            university.Department.TransactionCommit(transaction);
+
         }
 
         [TestMethod]
         public void DeleteWithTransaction()
         {
+            //University university = new University();
+            //var transaction = university.BeginTransaction();
+            //university.Department.Delete(x => x.DepartmentID == 5, transaction);
+            //university.Department.Delete(x => x.DepartmentID == 6, transaction);
+            //university.Department.Delete(x => x.DepartmentID == 11, transaction);
+            //university.Department.Delete(x => x.DepartmentID == 12, transaction);
+            //university.Department.Delete(x => x.DepartmentID == 13, transaction);
+            //university.Course.Delete(x => x.CourseID == 1, transaction);
+            //university.TransactionCommit(transaction);
+
             University university = new University();
             var transaction = university.BeginTransaction();
             university.Department.Delete(x => x.DepartmentID == 5, transaction);
@@ -54,7 +78,6 @@ namespace W_ORM.Test.MSSQL.UnitTests
             university.Department.Delete(x => x.DepartmentID == 11, transaction);
             university.Department.Delete(x => x.DepartmentID == 12, transaction);
             university.Department.Delete(x => x.DepartmentID == 13, transaction);
-            university.Course.Delete(x => x.CourseID == 1, transaction);
             university.TransactionCommit(transaction);
 
         }

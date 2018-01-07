@@ -11,20 +11,29 @@ namespace W_ORM.Test.MYSQL.UnitTests
         [TestMethod]
         public void FirstOrDefault()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //university.Student.FirstOrDefault(x => x.DepartmentID == 1);
+
             MYSQL_University university = new MYSQL_University();
-            university.Student.FirstOrDefault(x => x.DepartmentID == 1);
+            Department department = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
         }
 
         [TestMethod]
         public void ToList()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //List<Department> departmentList = university.Department.ToList();
+
             MYSQL_University university = new MYSQL_University();
-            List<Department> departmentList = university.Department.ToList();
+            List<Department> department = university.Department.ToList();
         }
 
         [TestMethod]
         public void ToPaginateList()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //List<Department> departmentList = university.Department.ToPaginateList(null, "DepartmentID", 2, 3);
+
             MYSQL_University university = new MYSQL_University();
             List<Department> departmentList = university.Department.ToPaginateList(null, "DepartmentID", 2, 3);
         }
@@ -32,8 +41,11 @@ namespace W_ORM.Test.MYSQL.UnitTests
         [TestMethod]
         public void Where()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //List<Student> studentList = university.Student.Where(x => x.DepartmentID == 1 && x.StudentEmail.Contains("Test") || x.StudentName != "Bahadır");
+
             MYSQL_University university = new MYSQL_University();
-            List<Student> studentList = university.Student.Where(x => x.DepartmentID == 1 && x.StudentEmail.Contains("Test") || x.StudentName != "Bahadır");
+            List<Department> departmentList = university.Department.Where(x => x.DepartmentID > 5 && x.DepartmentID < 9);
         }
     }
 }

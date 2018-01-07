@@ -10,17 +10,28 @@ namespace W_ORM.Test.MYSQL.UnitTests
         [TestMethod]
         public void Insert()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //university.Department.Insert(new Department { DepartmentID = 1, DepartmentName = "Computer Engineering" });
+            //university.PushToDB();
+
             MYSQL_University university = new MYSQL_University();
-            university.Department.Insert(new Department { DepartmentID = 1, DepartmentName = "Computer Engineering" });
+            university.Department.Insert(new Department { DepartmentID = 11, DepartmentName = "Biomedical Engineering" });
             university.PushToDB();
+
         }
 
         [TestMethod]
         public void Update()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //Department willBeUpdatingDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
+            //willBeUpdatingDepartment.DepartmentName = "Computer Engineering Updated";
+            //university.Department.Update(willBeUpdatingDepartment);
+            //university.PushToDB();
+
             MYSQL_University university = new MYSQL_University();
-            Department willBeUpdatingDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
-            willBeUpdatingDepartment.DepartmentName = "Computer Engineering Updated";
+            Department willBeUpdatingDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 2);
+            willBeUpdatingDepartment.DepartmentName = "UpdatingDepartment";
             university.Department.Update(willBeUpdatingDepartment);
             university.PushToDB();
         }
@@ -28,8 +39,13 @@ namespace W_ORM.Test.MYSQL.UnitTests
         [TestMethod]
         public void Delete()
         {
+            //MYSQL_University university = new MYSQL_University();
+            //Department willBeDeletedDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
+            //university.Department.Delete(willBeDeletedDepartment);
+            //university.PushToDB();
+
             MYSQL_University university = new MYSQL_University();
-            Department willBeDeletedDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 1);
+            Department willBeDeletedDepartment = university.Department.FirstOrDefault(x => x.DepartmentID == 2);
             university.Department.Delete(willBeDeletedDepartment);
             university.PushToDB();
         }
