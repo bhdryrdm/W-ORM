@@ -27,7 +27,7 @@ namespace W_ORM.Test.MSSQL.UnitTests
             {
                 university.Department.Insert(department, transaction);
             }
-            university.Department.TransactionCommit(transaction);
+            university.TransactionCommit(transaction);
         }
 
         [TestMethod]

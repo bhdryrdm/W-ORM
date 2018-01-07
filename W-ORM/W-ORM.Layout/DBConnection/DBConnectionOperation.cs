@@ -22,7 +22,7 @@ namespace W_ORM.Layout.DBConnection
         public static DbConnection ConnectionOpen(DbConnection connection)
         {
             DbConnection returnConnection = null;
-            if(connection.State != ConnectionState.Open)
+            if(connection != null && connection.State != ConnectionState.Open)
             {
                 connection.Open();
                 returnConnection = connection;
@@ -38,7 +38,7 @@ namespace W_ORM.Layout.DBConnection
         public static DbConnection ConnectionClose(DbConnection connection)
         {
             DbConnection returnConnection = null;
-            if (connection.State != ConnectionState.Closed)
+            if (connection != null && connection.State != ConnectionState.Closed)
             {
                 connection.Close();
                 returnConnection = connection;

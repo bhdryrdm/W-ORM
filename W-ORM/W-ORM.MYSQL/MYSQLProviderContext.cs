@@ -150,7 +150,7 @@ namespace W_ORM.MYSQL
             string whereCondition = new QueryTranslator().Translate(Evaluator.PartialEval(predicate));
             runQuery = $"SELECT * FROM {EntityType.Name} " +
                         $"{(!string.IsNullOrEmpty(whereCondition) ? " WHERE " + whereCondition : "")}" +
-                        $"LIMIT {(requestedPageNumber - 1) * pageSize},{requestedPageNumber * pageSize} ";
+                        $"LIMIT {(requestedPageNumber - 1) * pageSize},{pageSize} ";
             return base.GetListFromDB<TEntityClass>();
         }
         #endregion

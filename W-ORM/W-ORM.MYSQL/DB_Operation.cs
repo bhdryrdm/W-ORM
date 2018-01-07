@@ -52,7 +52,7 @@ namespace W_ORM.MYSQL
                     #endregion
 
                     #region Oluşturulan veritabanına geçiş yapılır
-                    connection.ChangeDatabase(this.contextName);
+                    connection.ChangeDatabase(this.contextName.ToLower());
                     #endregion
 
                     #region __WORM__Configuration Tablosu var olup olmadığı kontrol edilerek oluşturulur
@@ -65,7 +65,7 @@ namespace W_ORM.MYSQL
                     #endregion
 
                     #region __WORM__Configuration tablosundan veritabanı son versiyonu çekilir
-                    command = new MySqlCommand($"SELECT Version FROM __WORM__Configuration ORDER BY Version DESC LIMIT 1", (MySqlConnection)connection);
+                    command = new MySqlCommand($"SELECT Version FROM __worm__configuration ORDER BY Version DESC LIMIT 1", (MySqlConnection)connection);
                     DbDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -104,7 +104,7 @@ namespace W_ORM.MYSQL
                                                 ");";
 
             DBInformationModel dBInformationModel = DBConnectionFactory.ReturnDBInformatinFromXML(this.ContextName);
-            MySqlCommand command = new MySqlCommand($"INSERT INTO __WORM__Configuration(UpdatedTime, UpdatedAuthor, TablesXMLForm) " +
+            MySqlCommand command = new MySqlCommand($"INSERT INTO __worm__configuration(UpdatedTime, UpdatedAuthor, TablesXMLForm) " +
                                      $"VALUES(@UpdatedTime,@UpdatedAuthor,@TablesXMLForm)",
                                     (MySqlConnection)connection);
             command.Parameters.AddWithValue("@UpdatedTime", DateTime.Now);
