@@ -26,7 +26,7 @@ namespace W_ORM.Test.MSSQL.UnitTests
         public void ToPaginateList()
         {
             University university = new University();
-            List<Department> departmentList = university.Department.ToPaginateList(null, "DepartmentID", 2, 3);
+            List<Department> departmentList = university.Department.ToPaginateList(null, "DepartmentID", 5, 10);
         }
 
         [TestMethod]

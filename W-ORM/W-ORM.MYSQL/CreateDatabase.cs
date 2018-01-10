@@ -223,8 +223,8 @@ namespace W_ORM.MYSQL
 
             #endregion
 
-            //                                                    DROP TABLES          CREATE TABLES             ALTER TABLES           XML QUERY
-            return Tuple.Create(dropConstraintListMYSQLQuery +dropTableMYSQLQuery + createTableMYSQLQuery +  alterTableMYSQLQuery, createXMLObjectQuery);
+            //                                                    DROP TABLES            ALTER TABLES          CREATE TABLES           XML QUERY
+            return Tuple.Create(dropConstraintListMYSQLQuery +dropTableMYSQLQuery + alterTableMYSQLQuery + createTableMYSQLQuery, createXMLObjectQuery);
         }
     }
 }

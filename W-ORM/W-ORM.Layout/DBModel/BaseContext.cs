@@ -143,6 +143,38 @@ namespace W_ORM.Layout.DBModel
             return entity;
         }
 
+        public DbDataReader ExecutePureSQL(string query, Dictionary<string,object> parameters = null)
+        {
+            try
+            {
+                using (connection = DBConnectionFactory.Instance(contextName))
+                {
+                    DBConnectionOperation.ConnectionOpen(connection);
+                    command = connection.CreateCommand();
+                    command.CommandText = query;
+
+                    if (parameters != null)
+                    {
+                        foreach (var loopParameter in parameters)
+                        {
+                            DbParameter parameter = command.CreateParameter();
+                            parameter.ParameterName = loopParameter.Key.ToString();
+                            parameter.Value = loopParameter.Value;
+                            command.Parameters.Add(parameter);
+                        }
+                    }
+
+                    return command.ExecuteReader();
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                DBConnectionOperation.ConnectionClose(connection);
+                throw ex;
+            }
+        }
+
         public DbTransaction BeginTransaction()
         {
             try
